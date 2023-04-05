@@ -1,0 +1,83 @@
+.back {
+  position: absolute;
+  height: 90px;
+  left: 48px;
+  top: 130px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell",
+    "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* font-family: "Noto Looped Thai UI"; */
+  /* font-style: normal; */
+  /* font-weight: 700; */
+  font-size: 20px;
+  line-height: 20px;
+  display: flex;
+  /* align-items: center; */
+  text-align: center;
+}
+.login {
+  position: absolute;
+  height: 90px;
+  left: 48px;
+  top: 150px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell",
+    "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 45px;
+  line-height: 113px;
+  display: flex;
+  align-items: center;
+  text-align: center;
+}
+.logo {
+  position: absolute;
+  width: 70px;
+  height: 80px;
+  left: 57px;
+  top: 41px;
+}
+.bg1 {
+  position: absolute;
+  width: 49%;
+  height: 100% !important;
+  margin-bottom: 30rem;
+}
+
+.bg {
+  position: absolute;
+  width: 49%;
+  height: 100% !important;
+  right: 0%;
+  /* left: 51.4%; */
+
+  /* transform: rotate(149.19deg); */
+}
+.troll {
+  position: absolute;
+  left: 64.46%;
+  right: 7.51%;
+  top: 30%;
+  bottom: 15.06%;
+}
+
+.color {
+  background-color: #00205f;
+}
+.btn1 {
+  position: absolute;
+  width: 160.59px;
+  height: 49.18px;
+  left: 242.72px;
+  top: 420px;
+}
+.form {
+  position: absolute;
+  width: 530px;
+  height: 95px;
+  left: 57px;
+  top: 230px;
+}
