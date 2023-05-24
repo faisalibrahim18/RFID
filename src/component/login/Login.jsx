@@ -1,12 +1,46 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, Link } from "react-router-dom";
+import { LoginUser, reset } from "../../features/authSlice";
 import Logo from "../../assets/logo.png";
 import Bg from "../../assets/1.png";
 import Kaos from "../../assets/kaos.png";
 
 import "./Login.css";
-import { Link } from "react-router-dom";
 import { BiArrowBack } from "react-icons/bi";
+import Swal from "sweetalert2";
+
 const Login = () => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { user, isError, isSuccess, isLoading, message } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      Swal.fire({
+        icon: "error",
+        text: "Anda harus LogOut Terlebih dahulu!",
+      });
+
+      navigate("/dashboard");
+    }
+  }, []);
+  useEffect(() => {
+    if (user || isSuccess) {
+      //
+      navigate("/dashboard");
+    }
+    // Authorization = "Bearer" + localStorage.getItem("token");
+    dispatch(reset());
+  }, [user, isSuccess, dispatch, navigate]);
+
+  const Auth = (e) => {
+    e.preventDefault();
+    dispatch(LoginUser({ username, password }));
+  };
   return (
     <div
       className=" lg:bg-right lg:h-screen  bg-cover bg-no-repeat"
@@ -42,25 +76,26 @@ const Login = () => {
           <h1 className="lg:text-5xl  text-3xl pb-10  text-black font-bold   md:text-left slide-in-bottom-h1">
             login
           </h1>
-          <form className="lg:w-1/2 fade-in">
+          <form className="lg:w-1/2 fade-in" onSubmit={Auth}>
+            {isError && <p className="alert alert-danger rounded text-center p-2 shadow ">{message}</p>}
             <div className="mb-2">
-              <label for="username" className="block text-sm font-semibold text-gray-800">
-                Username
-              </label>
+              <label className="block text-sm font-semibold text-gray-800">Username</label>
               <input
                 type="text"
                 className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
                 placeholder="Masukan username..."
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
               />
             </div>
             <div className="mb-2">
-              <label for="password" className="block text-sm font-semibold text-gray-800">
-                Password
-              </label>
+              <label className="block text-sm font-semibold text-gray-800">Password</label>
               <input
                 type="password"
                 className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
                 placeholder="********"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
               />
             </div>
 
@@ -69,7 +104,7 @@ const Login = () => {
                 type="submit"
                 className="color w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-blue-950 rounded-md hover:bg-blue-900 focus:outline-none focus:bg-blue-500"
               >
-                Login
+                {isLoading ? "Loading.." : "Login"}
               </button>
             </div>
           </form>

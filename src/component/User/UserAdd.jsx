@@ -1,46 +1,43 @@
-import React, { useEffect, useState } from "react";
-import Logo from "../../assets/logo.png";
-
-import Bg from "../../assets/1.png";
-import Troll from "../../assets/troll.png";
-import { BiArrowBack } from "react-icons/bi";
-
-import "./Register.css";
-import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-const Register = () => {
+
+const UserAdd = () => {
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [conf_password, setConf_Password] = useState("");
+  const [confirmPassword, setconfirmPassword] = useState("");
   const [email, setEmail] = useState("");
-  const [number_phone, setNumber_phone] = useState("");
-  const [msg, setMsg] = useState("");
-
+  const [number_phone, Setnumber_phone] = useState("");
+  const [role, setRole] = useState("");
+  const [message, setMsg] = useState("");
   const navigate = useNavigate();
-  useEffect(() => {
-    if (localStorage.getItem("token")) {
-      Swal.fire({
-        icon: "error",
-        text: "Anda harus LogOut Terlebih dahulu!",
-      });
 
-      navigate("/dashboard");
-    }
-  }, []);
-  const saveRegister = async (e) => {
+  const saveUser = async (e) => {
     e.preventDefault();
     try {
+      const token = localStorage.getItem("token");
       await axios
-        .post("http://localhost:9000/api/v1/rfid/user", {
-          name: name,
-          username: username,
-          password: password,
-          confirmPassword: conf_password,
-          email: email,
-          number_phone: number_phone,
-        })
+        .post(
+          "http://localhost:9000/api/v1/rfid/user",
+
+          {
+            name: name,
+            username: username,
+            password: password,
+            confirmPassword: confirmPassword,
+            email: email,
+            number_phone: number_phone,
+            role: role,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        )
         .then(({ data }) => {
           Swal.fire({
             icon: "success",
@@ -48,60 +45,37 @@ const Register = () => {
           });
         });
 
-      navigate("/");
+      navigate("/users");
     } catch (error) {
       if (error.response) {
         setMsg(error.response.data.msg);
       } else {
         Swal.fire({
-          text: error.data.msg,
+          text: error.data.message,
           icon: "error",
         });
       }
     }
   };
-
   return (
-    <div
-      className=" lg:bg-right h-screen  bg-cover bg-no-repeat"
-      style={{
-        backgroundImage: `url(${Bg})`,
-      }}
-    >
-      <div className="w-full  mx-auto p-11">
-        <div className="w-full flex items-center justify-between">
-          <Link
-            className="flex items-center text-indigo-400 no-underline hover:no-underline font-bold text-2xl lg:text-4xl"
-            href="#"
-          >
-            <img
-              src={Logo}
-              className="lg:h-auto lg:w-auto bounce-top-icons bg-opacity-100 "
-              style={{ width: "70px", height: "80px", left: "57px", top: "41px" }}
-            />
-          </Link>
+    <>
+      <div className="p-6">
+        {/* Title */}
+        <div className="lg:flex lg:flex-wrap pb-6">
+          <div className=" lg:w-1/2 text-3xl font-semibold  ">
+            <h1>Add User</h1>
+          </div>
+
+          <div className="flex w-full pt-1 content-center justify-between md:w-1/2 md:justify-end"></div>
         </div>
-      </div>
-      {/* <!--Main--> */}
-      <div className=" px-11  flex  flex-col md:flex-row items-center">
-        {/* <!--Left Col--> */}
-        <div className="w-full xl:w-2/2 text-justify justify-center lg:items-start overflow-y-hidden">
-          <Link
-            to={"/"}
-            className="back button flex pb-2 text-blue-950 hover:text-blue-600 hover:underline fade-in"
-          >
-            <BiArrowBack />
-            Back
-          </Link>
-          <h1 className="lg:text-5xl  text-3xl pb-10  text-black font-bold   md:text-left slide-in-bottom-h1">
-            Get Started
-          </h1>
-          <form className="lg:pr-64 fade-in" onSubmit={saveRegister}>
-            {Object.keys(msg).length > 0 && (
-              <p className="alert alert-danger rounded text-center p-2 shadow m-3">{msg}</p>
-            )}
+
+        <div className="container mx-auto bg-white rounded-md p-10 shadow-md">
+          {Object.keys(message).length > 0 && (
+            <p className="alert alert-danger rounded text-center p-2 shadow m-3">{message}</p>
+          )}
+          <form className="w-full" onSubmit={saveUser}>
             <div className="mb-2">
-              <label for="nama" className="block text-sm font-semibold text-gray-800">
+              <label for="nama" className=" text-sm font-semibold text-gray-800">
                 Nama
               </label>
               <input
@@ -147,8 +121,8 @@ const Register = () => {
                   </label>
                   <input
                     type="password"
-                    value={conf_password}
-                    onChange={(e) => setConf_Password(e.target.value)}
+                    value={confirmPassword}
+                    onChange={(e) => setconfirmPassword(e.target.value)}
                     className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
                     placeholder="*********"
                   />
@@ -179,41 +153,51 @@ const Register = () => {
                   <input
                     type="text"
                     value={number_phone}
-                    onChange={(e) => setNumber_phone(e.target.value)}
+                    onChange={(e) => Setnumber_phone(e.target.value)}
                     className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
                     placeholder="Masukan No Handphone..."
                   />
                 </div>
               </div>
             </div>
+            <div className="flex flex-wrap">
+              <div className="md:w-1/2   w-full">
+                <div className="mb-2">
+                  <label for="email" className="block text-sm font-semibold text-gray-800">
+                    Pilih Role
+                  </label>
+                  <select
+                    value={role}
+                    onChange={(e) => setRole(e.target.value)}
+                    className="block w-full px-2 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+                  >
+                    <option>Pilih Role :</option>
 
-            <div className="mt-6">
-              <button
-                type="submit"
-                className="color w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-blue-950 rounded-md hover:bg-blue-900 focus:outline-none focus:bg-blue-500"
-              >
-                Register
-              </button>
+                    <option value="admin">Admin</option>
+                    <option value="user">User</option>
+                  </select>
+                </div>
+              </div>
+              <div className=" md:w-1/2 lg:pl-3 md:pl-3  w-full">
+                {" "}
+                <div className="mt-6 flex ">
+                  <Link
+                    to={"/users"}
+                    className=" bg-transparent mr-2 w-1/2  border text-center py-2 px-2 pl-5 pr-5 border-black hover:border-transparent text-black hover:text-white rounded-md hover:bg-blue-950"
+                  >
+                    Back
+                  </Link>
+                  <button className="color w-1/2 px-2 py-0 tracking-wide text-white transition-colors duration-200 transform bg-blue-950 rounded-md hover:bg-blue-900 focus:outline-none focus:bg-blue-500">
+                    Save
+                  </button>
+                </div>
+              </div>
             </div>
           </form>
         </div>
-
-        {/* <!--Right Col--> */}
-        <div className="lg:pt-22 pt-10 lg:pr-20">
-          <img className="slide-in-bottom  " src={Troll} style={{ width: "30rem" }} />
-        </div>
       </div>
-
-      <div className=" px-11 pt-20 text-sm text-center md:text-left fade-in">
-        <Link
-          className="text-gray-500 pt-10 no-underline hover:no-underline fade-in w-full pb-6 text-sm text-center md:text-left"
-          to={"#"}
-        >
-          © BKA 2023
-        </Link>
-      </div>
-    </div>
+    </>
   );
 };
 
-export default Register;
+export default UserAdd;

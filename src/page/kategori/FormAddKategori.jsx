@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
-import Dashboard from "./Dashboard";
-import Layout from "./Layout";
+import AddKategori from "../../component/kategori/AddKategori";
+import Layout from "../../component/layouts/Layout";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
-const Home = () => {
+const FormAddKategori = () => {
   const navigate = useNavigate();
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -17,14 +17,12 @@ const Home = () => {
     }
   });
   return (
-    <>
-      <Layout>
-        {/* Main */}
-        <Dashboard />
-        {/* Close Main */}
-      </Layout>
-    </>
+    <Layout>
+      {/* Main */}
+      <AddKategori />
+      {/* Close Main */}
+    </Layout>
   );
 };
 
-export default Home;
+export default FormAddKategori;

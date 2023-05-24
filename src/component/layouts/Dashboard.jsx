@@ -1,0 +1,545 @@
+import React, { useEffect, useState } from "react";
+import { BsPeopleFill } from "react-icons/bs";
+import Ds from "../../assets/ds.png";
+import Bro from "../../assets/bro1.png";
+import { useNavigate } from "react-router-dom";
+import { BarChart, Bar, XAxis, CartesianGrid, Tooltip } from "recharts";
+import axios from "axios";
+import Swal from "sweetalert2";
+const data = [
+  {
+    name: "16 June",
+    uv: 3000,
+    pv: 1398,
+    amt: 2210,
+  },
+  {
+    name: "17 June",
+    uv: 2000,
+    pv: 9800,
+    amt: 2290,
+  },
+  {
+    name: "18 June",
+    uv: 2780,
+    pv: 3908,
+    amt: 2000,
+  },
+  {
+    name: "19 June",
+    uv: 1890,
+    pv: 4800,
+    amt: 2181,
+  },
+  {
+    name: "20 June",
+    uv: 2390,
+    pv: 3800,
+    amt: 2500,
+  },
+  {
+    name: "21 June",
+    uv: 3490,
+    pv: 4300,
+    amt: 2100,
+  },
+];
+const Dashboard = () => {
+  const [showModal, setShowModal] = React.useState(false);
+  const [name_customer, setNameCustomer] = useState("");
+  const [category, setCategory] = useState("");
+  const [quality, setQuality] = useState("");
+  const [service, setService] = useState("");
+  const [linenn, setLinen] = useState("");
+  const [dateIn, setDateIn] = useState("");
+  const [dateOut, setDateOut] = useState("");
+  const [amount, setAmount] = useState("");
+  const [weight, setWeight] = useState("");
+  const [note, setNote] = useState("");
+  const [msg, setMsg] = useState("");
+  const [address, setAddress] = useState("");
+  const navigate = useNavigate();
+
+  const [custumer, setCustumer] = useState([]);
+  const [dataKategori, setdataKategori] = useState([]);
+  const [dataLinen, setdataLinen] = useState([]);
+
+  useEffect(() => {
+    getLinen();
+  }, []);
+
+  const getLinen = async () => {
+    const token = localStorage.getItem("token");
+    const response = await axios.get("http://localhost:9000/api/v1/rfid/linen", {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    // console.log(response.data.data);
+    setdataLinen(response.data.data);
+  };
+  useEffect(() => {
+    getKategori();
+  }, []);
+
+  const getKategori = async () => {
+    const token = localStorage.getItem("token");
+    const response = await axios.get("http://localhost:9000/api/v1/rfid/category", {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    // console.log(response.data.data);
+    setdataKategori(response.data.data);
+  };
+
+  useEffect(() => {
+    getCustumer();
+  }, []);
+
+  const getCustumer = async () => {
+    const token = localStorage.getItem("token");
+    const response = await axios.get("http://localhost:9000/api/v1/rfid/hospital", {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    // console.log(response.data.data);
+    setCustumer(response.data.data);
+  };
+
+  const saveDistribusi = async (e) => {
+    e.preventDefault();
+    try {
+      const token = localStorage.getItem("token");
+      await axios
+        .post(
+          "http://localhost:9000/api/v1/rfid/distribusi",
+          {
+            customer: name_customer,
+            category: category,
+            linen: linenn,
+            quality: quality,
+            service: service,
+            dateIn: dateIn,
+            dateOut: dateOut,
+            amount: amount,
+            weight: weight,
+            note: note,
+          },
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        )
+        .then(({ data }) => {
+          Swal.fire({
+            icon: "success",
+            text: data.message,
+          });
+        });
+
+      navigate("/distribusi");
+    } catch (error) {
+      if (error.response) {
+        // console.log(error.response.data);
+        setMsg(error.response.data.msg);
+      } else {
+        Swal.fire({
+          text: error.data.msg,
+          icon: "error",
+        });
+      }
+    }
+  };
+
+  const token = localStorage.getItem("token");
+  const user = localStorage.getItem("user");
+  const auth = JSON.parse(user);
+  // console.log(token);
+  // console.log(auth.name);
+
+  useEffect(() => {
+    const lokasi = custumer.filter((item) => item._id === name_customer);
+    setAddress(lokasi[0]?.address);
+  }, [name_customer]);
+
+  return (
+    <>
+      <div className="md:p-5 p-2 font-semibold static ">
+        <div className="flex flex-wrap flex-row  slide-in-bottom">
+          <div className="flex-shrink max-w-full w-full  bg-white rounded-lg shadow-lg mb-6">
+            <div className="pl-6 pt-6">
+              <div className="flex flex-wrap flex-row">
+                <div className="flex-shrink max-w-full w-full">
+                  <div className="flex flex-row justify-between pb-2">
+                    <div className="flex flex-col">
+                      <h3 className="text-xl font-bold">BAKTI KASIH ANUGRAH</h3>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex-shrink max-w-full w-full xl:w-1/2">
+                  <div className="static overflow-x-auto">
+                    <p className="w-full pr-5">
+                      Kami menyediakan kebutuhan linen untuk Rumah Sakit, kami melayani dengan sistim cuci
+                      sewa linen bersih siap pakai dan atau mencuci linen milik RS.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex-shrink max-w-full w-full lg:w-1/2 md:pt-0 pt-10">
+                  <button
+                    type="button"
+                    className="bg-[#A4BC92] p-3 rounded-xl pl-5 pr-3 text-white hover:bg-[#849e6f]"
+                    onClick={() => setShowModal(true)}
+                  >
+                    {" "}
+                    <b className="pr-4 text-xl font-semibold">Schedule a pickup</b>
+                    <i className=" fa-solid fa-chevron-down fa-rotate-270 fa-xl"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div className="relative">
+              <img
+                src={Bro}
+                className="md:absolute static w-52 md:right-10 md:pt-0 md:pl-0 pt-14 md:ml-0 ml-36"
+              />
+              <img src={Ds} alt="" className="rounded-lg" />
+            </div>
+          </div>
+        </div>
+
+        <div className="flex flex-wrap flex-row  ">
+          <div className="max-w-full px-4 lg:w-auto mb-6 w-full fade-in pl-6">
+            <div className="bg-white border-b-4 mb-5 border-[#2DC8A8] rounded-lg shadow-xl p-5">
+              <div className="flex flex-row items-center">
+                <div className="flex-shrink text-left md:text-center pr-12">
+                  <h1 className="font-semibold text-[#7E92A2] ">Customers</h1>
+                  <p className="font-semibold text-6xl">10</p>
+                </div>
+                <div className="pl-3">
+                  <div className="rounded-full bg-gradient-to-b from-[#2DC8A8] to-white items-center text-2xl p-5 text-[#2DC8A8] w-16 h-16 ">
+                    <BsPeopleFill />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="bg-white border-b-4 mb-5 border-[#FEBF00] rounded-lg shadow-xl p-5">
+              <div className="flex flex-row items-center">
+                <div className="flex-shrink text-left md:text-center pr-12">
+                  <h1 className="font-semibold text-[#7E92A2] ">Distribution</h1>
+                  <p className="font-semibold text-6xl">10</p>
+                </div>
+                <div className="pr-5">
+                  <div className="rounded-full bg-gradient-to-b from-[#FEBF00] to-white items-center text-2xl p-5 text-[#FEBF00] w-16 h-16 ">
+                    <BsPeopleFill />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="bg-white border-b-4 mb-5 border-[#F64141] rounded-lg shadow-xl p-5">
+              <div className="flex flex-row items-center">
+                <div className="flex-shrink text-left md:text-center pr-12">
+                  <h1 className="font-semibold text-[#7E92A2] ">Hospital</h1>
+                  <p className="font-semibold text-6xl">10</p>
+                </div>
+                <div className="pl-6">
+                  <div className="rounded-full bg-gradient-to-b from-[#F64141] to-white items-center text-2xl p-5 text-[#F64141] w-16 h-16 ">
+                    <BsPeopleFill />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex-shrink max-w-full px-4 w-full lg:w-auto mb-6">
+            <div className="bg-white rounded-lg shadow-lg h-auto p-6">
+              <div className="flex flex-row justify-between pb-3">
+                <div className="flex flex-col">
+                  <h3 className="text-base ">
+                    <b>Info today</b> : 22 June 2023
+                  </h3>
+                </div>
+                <div className="relative">Incoming Data</div>
+              </div>
+              <hr />
+              <div className="relative pt-5">
+                <BarChart width={680} position={"relative"} height={350} data={data} margin={{}} barSize={40}>
+                  <XAxis dataKey="name" scale="point" padding={{ left: 30, right: 10 }} />
+                  {/* <YAxis /> */}
+                  <Tooltip />
+                  {/* <Legend /> */}
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <Bar dataKey="pv" fill="#A4BC92" background={{ fill: "#E5F5E5" }} />
+                </BarChart>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Modal */}
+        {showModal ? (
+          <>
+            <div className=" overflow-x-hidden m-4  scrollbars fixed inset-0 z-50 outline-none focus:outline-none">
+              <div className="relative w-auto my-6 mx-auto max-w-3xl">
+                {/*content*/}
+                <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+                  {/*header*/}
+                  <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
+                    <h3 className="text-2xl font-semibold">Hospital Information</h3>
+                    <button
+                      className="p-1 ml-auto bg-transparent border-0 text-red-600  hover:text-red-400 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
+                      onClick={() => setShowModal(false)}
+                    >
+                      <span className=" text-red-500  hover:text-red-300  h-6 w-6 text-2xl block outline-none focus:outline-none">
+                        x
+                      </span>
+                    </button>
+                  </div>
+                  {/*body*/}
+                  <div className="relative p-6 flex-auto">
+                    {Object.keys(msg).length > 0 && (
+                      <p className="alert alert-danger rounded text-center p-2 shadow m-3">{msg}</p>
+                    )}
+                    <form className="w-full" onSubmit={saveDistribusi}>
+                      <div className="mb-2">
+                        <select
+                          className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+                          value={name_customer}
+                          onChange={(e) => setNameCustomer(e.target.value)}
+                        >
+                          <option selected>Pilih Hospital : </option>
+                          {/* <option selected disabled>
+                                  Select a Grup:
+                                </option> */}
+
+                          {custumer.map((d, i) => (
+                            <option value={d._id}>
+                              {d.code} - {d.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+
+                      <div className="flex flex-wrap ">
+                        {/* <div className="  md:mb-2  w-full">
+                          <div className="mb-2">
+                            <input
+                              type="text"
+                              className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+                              placeholder="Hospital e-mail"
+                            />
+                          </div>
+                        </div> */}
+                        {/* <div className=" md:w-1/2  lg:pl-3 md:pl-3  w-full">
+                          {" "}
+                          <div className="mb-2">
+                            <input
+                              type="text"
+                              value={custumer.number_phone}
+                              onChange={handlePhoneNumberChange}
+                              className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+                              placeholder="Hospital phone number"
+                            />
+                          </div>
+                        </div> */}
+                      </div>
+                      <div className="mb-2">
+                        <select
+                          value={service}
+                          onChange={(e) => setService(e.target.value)}
+                          className="block w-full px-2 py-2 mt-2  bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+                        >
+                          <option value="" className="text-gray-200">
+                            Service
+                          </option>
+                          <option value="cuci">Cuci</option>
+                          <option value="setrika">Setrika</option>
+                          <option value="cuci & setrika">Cuci & Setrika</option>
+                        </select>
+                      </div>
+                      {/* <div className="mb-2">
+                        <select
+                          value={status}
+                          onChange={(e) => setStatus(e.target.value)}
+                          className="block w-full px-2 py-2 mt-2  bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+                        >
+                          <option value="" className="text-gray-200">
+                            Status
+                          </option>
+                          <option value="checking">Checking</option>
+                          <option value="transit">Transit</option>
+                          <option value="Accepted">Accepted</option>
+                        </select>
+                      </div> */}
+
+                      <div className="flex flex-wrap">
+                        <div className="md:w-1/2   w-full">
+                          <div className="mb-2">
+                            <input
+                              type="text"
+                              className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+                              placeholder="Address"
+                              value={address}
+                            />
+                          </div>
+                        </div>
+                        {/* <div className=" w-full">
+                          {" "}
+                          <div className="mb-2">
+                            <input
+                              type="text"
+                              className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+                              placeholder="Postal code"
+                            />
+                          </div>
+                        </div> */}
+                      </div>
+                      <div className="flex flex-wrap">
+                        <div className="md:w-1/2   w-full">
+                          <div className="mb-2">
+                            <label className="block text-sm font-semibold text-gray-800">Pick -up date</label>
+                            <input
+                              type="date"
+                              value={dateIn}
+                              onChange={(e) => setDateIn(e.target.value)}
+                              className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+                            />
+                          </div>
+                        </div>
+                        <div className=" md:w-1/2 lg:pl-3 md:pl-3  w-full">
+                          {" "}
+                          <div className="mb-2">
+                            <label className="block text-sm font-semibold text-gray-800">Delivery date</label>
+                            <input
+                              type="date"
+                              value={dateOut}
+                              onChange={(e) => setDateOut(e.target.value)}
+                              className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex  ">
+                        <h3 className="text-2xl font-semibold">Linen Information</h3>
+                      </div>
+                      <div className="flex flex-wrap">
+                        <div className="md:w-1/2   w-full">
+                          <div className="mb-2">
+                            <select
+                              className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+                              value={category}
+                              onChange={(e) => setCategory(e.target.value)}
+                            >
+                              <option selected>Pilih Category: </option>
+
+                              {dataKategori.map((d, i) => (
+                                <option value={d._id}>
+                                  {d.kode} - {d.name}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                        </div>
+                        <div className=" md:w-1/2 lg:pl-3 md:pl-3  w-full">
+                          {" "}
+                          <div className="mb-2">
+                            <select
+                              value={quality}
+                              onChange={(e) => setQuality(e.target.value)}
+                              className="block w-full px-2 py-2 mt-2  bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+                            >
+                              <option value="" className="text-gray-200">
+                                Quality
+                              </option>
+                              <option value="baik">Baik</option>
+                              <option value="kurang baik">Kurang Baik</option>
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex flex-wrap">
+                        <div className="md:w-1/2   w-full">
+                          <div className="mb-2">
+                            <select
+                              className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+                              value={linenn}
+                              onChange={(e) => setLinen(e.target.value)}
+                            >
+                              <option selected>Pilih Linen: </option>
+
+                              {dataLinen.map((d, i) => (
+                                <option value={d._id}>{d.name}</option>
+                              ))}
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex flex-wrap">
+                        <div className="md:w-1/2   w-full">
+                          <div className="mb-2">
+                            <input
+                              type="text"
+                              value={amount}
+                              onChange={(e) => setAmount(e.target.value)}
+                              className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+                              placeholder="Amount"
+                            />
+                          </div>
+                        </div>
+                        <div className=" md:w-1/2 lg:pl-3 md:pl-3  w-full">
+                          {" "}
+                          <div className="mb-2">
+                            <input
+                              type="text"
+                              value={weight}
+                              onChange={(e) => setWeight(e.target.value)}
+                              className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+                              placeholder="weight"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="mb-2">
+                        <textarea
+                          className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+                          cols="30"
+                          rows="5"
+                          value={note}
+                          onChange={(e) => setNote(e.target.value)}
+                          placeholder="Notes"
+                        ></textarea>
+                      </div>
+                      {/*footer*/}
+                      <div className="flex justify-center pt-10">
+                        <button
+                          className="bg-[#A4BC92] text-white active:bg-[#C7E9B0] font-semibold text-sm px-5 py-2 rounded-lg shadow hover:shadow-lg outline-none focus:outline-none mb-1 ease-linear transition-all duration-150"
+                          type="submit"
+                        >
+                          Save
+                          <i className=" fa-solid fa-chevron-down fa-rotate-270 fa-xl ml-5"></i>
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
+          </>
+        ) : null}
+      </div>
+    </>
+  );
+};
+
+export default Dashboard;

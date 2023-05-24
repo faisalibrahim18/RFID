@@ -1,11 +1,23 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Logo from "../../assets/logo.png";
 import Bg from "../../assets/1.png";
 import Bro from "../../assets/bro.png";
 import "./Landingpage.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const Landing = () => {
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      Swal.fire({
+        icon: "error",
+        text: "Anda harus LogOut Terlebih dahulu!",
+      });
+
+      navigate("/dashboard");
+    }
+  }, []);
   return (
     <div
       className=" lg:bg-right lg:h-screen  bg-cover bg-no-repeat"

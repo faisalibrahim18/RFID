@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
-import Dashboard from "./Dashboard";
-import Layout from "./Layout";
+import UserAdd from "../../component/User/UserAdd";
+import Layout from "../../component/layouts/Layout";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
-const Home = () => {
+const FormUserAdd = () => {
   const navigate = useNavigate();
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -20,11 +20,11 @@ const Home = () => {
     <>
       <Layout>
         {/* Main */}
-        <Dashboard />
+        <UserAdd />
         {/* Close Main */}
       </Layout>
     </>
   );
 };
 
-export default Home;
+export default FormUserAdd;

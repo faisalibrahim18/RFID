@@ -13,3 +13,11 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
+
+.td-class {
+  @apply px-4  py-4 text-gray-900 bg-[#F7F7F7] text-center  first:rounded-tl-md first:rounded-bl-md last:rounded-tr-md last:rounded-br-md;
+}
+
+.td-head {
+  @apply px-4 py-2 text-gray-900 bg-[#96CDF4] first:rounded-tl-md first:rounded-bl-md last:rounded-tr-md last:rounded-br-md;
+}
