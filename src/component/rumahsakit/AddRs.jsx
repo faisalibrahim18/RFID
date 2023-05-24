@@ -55,7 +55,7 @@ const AddRs = () => {
   return (
     <div className="p-7 ">
       {/* Title */}
-      <div className="lg:flex lg:flex-wrap pt-20 pb-6">
+      <div className="lg:flex lg:flex-wrap pb-6">
         <div className="  text-3xl font-semibold  ">
           <h1>Add Rumah Sakit</h1>
         </div>

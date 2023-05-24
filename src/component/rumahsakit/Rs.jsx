@@ -75,7 +75,7 @@ const Rs = () => {
               to={"/rumah_sakit/add"}
               className="bg-[#96CDF4] pl-3 pr-3 mb-2 rounded-md p-2 hover:bg-blue-200"
             >
-              Add Rumah Sakit
+              <i className="fa-solid fa-plus"></i> Add Rumah Sakit
             </Link>
           </div>
         </div>
@@ -104,17 +104,11 @@ const Rs = () => {
                         <td className="td-class">{item.number_phone}</td>
                         <td className="td-class">{item.address}</td>
                         <td className="td-class">
-                          <Link
-                            to={`/rumah_sakit/edit/${item._id}`}
-                            className="bg-[#96CDF4] pl-3 pr-3 rounded-md p-2 hover:bg-blue-400 m-3 text-white"
-                          >
-                            Edit
+                          <Link to={`/rumah_sakit/edit/${item._id}`} className="m-3">
+                            <i className="fa-solid fa-pen-to-square text-[#96CDF4] hover:text-blue-400"></i>
                           </Link>
-                          <Link
-                            onClick={() => deleteHospital(item._id)}
-                            className="bg-[#FF1818] pl-3 pr-3 rounded-md p-2 text-white hover:bg-red-600"
-                          >
-                            Hapus
+                          <Link onClick={() => deleteHospital(item._id)}>
+                            <i className="fa-solid fa-trash-can text-[#FF1818] hover:text-red-400"></i>
                           </Link>
                         </td>
                       </tr>

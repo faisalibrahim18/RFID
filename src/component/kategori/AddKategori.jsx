@@ -48,7 +48,7 @@ const AddKategori = () => {
   return (
     <div className="p-7 ">
       {/* Title */}
-      <div className="lg:flex lg:flex-wrap pt-20 pb-6">
+      <div className="lg:flex lg:flex-wrap pb-6">
         <div className="  text-3xl font-semibold  ">
           <h1>Add Kategori</h1>
         </div>

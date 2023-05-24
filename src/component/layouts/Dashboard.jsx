@@ -6,44 +6,8 @@ import { useNavigate } from "react-router-dom";
 import { BarChart, Bar, XAxis, CartesianGrid, Tooltip } from "recharts";
 import axios from "axios";
 import Swal from "sweetalert2";
-const data = [
-  {
-    name: "16 June",
-    uv: 3000,
-    pv: 1398,
-    amt: 2210,
-  },
-  {
-    name: "17 June",
-    uv: 2000,
-    pv: 9800,
-    amt: 2290,
-  },
-  {
-    name: "18 June",
-    uv: 2780,
-    pv: 3908,
-    amt: 2000,
-  },
-  {
-    name: "19 June",
-    uv: 1890,
-    pv: 4800,
-    amt: 2181,
-  },
-  {
-    name: "20 June",
-    uv: 2390,
-    pv: 3800,
-    amt: 2500,
-  },
-  {
-    name: "21 June",
-    uv: 3490,
-    pv: 4300,
-    amt: 2100,
-  },
-];
+import Chart from "./Chart";
+
 const Dashboard = () => {
   const [showModal, setShowModal] = React.useState(false);
   const [name_customer, setNameCustomer] = useState("");
@@ -63,7 +27,63 @@ const Dashboard = () => {
   const [custumer, setCustumer] = useState([]);
   const [dataKategori, setdataKategori] = useState([]);
   const [dataLinen, setdataLinen] = useState([]);
+  const [dataHospital, setdataHospital] = useState([]);
+  const [datauser, setdataUser] = useState([]);
+  const [dataDistribusi, setdataDistribusi] = useState([]);
+  const [chartData, setChartData] = useState([]);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await axios.get("http://localhost:9000/api/v1/rfid/distribusi");
+      setChartData(res.data.data);
+    };
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const getDataHospital = async () => {
+      const token = localStorage.getItem("token");
+      const response = await axios.get("http://localhost:9000/api/v1/rfid/hospitalCount", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      // console.log(response.data.data);
+      setdataHospital(response.data.data);
+    };
+    getDataHospital();
+  }, []);
+  useEffect(() => {
+    const getDataUser = async () => {
+      const token = localStorage.getItem("token");
+      const response = await axios.get("http://localhost:9000/api/v1/rfid/userCount", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      // console.log(response.data.data);
+      setdataUser(response.data.data);
+    };
+    getDataUser();
+  }, []);
+
+  useEffect(() => {
+    getDataDistribusi();
+  }, []);
+
+  const getDataDistribusi = async () => {
+    const token = localStorage.getItem("token");
+    const response = await axios.get("http://localhost:9000/api/v1/rfid/distribusiCount", {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    // console.log(response.data.data);
+    setdataDistribusi(response.data.data);
+  };
   useEffect(() => {
     getLinen();
   }, []);
@@ -170,6 +190,7 @@ const Dashboard = () => {
     setAddress(lokasi[0]?.address);
   }, [name_customer]);
 
+  // console.log(chartData);
   return (
     <>
       <div className="md:p-5 p-2 font-semibold static ">
@@ -222,8 +243,8 @@ const Dashboard = () => {
             <div className="bg-white border-b-4 mb-5 border-[#2DC8A8] rounded-lg shadow-xl p-5">
               <div className="flex flex-row items-center">
                 <div className="flex-shrink text-left md:text-center pr-12">
-                  <h1 className="font-semibold text-[#7E92A2] ">Customers</h1>
-                  <p className="font-semibold text-6xl">10</p>
+                  <h1 className="font-semibold text-[#7E92A2] ">Users</h1>
+                  <p className="font-semibold text-6xl">{datauser}</p>
                 </div>
                 <div className="pl-3">
                   <div className="rounded-full bg-gradient-to-b from-[#2DC8A8] to-white items-center text-2xl p-5 text-[#2DC8A8] w-16 h-16 ">
@@ -236,7 +257,7 @@ const Dashboard = () => {
               <div className="flex flex-row items-center">
                 <div className="flex-shrink text-left md:text-center pr-12">
                   <h1 className="font-semibold text-[#7E92A2] ">Distribution</h1>
-                  <p className="font-semibold text-6xl">10</p>
+                  <p className="font-semibold text-6xl">{dataDistribusi}</p>
                 </div>
                 <div className="pr-5">
                   <div className="rounded-full bg-gradient-to-b from-[#FEBF00] to-white items-center text-2xl p-5 text-[#FEBF00] w-16 h-16 ">
@@ -249,7 +270,7 @@ const Dashboard = () => {
               <div className="flex flex-row items-center">
                 <div className="flex-shrink text-left md:text-center pr-12">
                   <h1 className="font-semibold text-[#7E92A2] ">Hospital</h1>
-                  <p className="font-semibold text-6xl">10</p>
+                  <p className="font-semibold text-6xl">{dataHospital}</p>
                 </div>
                 <div className="pl-6">
                   <div className="rounded-full bg-gradient-to-b from-[#F64141] to-white items-center text-2xl p-5 text-[#F64141] w-16 h-16 ">
@@ -264,22 +285,21 @@ const Dashboard = () => {
             <div className="bg-white rounded-lg shadow-lg h-auto p-6">
               <div className="flex flex-row justify-between pb-3">
                 <div className="flex flex-col">
-                  <h3 className="text-base ">
-                    <b>Info today</b> : 22 June 2023
-                  </h3>
+                  <h3 className="text-base ">{/* <b>Info today</b> : 22 June 2023 */}</h3>
                 </div>
                 <div className="relative">Incoming Data</div>
               </div>
               <hr />
               <div className="relative pt-5">
-                <BarChart width={680} position={"relative"} height={350} data={data} margin={{}} barSize={40}>
+                <Chart data={chartData} />
+                {/* <BarChart width={680} position={"relative"} height={350} data={data} margin={{}} barSize={40}>
                   <XAxis dataKey="name" scale="point" padding={{ left: 30, right: 10 }} />
-                  {/* <YAxis /> */}
+                  <YAxis />
                   <Tooltip />
-                  {/* <Legend /> */}
+                  <Legend />
                   <CartesianGrid strokeDasharray="3 3" />
                   <Bar dataKey="pv" fill="#A4BC92" background={{ fill: "#E5F5E5" }} />
-                </BarChart>
+                </BarChart> */}
               </div>
             </div>
           </div>

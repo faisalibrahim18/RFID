@@ -8,7 +8,9 @@ const AddInventory = () => {
   const [name, setName] = useState("");
   const [amount, setAmount] = useState("");
   const [message, setMsg] = useState("");
+
   const navigate = useNavigate();
+
   const saveInventory = async (e) => {
     e.preventDefault();
     try {
@@ -50,7 +52,7 @@ const AddInventory = () => {
   return (
     <div className="p-7 ">
       {/* Title */}
-      <div className="lg:flex lg:flex-wrap pt-20 pb-6">
+      <div className="lg:flex lg:flex-wrap pb-6">
         <div className="  text-3xl font-semibold  ">
           <h1>Add Inventory</h1>
         </div>

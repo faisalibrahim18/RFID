@@ -25,7 +25,7 @@ const UserEdit = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-        console.log(response);
+        // console.log(response);
 
         setName(response.data.data.name);
         setUsername(response.data.data.username);

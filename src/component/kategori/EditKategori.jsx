@@ -39,6 +39,7 @@ const EditKategori = () => {
         .put(
           `http://localhost:9000/api/v1/rfid/category/${id}`,
           {
+            kode: kode,
             name: name,
           },
           {

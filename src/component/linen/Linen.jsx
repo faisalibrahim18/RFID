@@ -66,7 +66,7 @@ const Linen = () => {
           </div>
           <div className="flex w-full mb-5 ml-5 md:ml-auto mr-4 font-semibold justify-between md:w-1/3 md:justify-end">
             <Link to={"/linen/add"} className="bg-[#96CDF4] pl-3 pr-3 mb-2 rounded-md p-2 hover:bg-blue-200">
-              Add Linen
+              <i className="fa-solid fa-plus"></i> Add Linen
             </Link>
           </div>
         </div>
@@ -89,17 +89,11 @@ const Linen = () => {
                         <td class="td-class">{index + 1}</td>
                         <td class="td-class">{item.name}</td>
                         <td class="td-class">
-                          <Link
-                            to={`/linen/edit/${item._id}`}
-                            className="bg-[#96CDF4] pl-3 pr-3 rounded-md p-2 hover:bg-blue-400 m-3 text-white"
-                          >
-                            Edit
+                          <Link to={`/linen/edit/${item._id}`} className=" m-3">
+                            <i className="fa-solid fa-pen-to-square text-[#96CDF4] hover:text-blue-400"></i>
                           </Link>
-                          <Link
-                            onClick={() => deletelinen(item._id)}
-                            className="bg-[#FF1818] pl-3 pr-3 rounded-md p-2 text-white hover:bg-red-600"
-                          >
-                            Hapus
+                          <Link onClick={() => deletelinen(item._id)}>
+                            <i className="fa-solid fa-trash-can text-[#FF1818] hover:text-red-400"></i>
                           </Link>
                         </td>
                       </tr>

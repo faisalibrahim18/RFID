@@ -1,6 +1,5 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import Swal from "sweetalert2";
 
 const Laporan = () => {
   const [showLaporan, setShowLaporan] = useState(false);
@@ -29,16 +28,32 @@ const Laporan = () => {
       console.log(error.response);
     }
   };
+  const cetakLaporanExcel = async () => {
+    try {
+      window.open(`http://localhost:9000/api/v1/rfid/distribusiDownload?dateIn=${dateIn}&dateOut=${dateOut}`);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const cetakLaporanPdf = async () => {
+    try {
+      window.open(
+        `http://localhost:9000/api/v1/rfid/distribusiDownloadPdf?dateIn=${dateIn}&dateOut=${dateOut}`,
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <>
       <div className=" p-2">
-        <div className="flex flex-wrap flex-row">
-          <div className="flex-shrink max-w-full px-4 w-1/2">
+        <div className="">
+          <div className=" max-w-full px-4 ">
             <h1 className="text-3xl font-semibold mt-3 mb-5">Laporan</h1>
           </div>
           <form className="w-full" onSubmit={getLaporan}>
-            <div className="flex w-full mb-5 ml-5 md:ml-auto mr-4 font-semibold justify-between md:w-1/3 md:justify-end">
+            <div className="flex w-full mb-5 md:ml-auto font-semibold justify-center">
               <div className="flex flex-wrap ">
                 <div className="md:w-1/2  md:mb-2  w-full">
                   <div className="mb-2">
@@ -66,7 +81,7 @@ const Laporan = () => {
                   </div>
                 </div>
                 <button type="submit" className="w-full bg-[#FEBF00]  m-1 rounded-md p-2 hover:bg-yellow-400">
-                  Laporan
+                  <i class="fa-solid fa-table-list"></i> Laporan
                 </button>
               </div>
             </div>
@@ -81,10 +96,18 @@ const Laporan = () => {
 
                   <div className="flex pr-3  pt-1   content-center font-semibold  w-1/2 justify-end">
                     <button
-                      type="file"
+                      onClick={cetakLaporanExcel}
+                      type="button"
+                      className="bg-[#1cc939] text-white  m-1 pl-3 pr-3 rounded-md p-2 hover:bg-[#40d859]"
+                    >
+                      <i className="fa-solid fa-file-excel"></i> Cetak Excel
+                    </button>
+                    <button
+                      onClick={cetakLaporanPdf}
+                      type="button"
                       className="bg-[#FF1818] text-white  m-1 pl-3 pr-3 rounded-md p-2 hover:bg-red-600"
                     >
-                      Cetak
+                      <i className="fa-solid fa-file-pdf"></i> Cetak Pdf
                     </button>
                   </div>
                 </div>
@@ -111,7 +134,7 @@ const Laporan = () => {
                           <td className="td-class">{item.customer.name}</td>
                           <td className="td-class">{item.dateIn}</td>
                           <td className="td-class">{item.dateOut}</td>
-                          <td className="td-class">{item.category.name}</td>
+                          <td className="td-class">{item.linen.name}</td>
                           <td className="td-class">
                             {item.quality === "baik" ? (
                               <span className=" rounded-md bg-[#96CDF4] px-4 py-px text-xs font-semibold uppercase text-gray-900 antialiased">
@@ -128,48 +151,74 @@ const Laporan = () => {
                               ""
                             )}
                           </td>
-                          <td className="td-class">
-                            {" "}
-                            {item.status === null ? (
-                              <button
-                                onClick={() => handleUpdateProses(item._id)}
-                                className="bg-[#b5f1b5] hover:bg-[#88f588] pr-2 pl-2 rounded-lg"
-                              >
-                                confirm
-                              </button>
-                            ) : (
-                              ""
-                            )}
-                            {item?.status?.status === "processing" ? (
-                              <button
-                                onClick={() => setShowProses(true)}
-                                className="bg-[#b5f1b5] hover:bg-[#88f588] pr-2 pl-2 rounded-lg"
-                              >
-                                CheckIn
-                              </button>
-                            ) : (
-                              ""
-                            )}
-                          </td>
+                          <td className="td-class">{item.category.name}</td>
                           <td className="td-class">{item.amount}</td>
                           <td className="td-class">
                             {item.service === "cuci" ? (
-                              <span class="rounded-md bg-[#FEBF00] px-4 py-px text-xs font-semibold uppercase text-gray-900 antialiased">
+                              <span className="rounded-md bg-[#FEBF00] px-4 py-px text-xs font-semibold uppercase text-gray-900 antialiased">
                                 cuci
                               </span>
                             ) : (
                               ""
                             )}
                             {item.service === "wash" ? (
-                              <span class=" rounded-md bg-[#009800] px-4 py-px text-xs font-semibold uppercase text-gray-900 antialiased">
+                              <span className=" rounded-md bg-[#009800] px-4 py-px text-xs font-semibold uppercase text-gray-900 antialiased">
                                 Wash
                               </span>
                             ) : (
                               ""
                             )}
                             {item.service === "setrika" ? (
-                              <span class="float-right rounded-md bg-[#96CDF4] px-4 py-px text-xs font-semibold uppercase text-gray-900 antialiased">
+                              <span className="float-right rounded-md bg-[#96CDF4] px-4 py-px text-xs font-semibold uppercase text-gray-900 antialiased">
                                 Setrika
+                              </span>
+                            ) : (
+                              ""
+                            )}
+                          </td>
+
+                          <td className="td-class">
+                            {" "}
+                            {item.status === null ? (
+                              <span className="bg-[#b5f1b5]  pr-2 pl-2 rounded-lg">
+                                {isLoading ? "Loading.." : "Confirm"}
+                              </span>
+                            ) : (
+                              ""
+                            )}
+                            {item?.status?.status === "processing" ? (
+                              <span className="bg-[#96CDF4]  pr-2 pl-2 rounded-lg">CheckIn</span>
+                            ) : (
+                              ""
+                            )}
+                            {item?.status?.status === "checking" ? (
+                              <span className="bg-[#FEBF00]  pr-2 pl-2 rounded-lg">Transit</span>
+                            ) : (
+                              ""
+                            )}
+                            {item?.status?.status === "transit" ? (
+                              <span className="bg-[#5eebc7]  pr-2 pl-2 rounded-lg">Accepted</span>
+                            ) : (
+                              ""
+                            )}
+                            {item?.status?.status === "accepted" ? (
+                              <span className="bg-[#65a0f8]  pr-2 pl-2 rounded-lg">Wash</span>
+                            ) : (
+                              ""
+                            )}
+                            {item?.status?.status === "washing" ? (
+                              <span className="bg-[#82f865]  pr-2 pl-2 rounded-lg">Dry</span>
+                            ) : (
+                              ""
+                            )}
+                            {item?.status?.status === "drying" ? (
+                              <span className="bg-[#54e2f5]  pr-2 pl-2 rounded-lg">Done</span>
+                            ) : (
+                              ""
+                            )}
+                            {item?.status?.status === "success" ? (
+                              <span className=" rounded-md bg-[#10e04f] px-4 py-px text-xs font-semibold uppercase text-gray-900 antialiased">
+                                Success
                               </span>
                             ) : (
                               ""

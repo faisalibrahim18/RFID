@@ -8,11 +8,10 @@ import Mbl from "../../assets/mbl.png";
 import Baju from "../../assets/baju.png";
 import "./stepper.css";
 import axios from "axios";
+import { Link } from "react-router-dom";
 const Tracking = () => {
-  const steps = ["Customer Info", "Shipping Info", "Payment", "Step 4"];
-  const [currentStep, setCurrentStep] = useState(1);
-  const [complete, setComplete] = useState(false);
-
+  const [data, setStatus] = useState([], false);
+  const [track, setTrack] = useState("");
   const [tracker, setTracker] = useState([]);
 
   useEffect(() => {
@@ -30,721 +29,910 @@ const Tracking = () => {
     // console.log(response);
     setTracker(response.data.data);
   };
+
+  const handleTracking = async (id) => {
+    console.log(id);
+  };
+  useEffect(() => {
+    const tracking = tracker.filter((item) => item._id === track);
+    // console.log(tracking);
+    if (!tracking) {
+      setShow(false);
+    } else if (tracking) {
+      setStatus(tracking);
+      //
+    }
+  }, [track]);
+
   return (
-    <div className="md:flex flex-row -mt-32">
-      {/* left */}
-      <div className="p-2 lg:pl-5  pl-2 font-semibold flex-wrap flex pt-36">
-        {/* Tracking View */}
+    <>
+      <div className="">
+        <div className="md:flex flex-row -mt-32">
+          {/* left */}
 
-        <div className="flex-shrink max-w-full px-4 w-full  mb-6">
-          <div className="bg-[#537FE7]  rounded-lg shadow-lg h-full p-6">
-            <div className="flex flex-row justify-between pb-3">
-              <div className="flex flex-col">
-                <h3 className="text-base font-semibold text-white">Order Id : BKA776SDJK89L</h3>
-              </div>
-              <div className="relative">
-                <span className="bg-green-400  rounded-md p-1 pl-6 pr-6 text-green-600">Wash</span>
-              </div>
+          <div className="p-2 lg:pl-5  pl-2 font-semibold flex-wrap flex pt-36">
+            {/* Tracking View */}
+            <div className=" w-72 pt-13 font-semibold mb-6">
+              <select
+                value={track}
+                onChange={(e) => setTrack(e.target.value)}
+                className="block md:w-96 w-80 px-2 py-2 mt-2  bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+              >
+                <option selected>Pilih Data Tracking </option>
+                {tracker.map((d, i) => (
+                  <option value={d._id} key={d._id}>
+                    {d.customer.name}{" "}
+                  </option>
+                ))}
+              </select>
             </div>
-            <div className="relative">
-              <div className="w-full h-4 bg-green-100 rounded-full mt-2">
-                <div
-                  className="h-full text-center text-xs text-white bg-green-500 rounded-full"
-                  style={{ width: "50%" }}
-                >
-                  {/* <span className="text-xs text-white text-center">86%</span> */}
-                </div>
-              </div>
+
+            {data.map((item) => (
               <div>
-                {" "}
-                <div className="absolute text-gray-200 text-sm ">21 JUN</div>
-                <ol className=" mt-3 ml-16 relative border-l border-white">
-                  <li className="ml-4 ">
-                    <div className="absolute w-3 h-3 bg-white rounded-full items-center justify-between mb-3 sm:flex  -left-1.5 border border-white"></div>
-                    <div className="pt-0">
-                      <time className="mb-1 text-xs font-normal text-gray-200">10.10 AM</time>
-                      <div className="text-sm font-normal text-white">In transit</div>
+                {item.status === null ? (
+                  <div className="bg-gray-300 p-5 mt-20 -ml-12">
+                    <h1>
+                      Proses Harus di Confirm terlebih dahulu Untuk Melihat Tracking{" "}
+                      <Link to={"/distribusi"} className="text-red-600 hover:text-red-400 ">
+                        Klik untuk Ke Halaman.
+                      </Link>
+                    </h1>
+                  </div>
+                ) : (
+                  <div className="flex-shrink max-w-full px-4 md:w-96 w-full md:mt-4 mb-6">
+                    <div className="bg-[#537FE7]  rounded-lg shadow-lg h-full p-6">
+                      <div className="flex flex-row justify-between pb-3">
+                        <div className="flex flex-col">
+                          <h3 className="text-base font-semibold text-white mr-1">
+                            Order by : {item.customer.name}
+                          </h3>
+                        </div>
+                        <div className="relative">
+                          {item.status.status === "checking" ? (
+                            <span className="bg-gray-400  rounded-md p-1 pl-6 pr-6 text-gray-600">
+                              CheckIn
+                            </span>
+                          ) : (
+                            ""
+                          )}
+                          {item.status.status === "transit" ? (
+                            <span className="bg-blue-400  rounded-md p-1 pl-6 pr-6 text-blue-600">
+                              Transit
+                            </span>
+                          ) : (
+                            ""
+                          )}
+                          {item.status.status === "accepted" ? (
+                            <span className="bg-amber-400  rounded-md p-1 pl-6 pr-6 text-amber-600">
+                              Accepted
+                            </span>
+                          ) : (
+                            ""
+                          )}
+                          {item.status.status === "washing" ? (
+                            <span className="bg-lime-400  rounded-md p-1 pl-6 pr-6 text-lime-600">Wash</span>
+                          ) : (
+                            ""
+                          )}
+                          {item.status.status === "drying" ? (
+                            <span className="bg-sky-400  rounded-md p-1 pl-6 pr-6 text-sky-600">dry</span>
+                          ) : (
+                            ""
+                          )}
+                          {item.status.status === "success" ? (
+                            <span className="bg-green-400  rounded-md p-1 pl-6 pr-6 text-green-600">
+                              Done
+                            </span>
+                          ) : (
+                            ""
+                          )}
+                        </div>
+                      </div>
+                      <div className="relative">
+                        <div className="w-full h-4 bg-green-100 rounded-full mt-2">
+                          {item.status.status === "checking" ? (
+                            <div
+                              className="h-full text-center text-xs text-white bg-green-500 rounded-full"
+                              style={{ width: "10%" }}
+                            >
+                              <span className="text-xs text-white text-center">10%</span>
+                            </div>
+                          ) : (
+                            ""
+                          )}
+                          {item.status.status === "transit" ? (
+                            <div
+                              className="h-full text-center text-xs text-white bg-green-500 rounded-full"
+                              style={{ width: "25%" }}
+                            >
+                              <span className="text-xs text-white text-center">25%</span>
+                            </div>
+                          ) : (
+                            ""
+                          )}
+                          {item.status.status === "accepted" ? (
+                            <div
+                              className="h-full text-center text-xs text-white bg-green-500 rounded-full"
+                              style={{ width: "45%" }}
+                            >
+                              <span className="text-xs text-white text-center">45%</span>
+                            </div>
+                          ) : (
+                            ""
+                          )}
+                          {item.status.status === "washing" ? (
+                            <div
+                              className="h-full text-center text-xs text-white bg-green-500 rounded-full"
+                              style={{ width: "70%" }}
+                            >
+                              <span className="text-xs text-white text-center">70%</span>
+                            </div>
+                          ) : (
+                            ""
+                          )}
+                          {item.status.status === "drying" ? (
+                            <div
+                              className="h-full text-center text-xs text-white bg-green-500 rounded-full"
+                              style={{ width: "90%" }}
+                            >
+                              <span className="text-xs text-white text-center">90%</span>
+                            </div>
+                          ) : (
+                            ""
+                          )}
+                          {item.status.status === "success" ? (
+                            <div
+                              className="h-full text-center text-xs text-white bg-green-500 rounded-full"
+                              style={{ width: "100%" }}
+                            >
+                              <span className="text-xs text-white text-center">100%</span>
+                            </div>
+                          ) : (
+                            ""
+                          )}
+                        </div>
+                        <div>
+                          {" "}
+                          <div className="absolute text-gray-200 text-sm ">21 JUN</div>
+                          <ol className=" mt-3 ml-16 relative border-l border-white">
+                            <li className="ml-4 ">
+                              <div className="absolute w-3 h-3 bg-white rounded-full items-center justify-between mb-3 sm:flex  -left-1.5 border border-white"></div>
+                              <div className="pt-0">
+                                <time className="mb-1 text-xs font-normal text-gray-200">10.10 AM</time>
+                                <div className="text-sm font-normal text-white">In transit</div>
+                              </div>
+                            </li>
+                          </ol>
+                        </div>
+                        <div>
+                          {" "}
+                          <div className="absolute text-gray-200 text-sm ">21 JUN</div>
+                          <ol className=" ml-16 relative border-l border-white">
+                            <li className="ml-4 ">
+                              <div className="absolute w-3 h-3 bg-white rounded-full items-center justify-between mb-3 sm:flex  -left-1.5 border border-white"></div>
+                              <div className="pt-0">
+                                <time className="mb-1 text-xs font-normal text-gray-200">11.25 AM</time>
+                                <div className="text-sm font-normal text-white">Accepted</div>
+                              </div>
+                            </li>
+                          </ol>
+                        </div>
+                        <div>
+                          {" "}
+                          <div className="absolute text-gray-200 text-sm ">22 JUN</div>
+                          <ol className=" ml-16 relative border-l border-white">
+                            <li className="ml-4 ">
+                              <div className="absolute w-3 h-3 bg-white rounded-full items-center justify-between mb-3 sm:flex  -left-1.5 border border-white"></div>
+                              <div className="pt-0">
+                                <time className="mb-1 text-xs font-normal text-gray-200">09.00 AM</time>
+                                <div className="text-sm font-normal text-white">Wash</div>
+                              </div>
+                            </li>
+                          </ol>
+                        </div>
+                      </div>
                     </div>
-                  </li>
-                </ol>
+                  </div>
+                )}
               </div>
-              <div>
-                {" "}
-                <div className="absolute text-gray-200 text-sm ">21 JUN</div>
-                <ol className=" ml-16 relative border-l border-white">
-                  <li className="ml-4 ">
-                    <div className="absolute w-3 h-3 bg-white rounded-full items-center justify-between mb-3 sm:flex  -left-1.5 border border-white"></div>
-                    <div className="pt-0">
-                      <time className="mb-1 text-xs font-normal text-gray-200">11.25 AM</time>
-                      <div className="text-sm font-normal text-white">Accepted</div>
-                    </div>
-                  </li>
-                </ol>
-              </div>
-              <div>
-                {" "}
-                <div className="absolute text-gray-200 text-sm ">22 JUN</div>
-                <ol className=" ml-16 relative border-l border-white">
-                  <li className="ml-4 ">
-                    <div className="absolute w-3 h-3 bg-white rounded-full items-center justify-between mb-3 sm:flex  -left-1.5 border border-white"></div>
-                    <div className="pt-0">
-                      <time className="mb-1 text-xs font-normal text-gray-200">09.00 AM</time>
-                      <div className="text-sm font-normal text-white">Wash</div>
-                    </div>
-                  </li>
-                </ol>
-              </div>
-            </div>
+            ))}
+            {/* Close Tracking View */}
           </div>
-        </div>
-        <div className="flex-shrink max-w-full px-4 w-full  mb-6">
-          <div className="bg-white  rounded-lg shadow-lg h-full p-6">
-            <div className="flex flex-row justify-between pb-3">
-              <div className="flex flex-col">
-                <h3 className="text-base font-semibold ">Order Id : BKA776SDJK89L</h3>
-              </div>
-              <div className="relative">
-                <span className="bg-yellow-200  rounded-md p-1 pl-6 pr-6 text-yellow-600">Cheking</span>
-              </div>
-            </div>
-            <div className="relative">
-              <div className="w-full h-4 bg-blue-100 rounded-full mt-2">
-                <div
-                  className="h-full text-center text-xs text-white bg-[#537FE7] rounded-full"
-                  style={{ width: "50%" }}
-                >
-                  {/* <span className="text-xs text-white text-center">86%</span> */}
-                </div>
-              </div>
-              <div>
-                {" "}
-                <div className="absolute text-gray-400 text-sm ">21 JUN</div>
-                <ol className=" mt-3 ml-16 relative border-dashed border-l-2  border-black">
-                  <li className="ml-4 ">
-                    <div className="absolute w-3 h-3 bg-black rounded-full items-center justify-between mb-3 sm:flex  -left-1.5 border border-black"></div>
-                    <div className="pt-0">
-                      <time className="mb-1 text-xs font-normal text-gray-400">10.10 AM</time>
-                      <div className="text-sm font-normal text-black">In transit</div>
-                    </div>
-                  </li>
-                </ol>
-              </div>
-              <div>
-                {" "}
-                <div className="absolute text-gray-400 text-sm ">21 JUN</div>
-                <ol className=" ml-16 relative border-dashed border-l-2 border-black">
-                  <li className="ml-4 ">
-                    <div className="absolute w-3 h-3 bg-black rounded-full items-center justify-between mb-3 sm:flex  -left-1.5 border border-black"></div>
-                    <div className="pt-0">
-                      <time className="mb-1 text-xs font-normal text-gray-400">11.25 AM</time>
-                      <div className="text-sm font-normal text-black">Accepted</div>
-                    </div>
-                  </li>
-                </ol>
-              </div>
-              <div>
-                {" "}
-                <div className="absolute text-gray-400 text-sm ">22 JUN</div>
-                <ol className=" ml-16 relative border-dashed border-l-2 border-black">
-                  <li className="ml-4 ">
-                    <div className="absolute w-3 h-3 bg-black rounded-full items-center justify-between mb-3 sm:flex  -left-1.5 border border-black"></div>
-                    <div className="pt-0">
-                      <time className="mb-1 text-xs font-normal text-gray-400">09.00 AM</time>
-                      <div className="text-sm font-normal text-black">Wash</div>
-                    </div>
-                  </li>
-                </ol>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="flex-shrink max-w-full px-4 w-full  mb-6">
-          <div className="bg-white  rounded-lg shadow-lg h-full p-6">
-            <div className="flex flex-row justify-between pb-3">
-              <div className="flex flex-col">
-                <h3 className="text-base font-semibold ">Order Id : BKA776SDJK89L</h3>
-              </div>
-              <div className="relative">
-                <span className="bg-yellow-200  rounded-md p-1 pl-6 pr-6 text-yellow-600">Cheking</span>
-              </div>
-            </div>
-            <div className="relative">
-              <div className="w-full h-4 bg-blue-100 rounded-full mt-2">
-                <div
-                  className="h-full text-center text-xs text-white bg-[#537FE7] rounded-full"
-                  style={{ width: "50%" }}
-                >
-                  {/* <span className="text-xs text-white text-center">86%</span> */}
-                </div>
-              </div>
-              <div>
-                {" "}
-                <div className="absolute text-gray-400 text-sm ">21 JUN</div>
-                <ol className=" mt-3 ml-16 relative border-dashed border-l-2  border-black">
-                  <li className="ml-4 ">
-                    <div className="absolute w-3 h-3 bg-black rounded-full items-center justify-between mb-3 sm:flex  -left-1.5 border border-black"></div>
-                    <div className="pt-0">
-                      <time className="mb-1 text-xs font-normal text-gray-400">10.10 AM</time>
-                      <div className="text-sm font-normal text-black">In transit</div>
-                    </div>
-                  </li>
-                </ol>
-              </div>
-              <div>
-                {" "}
-                <div className="absolute text-gray-400 text-sm ">21 JUN</div>
-                <ol className=" ml-16 relative border-dashed border-l-2 border-black">
-                  <li className="ml-4 ">
-                    <div className="absolute w-3 h-3 bg-black rounded-full items-center justify-between mb-3 sm:flex  -left-1.5 border border-black"></div>
-                    <div className="pt-0">
-                      <time className="mb-1 text-xs font-normal text-gray-400">11.25 AM</time>
-                      <div className="text-sm font-normal text-black">Accepted</div>
-                    </div>
-                  </li>
-                </ol>
-              </div>
-              <div>
-                {" "}
-                <div className="absolute text-gray-400 text-sm ">22 JUN</div>
-                <ol className=" ml-16 relative border-dashed border-l-2 border-black">
-                  <li className="ml-4 ">
-                    <div className="absolute w-3 h-3 bg-black rounded-full items-center justify-between mb-3 sm:flex  -left-1.5 border border-black"></div>
-                    <div className="pt-0">
-                      <time className="mb-1 text-xs font-normal text-gray-400">09.00 AM</time>
-                      <div className="text-sm font-normal text-black">Wash</div>
-                    </div>
-                  </li>
-                </ol>
-              </div>
-            </div>
-          </div>
-        </div>
+          {/* close left */}
 
-        {/* Close Tracking View */}
-      </div>
-      {/* close left */}
+          {/* right */}
 
-      {/* right */}
-      {tracker.map((item) => (
-        <div className="bg-gray-200 p-7 w-full " key={item._id}>
-          <h1 className="md:mt-28 text-lg font-bold">Tracking view</h1>
-          {item.status.status === "processing" ? (
-            <div className="p-3 bg-white rounded-md  md:w-[630px] ">
-              <div className="flex  ">
-                <div className="step-item in-active">
-                  <div className="step">
-                    <div className="steps in-active ">
-                      <img src={Check} className="m-3 " alt="" />
-                    </div>
-                  </div>
+          {data.map((item) => (
+            <div>
+              {item.status === null ? (
+                "tidak Ada data"
+              ) : (
+                <div className="bg-gray-200 p-7 w-full " key={item._id}>
+                  <h1 className="md:mt-28 text-lg font-bold">Tracking view</h1>
+                  {item.status.status === "processing" ? (
+                    <div className="p-3 bg-white rounded-md  md:w-[630px] ">
+                      <div className="flex  ">
+                        <div className="step-item in-active">
+                          <div className="step">
+                            <div className="steps in-active ">
+                              <img src={Check} className="m-3 " alt="" />
+                            </div>
+                          </div>
 
-                  <p className="text-[#537FE7] font-semibold">-</p>
-                  <p className="text-xs text-center">-</p>
-                </div>
-                <div className="step-item in-active">
-                  <div className="step">
-                    <div className="steps">
-                      <img src={Transit} className="m-3" alt="" />
+                          <p className="text-[#537FE7] font-semibold">-</p>
+                          <p className="text-xs text-center">-</p>
+                        </div>
+                        <div className="step-item in-active">
+                          <div className="step">
+                            <div className="steps">
+                              <img src={Transit} className="m-3" alt="" />
+                            </div>
+                          </div>
+                          <p className="text-[#537FE7] font-semibold">-</p>
+                          <p className="text-xs text-center">-</p>
+                        </div>
+                        <div className="step-item in-active">
+                          <div className="step">
+                            <div className="steps">
+                              <img src={Acc} className="m-3" alt="" />
+                            </div>
+                          </div>
+                          <p className="text-[#537FE7] font-semibold">-</p>
+                          <p className="text-xs text-center">-</p>
+                        </div>
+                        <div className="step-item in-active">
+                          <div className="step">
+                            <div className="steps ">
+                              <img src={Wash} className="" alt="" />
+                            </div>
+                          </div>
+                          <p className="text-[#537FE7] font-semibold">-</p>
+                          <p className="text-xs text-center">-</p>
+                        </div>
+                        <div className="step-item in-active">
+                          <div className="step">
+                            <div className="steps ">
+                              <img src={Dry} className="m-3" alt="" />
+                            </div>
+                          </div>
+                          <p className="text-[#537FE7] font-semibold">-</p>
+                          <p className="text-xs text-center">-</p>
+                        </div>
+                        <div className="step-item in-active">
+                          <div className="step">
+                            <div className="steps ">
+                              <img src={Acc} className="m-3" alt="" />
+                            </div>
+                          </div>
+                          <p className="text-[#537FE7] font-semibold">-</p>
+                          <p className="text-xs text-center">-</p>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                  <p className="text-[#537FE7] font-semibold">-</p>
-                  <p className="text-xs text-center">-</p>
-                </div>
-                <div className="step-item in-active">
-                  <div className="step">
-                    <div className="steps">
-                      <img src={Acc} className="m-3" alt="" />
-                    </div>
-                  </div>
-                  <p className="text-[#537FE7] font-semibold">-</p>
-                  <p className="text-xs text-center">-</p>
-                </div>
-                <div className="step-item in-active">
-                  <div className="step">
-                    <div className="steps ">
-                      <img src={Wash} className="" alt="" />
-                    </div>
-                  </div>
-                  <p className="text-[#537FE7] font-semibold">-</p>
-                  <p className="text-xs text-center">-</p>
-                </div>
-                <div className="step-item in-active">
-                  <div className="step">
-                    <div className="steps ">
-                      <img src={Dry} className="m-3" alt="" />
-                    </div>
-                  </div>
-                  <p className="text-[#537FE7] font-semibold">-</p>
-                  <p className="text-xs text-center">-</p>
-                </div>
-                <div className="step-item in-active">
-                  <div className="step">
-                    <div className="steps ">
-                      <img src={Acc} className="m-3" alt="" />
-                    </div>
-                  </div>
-                  <p className="text-[#537FE7] font-semibold">-</p>
-                  <p className="text-xs text-center">-</p>
-                </div>
-              </div>
-            </div>
-          ) : (
-            ""
-          )}
-          {item.status.status === "processing" ? (
-            <div className="p-3 bg-white rounded-md    md:w-[630px] ">
-              <div className="flex">
-                <div className="step-item active">
-                  <div className="step">
-                    <div className="steps active ">
-                      <img src={Check} className="m-3 " alt="" />
-                    </div>
-                  </div>
+                  ) : (
+                    ""
+                  )}
+                  {item.status.status === "checking" ? (
+                    <div className="p-3 bg-white rounded-md    md:w-[630px] ">
+                      <div className="flex">
+                        <div className="step-item active">
+                          <div className="step">
+                            <div className="steps active ">
+                              <img src={Check} className="m-3 " alt="" />
+                            </div>
+                          </div>
 
-                  <p className="text-[#537FE7] font-semibold">Cheking</p>
-                  <p className="text-xs text-center">21-06-2023 08.15</p>
-                </div>
-                <div className="step-item in-active">
-                  <div className="step">
-                    <div className="steps">
-                      <img src={Transit} className="m-3" alt="" />
+                          <p className="text-[#537FE7] font-semibold">Cheking</p>
+                          <p className="text-xs text-center">21-06-2023 08.15</p>
+                        </div>
+                        <div className="step-item in-active">
+                          <div className="step">
+                            <div className="steps">
+                              <img src={Transit} className="m-3" alt="" />
+                            </div>
+                          </div>
+                          <p className="text-[#537FE7] font-semibold">-</p>
+                          <p className="text-xs text-center">-</p>
+                        </div>
+                        <div className="step-item in-active">
+                          <div className="step">
+                            <div className="steps">
+                              <img src={Acc} className="m-3" alt="" />
+                            </div>
+                          </div>
+                          <p className="text-[#537FE7] font-semibold">-</p>
+                          <p className="text-xs text-center">-</p>
+                        </div>
+                        <div className="step-item in-active">
+                          <div className="step">
+                            <div className="steps ">
+                              <img src={Wash} className="" alt="" />
+                            </div>
+                          </div>
+                          <p className="text-[#537FE7] font-semibold">-</p>
+                          <p className="text-xs text-center">-</p>
+                        </div>
+                        <div className="step-item in-active">
+                          <div className="step">
+                            <div className="steps ">
+                              <img src={Dry} className="m-3" alt="" />
+                            </div>
+                          </div>
+                          <p className="text-[#537FE7] font-semibold">-</p>
+                          <p className="text-xs text-center">-</p>
+                        </div>
+                        <div className="step-item in-active">
+                          <div className="step">
+                            <div className="steps ">
+                              <img src={Acc} className="m-3" alt="" />
+                            </div>
+                          </div>
+                          <p className="text-[#537FE7] font-semibold">-</p>
+                          <p className="text-xs text-center">-</p>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                  <p className="text-[#537FE7] font-semibold">-</p>
-                  <p className="text-xs text-center">-</p>
-                </div>
-                <div className="step-item in-active">
-                  <div className="step">
-                    <div className="steps">
-                      <img src={Acc} className="m-3" alt="" />
-                    </div>
-                  </div>
-                  <p className="text-[#537FE7] font-semibold">-</p>
-                  <p className="text-xs text-center">-</p>
-                </div>
-                <div className="step-item in-active">
-                  <div className="step">
-                    <div className="steps ">
-                      <img src={Wash} className="" alt="" />
-                    </div>
-                  </div>
-                  <p className="text-[#537FE7] font-semibold">-</p>
-                  <p className="text-xs text-center">-</p>
-                </div>
-                <div className="step-item in-active">
-                  <div className="step">
-                    <div className="steps ">
-                      <img src={Dry} className="m-3" alt="" />
-                    </div>
-                  </div>
-                  <p className="text-[#537FE7] font-semibold">-</p>
-                  <p className="text-xs text-center">-</p>
-                </div>
-                <div className="step-item in-active">
-                  <div className="step">
-                    <div className="steps ">
-                      <img src={Acc} className="m-3" alt="" />
-                    </div>
-                  </div>
-                  <p className="text-[#537FE7] font-semibold">-</p>
-                  <p className="text-xs text-center">-</p>
-                </div>
-              </div>
-            </div>
-          ) : (
-            ""
-          )}
-          {item.status.status === "processing" ? (
-            <div className="p-3 bg-white rounded-md    md:w-[630px] ">
-              <div className="flex">
-                <div className="step-item active">
-                  <div className="step">
-                    <div className="steps active ">
-                      <img src={Check} className="m-3 " alt="" />
-                    </div>
-                  </div>
+                  ) : (
+                    ""
+                  )}
+                  {item.status.status === "transit" ? (
+                    <div className="p-3 bg-white rounded-md    md:w-[630px] ">
+                      <div className="flex">
+                        <div className="step-item active">
+                          <div className="step">
+                            <div className="steps active ">
+                              <img src={Check} className="m-3 " alt="" />
+                            </div>
+                          </div>
 
-                  <p className="text-[#537FE7] font-semibold">Cheking</p>
-                  <p className="text-xs text-center">21-06-2023 08.15</p>
-                </div>
-                <div className="step-item active">
-                  <div className="step">
-                    <div className="steps">
-                      <img src={Transit} className="m-3" alt="" />
+                          <p className="text-[#537FE7] font-semibold">Cheking</p>
+                          <p className="text-xs text-center">21-06-2023 08.15</p>
+                        </div>
+                        <div className="step-item active">
+                          <div className="step">
+                            <div className="steps">
+                              <img src={Transit} className="m-3" alt="" />
+                            </div>
+                          </div>
+                          <p className="text-[#537FE7] font-semibold">In transit</p>
+                          <p className="text-xs text-center">21-06-2023 10.10</p>
+                        </div>
+                        <div className="step-item in-active">
+                          <div className="step">
+                            <div className="steps">
+                              <img src={Acc} className="m-3" alt="" />
+                            </div>
+                          </div>
+                          <p className="text-[#537FE7] font-semibold">-</p>
+                          <p className="text-xs text-center">-</p>
+                        </div>
+                        <div className="step-item in-active">
+                          <div className="step">
+                            <div className="steps ">
+                              <img src={Wash} className="" alt="" />
+                            </div>
+                          </div>
+                          <p className="text-[#537FE7] font-semibold">-</p>
+                          <p className="text-xs text-center">-</p>
+                        </div>
+                        <div className="step-item in-active">
+                          <div className="step">
+                            <div className="steps ">
+                              <img src={Dry} className="m-3" alt="" />
+                            </div>
+                          </div>
+                          <p className="text-[#537FE7] font-semibold">-</p>
+                          <p className="text-xs text-center">-</p>
+                        </div>
+                        <div className="step-item in-active">
+                          <div className="step">
+                            <div className="steps ">
+                              <img src={Acc} className="m-3" alt="" />
+                            </div>
+                          </div>
+                          <p className="text-[#537FE7] font-semibold">-</p>
+                          <p className="text-xs text-center">-</p>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                  <p className="text-[#537FE7] font-semibold">In transit</p>
-                  <p className="text-xs text-center">21-06-2023 10.10</p>
-                </div>
-                <div className="step-item in-active">
-                  <div className="step">
-                    <div className="steps">
-                      <img src={Acc} className="m-3" alt="" />
-                    </div>
-                  </div>
-                  <p className="text-[#537FE7] font-semibold">-</p>
-                  <p className="text-xs text-center">-</p>
-                </div>
-                <div className="step-item in-active">
-                  <div className="step">
-                    <div className="steps ">
-                      <img src={Wash} className="" alt="" />
-                    </div>
-                  </div>
-                  <p className="text-[#537FE7] font-semibold">-</p>
-                  <p className="text-xs text-center">-</p>
-                </div>
-                <div className="step-item in-active">
-                  <div className="step">
-                    <div className="steps ">
-                      <img src={Dry} className="m-3" alt="" />
-                    </div>
-                  </div>
-                  <p className="text-[#537FE7] font-semibold">-</p>
-                  <p className="text-xs text-center">-</p>
-                </div>
-                <div className="step-item in-active">
-                  <div className="step">
-                    <div className="steps ">
-                      <img src={Acc} className="m-3" alt="" />
-                    </div>
-                  </div>
-                  <p className="text-[#537FE7] font-semibold">-</p>
-                  <p className="text-xs text-center">-</p>
-                </div>
-              </div>
-            </div>
-          ) : (
-            ""
-          )}
-          {item.status.status === "processing" ? (
-            <div className="p-3 bg-white rounded-md    md:w-[630px] ">
-              <div className="flex">
-                <div className="step-item active">
-                  <div className="step">
-                    <div className="steps active ">
-                      <img src={Check} className="m-3 " alt="" />
-                    </div>
-                  </div>
+                  ) : (
+                    ""
+                  )}
+                  {item.status.status === "accepted" ? (
+                    <div className="p-3 bg-white rounded-md    md:w-[630px] ">
+                      <div className="flex">
+                        <div className="step-item active">
+                          <div className="step">
+                            <div className="steps active ">
+                              <img src={Check} className="m-3 " alt="" />
+                            </div>
+                          </div>
 
-                  <p className="text-[#537FE7] font-semibold">Cheking</p>
-                  <p className="text-xs text-center">21-06-2023 08.15</p>
-                </div>
-                <div className="step-item active">
-                  <div className="step">
-                    <div className="steps">
-                      <img src={Transit} className="m-3" alt="" />
+                          <p className="text-[#537FE7] font-semibold">Cheking</p>
+                          <p className="text-xs text-center">21-06-2023 08.15</p>
+                        </div>
+                        <div className="step-item active">
+                          <div className="step">
+                            <div className="steps">
+                              <img src={Transit} className="m-3" alt="" />
+                            </div>
+                          </div>
+                          <p className="text-[#537FE7] font-semibold">In transit</p>
+                          <p className="text-xs text-center">21-06-2023 10.10</p>
+                        </div>
+                        <div className="step-item active">
+                          <div className="step">
+                            <div className="steps">
+                              <img src={Acc} className="m-3" alt="" />
+                            </div>
+                          </div>
+                          <p className="text-[#537FE7] font-semibold">Accepted</p>
+                          <p className="text-xs text-center">21-06-2023 11.25</p>
+                        </div>
+                        <div className="step-item in-active">
+                          <div className="step">
+                            <div className="steps ">
+                              <img src={Wash} className="" alt="" />
+                            </div>
+                          </div>
+                          <p className="text-[#537FE7] font-semibold">-</p>
+                          <p className="text-xs text-center">-</p>
+                        </div>
+                        <div className="step-item in-active">
+                          <div className="step">
+                            <div className="steps ">
+                              <img src={Dry} className="m-3" alt="" />
+                            </div>
+                          </div>
+                          <p className="text-[#537FE7] font-semibold">-</p>
+                          <p className="text-xs text-center">-</p>
+                        </div>
+                        <div className="step-item in-active">
+                          <div className="step">
+                            <div className="steps ">
+                              <img src={Acc} className="m-3" alt="" />
+                            </div>
+                          </div>
+                          <p className="text-[#537FE7] font-semibold">-</p>
+                          <p className="text-xs text-center">-</p>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                  <p className="text-[#537FE7] font-semibold">In transit</p>
-                  <p className="text-xs text-center">21-06-2023 10.10</p>
-                </div>
-                <div className="step-item active">
-                  <div className="step">
-                    <div className="steps">
-                      <img src={Acc} className="m-3" alt="" />
-                    </div>
-                  </div>
-                  <p className="text-[#537FE7] font-semibold">Accepted</p>
-                  <p className="text-xs text-center">21-06-2023 11.25</p>
-                </div>
-                <div className="step-item in-active">
-                  <div className="step">
-                    <div className="steps ">
-                      <img src={Wash} className="" alt="" />
-                    </div>
-                  </div>
-                  <p className="text-[#537FE7] font-semibold">-</p>
-                  <p className="text-xs text-center">-</p>
-                </div>
-                <div className="step-item in-active">
-                  <div className="step">
-                    <div className="steps ">
-                      <img src={Dry} className="m-3" alt="" />
-                    </div>
-                  </div>
-                  <p className="text-[#537FE7] font-semibold">-</p>
-                  <p className="text-xs text-center">-</p>
-                </div>
-                <div className="step-item in-active">
-                  <div className="step">
-                    <div className="steps ">
-                      <img src={Acc} className="m-3" alt="" />
-                    </div>
-                  </div>
-                  <p className="text-[#537FE7] font-semibold">-</p>
-                  <p className="text-xs text-center">-</p>
-                </div>
-              </div>
-            </div>
-          ) : (
-            ""
-          )}
-          {item.status.status === "processing" ? (
-            <div className="p-3 bg-white rounded-md    md:w-[630px] ">
-              <div className="flex">
-                <div className="step-item active">
-                  <div className="step">
-                    <div className="steps active ">
-                      <img src={Check} className="m-3 " alt="" />
-                    </div>
-                  </div>
+                  ) : (
+                    ""
+                  )}
+                  {item.status.status === "washing" ? (
+                    <div className="p-3 bg-white rounded-md    md:w-[630px] ">
+                      <div className="flex">
+                        <div className="step-item active">
+                          <div className="step">
+                            <div className="steps active ">
+                              <img src={Check} className="m-3 " alt="" />
+                            </div>
+                          </div>
 
-                  <p className="text-[#537FE7] font-semibold">Cheking</p>
-                  <p className="text-xs text-center">21-06-2023 08.15</p>
-                </div>
-                <div className="step-item active">
-                  <div className="step">
-                    <div className="steps">
-                      <img src={Transit} className="m-3" alt="" />
+                          <p className="text-[#537FE7] font-semibold">Cheking</p>
+                          <p className="text-xs text-center">21-06-2023 08.15</p>
+                        </div>
+                        <div className="step-item active">
+                          <div className="step">
+                            <div className="steps">
+                              <img src={Transit} className="m-3" alt="" />
+                            </div>
+                          </div>
+                          <p className="text-[#537FE7] font-semibold">In transit</p>
+                          <p className="text-xs text-center">21-06-2023 10.10</p>
+                        </div>
+                        <div className="step-item active">
+                          <div className="step">
+                            <div className="steps">
+                              <img src={Acc} className="m-3" alt="" />
+                            </div>
+                          </div>
+                          <p className="text-[#537FE7] font-semibold">Accepted</p>
+                          <p className="text-xs text-center">21-06-2023 11.25</p>
+                        </div>
+                        <div className="step-item active">
+                          <div className="step">
+                            <div className="steps ">
+                              <img src={Wash} className="" alt="" />
+                            </div>
+                          </div>
+                          <p className="text-[#537FE7] font-semibold">Wash</p>
+                          <p className="text-xs text-center">22-06-2023 09.00</p>
+                        </div>
+                        <div className="step-item in-active">
+                          <div className="step">
+                            <div className="steps ">
+                              <img src={Dry} className="m-3" alt="" />
+                            </div>
+                          </div>
+                          <p className="text-[#537FE7] font-semibold">-</p>
+                          <p className="text-xs text-center">-</p>
+                        </div>
+                        <div className="step-item in-active">
+                          <div className="step">
+                            <div className="steps ">
+                              <img src={Acc} className="m-3" alt="" />
+                            </div>
+                          </div>
+                          <p className="text-[#537FE7] font-semibold">-</p>
+                          <p className="text-xs text-center">-</p>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                  <p className="text-[#537FE7] font-semibold">In transit</p>
-                  <p className="text-xs text-center">21-06-2023 10.10</p>
-                </div>
-                <div className="step-item active">
-                  <div className="step">
-                    <div className="steps">
-                      <img src={Acc} className="m-3" alt="" />
-                    </div>
-                  </div>
-                  <p className="text-[#537FE7] font-semibold">Accepted</p>
-                  <p className="text-xs text-center">21-06-2023 11.25</p>
-                </div>
-                <div className="step-item active">
-                  <div className="step">
-                    <div className="steps ">
-                      <img src={Wash} className="" alt="" />
-                    </div>
-                  </div>
-                  <p className="text-[#537FE7] font-semibold">Wash</p>
-                  <p className="text-xs text-center">22-06-2023 09.00</p>
-                </div>
-                <div className="step-item in-active">
-                  <div className="step">
-                    <div className="steps ">
-                      <img src={Dry} className="m-3" alt="" />
-                    </div>
-                  </div>
-                  <p className="text-[#537FE7] font-semibold">-</p>
-                  <p className="text-xs text-center">-</p>
-                </div>
-                <div className="step-item in-active">
-                  <div className="step">
-                    <div className="steps ">
-                      <img src={Acc} className="m-3" alt="" />
-                    </div>
-                  </div>
-                  <p className="text-[#537FE7] font-semibold">-</p>
-                  <p className="text-xs text-center">-</p>
-                </div>
-              </div>
-            </div>
-          ) : (
-            ""
-          )}
-          {item.status.status === "processing" ? (
-            <div className="p-3 bg-white rounded-md    md:w-[630px] ">
-              <div className="flex">
-                <div className="step-item active">
-                  <div className="step">
-                    <div className="steps active ">
-                      <img src={Check} className="m-3 " alt="" />
-                    </div>
-                  </div>
+                  ) : (
+                    ""
+                  )}
+                  {item.status.status === "drying" ? (
+                    <div className="p-3 bg-white rounded-md    md:w-[630px] ">
+                      <div className="flex">
+                        <div className="step-item active">
+                          <div className="step">
+                            <div className="steps active ">
+                              <img src={Check} className="m-3 " alt="" />
+                            </div>
+                          </div>
 
-                  <p className="text-[#537FE7] font-semibold">Cheking</p>
-                  <p className="text-xs text-center">21-06-2023 08.15</p>
-                </div>
-                <div className="step-item active">
-                  <div className="step">
-                    <div className="steps">
-                      <img src={Transit} className="m-3" alt="" />
+                          <p className="text-[#537FE7] font-semibold">Cheking</p>
+                          <p className="text-xs text-center">21-06-2023 08.15</p>
+                        </div>
+                        <div className="step-item active">
+                          <div className="step">
+                            <div className="steps">
+                              <img src={Transit} className="m-3" alt="" />
+                            </div>
+                          </div>
+                          <p className="text-[#537FE7] font-semibold">In transit</p>
+                          <p className="text-xs text-center">21-06-2023 10.10</p>
+                        </div>
+                        <div className="step-item active">
+                          <div className="step">
+                            <div className="steps">
+                              <img src={Acc} className="m-3" alt="" />
+                            </div>
+                          </div>
+                          <p className="text-[#537FE7] font-semibold">Accepted</p>
+                          <p className="text-xs text-center">21-06-2023 11.25</p>
+                        </div>
+                        <div className="step-item active">
+                          <div className="step">
+                            <div className="steps ">
+                              <img src={Wash} className="" alt="" />
+                            </div>
+                          </div>
+                          <p className="text-[#537FE7] font-semibold">Wash</p>
+                          <p className="text-xs text-center">22-06-2023 09.00</p>
+                        </div>
+                        <div className="step-item active">
+                          <div className="step">
+                            <div className="steps ">
+                              <img src={Dry} className="m-3" alt="" />
+                            </div>
+                          </div>
+                          <p className="text-[#537FE7] font-semibold">Dry </p>
+                          <p className="text-xs text-center">21-06-2023 08.15</p>
+                        </div>
+                        <div className="step-item in-active">
+                          <div className="step">
+                            <div className="steps ">
+                              <img src={Acc} className="m-3" alt="" />
+                            </div>
+                          </div>
+                          <p className="text-[#537FE7] font-semibold">-</p>
+                          <p className="text-xs text-center">-</p>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                  <p className="text-[#537FE7] font-semibold">In transit</p>
-                  <p className="text-xs text-center">21-06-2023 10.10</p>
-                </div>
-                <div className="step-item active">
-                  <div className="step">
-                    <div className="steps">
-                      <img src={Acc} className="m-3" alt="" />
-                    </div>
-                  </div>
-                  <p className="text-[#537FE7] font-semibold">Accepted</p>
-                  <p className="text-xs text-center">21-06-2023 11.25</p>
-                </div>
-                <div className="step-item active">
-                  <div className="step">
-                    <div className="steps ">
-                      <img src={Wash} className="" alt="" />
-                    </div>
-                  </div>
-                  <p className="text-[#537FE7] font-semibold">Wash</p>
-                  <p className="text-xs text-center">22-06-2023 09.00</p>
-                </div>
-                <div className="step-item active">
-                  <div className="step">
-                    <div className="steps ">
-                      <img src={Dry} className="m-3" alt="" />
-                    </div>
-                  </div>
-                  <p className="text-[#537FE7] font-semibold">Dry </p>
-                  <p className="text-xs text-center">21-06-2023 08.15</p>
-                </div>
-                <div className="step-item in-active">
-                  <div className="step">
-                    <div className="steps ">
-                      <img src={Acc} className="m-3" alt="" />
-                    </div>
-                  </div>
-                  <p className="text-[#537FE7] font-semibold">-</p>
-                  <p className="text-xs text-center">-</p>
-                </div>
-              </div>
-            </div>
-          ) : (
-            ""
-          )}
-          {item.status.status === "processing" ? (
-            <div className="p-3 bg-white rounded-md  md:w-[630px] ">
-              <div className="flex">
-                <div className="step-item active">
-                  <div className="step">
-                    <div className="steps active ">
-                      <img src={Check} className="m-3 " alt="" />
-                    </div>
-                  </div>
+                  ) : (
+                    ""
+                  )}
+                  {item.status.status === "success" ? (
+                    <div className="p-3 bg-white rounded-md  md:w-[630px] ">
+                      <div className="flex">
+                        <div className="step-item active">
+                          <div className="step">
+                            <div className="steps active ">
+                              <img src={Check} className="m-3 " alt="" />
+                            </div>
+                          </div>
 
-                  <p className="text-[#537FE7] font-semibold">Cheking</p>
-                  <p className="text-xs text-center">21-06-2023 08.15</p>
-                </div>
-                <div className="step-item active">
-                  <div className="step">
-                    <div className="steps">
-                      <img src={Transit} className="m-3" alt="" />
+                          <p className="text-[#537FE7] font-semibold">Cheking</p>
+                          <p className="text-xs text-center">21-06-2023 08.15</p>
+                        </div>
+                        <div className="step-item active">
+                          <div className="step">
+                            <div className="steps">
+                              <img src={Transit} className="m-3" alt="" />
+                            </div>
+                          </div>
+                          <p className="text-[#537FE7] font-semibold">In transit</p>
+                          <p className="text-xs text-center">21-06-2023 10.10</p>
+                        </div>
+                        <div className="step-item active">
+                          <div className="step">
+                            <div className="steps">
+                              <img src={Acc} className="m-3" alt="" />
+                            </div>
+                          </div>
+                          <p className="text-[#537FE7] font-semibold">Accepted</p>
+                          <p className="text-xs text-center">21-06-2023 11.25</p>
+                        </div>
+                        <div className="step-item active">
+                          <div className="step">
+                            <div className="steps ">
+                              <img src={Wash} className="" alt="" />
+                            </div>
+                          </div>
+                          <p className="text-[#537FE7] font-semibold">Wash</p>
+                          <p className="text-xs text-center">22-06-2023 09.00</p>
+                        </div>
+                        <div className="step-item active">
+                          <div className="step">
+                            <div className="steps ">
+                              <img src={Dry} className="m-3" alt="" />
+                            </div>
+                          </div>
+                          <p className="text-[#537FE7] font-semibold">Dry </p>
+                          <p className="text-xs text-center">21-06-2023 08.15</p>
+                        </div>
+                        <div className="step-item complete">
+                          <div className="step">
+                            <div className="steps ">
+                              <img src={Acc} className="m-3" alt="" />
+                            </div>
+                          </div>
+                          <p className="text-[#537FE7] font-semibold">Done</p>
+                          <p className="text-xs text-center">21-06-2023 08.15</p>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                  <p className="text-[#537FE7] font-semibold">In transit</p>
-                  <p className="text-xs text-center">21-06-2023 10.10</p>
-                </div>
-                <div className="step-item active">
-                  <div className="step">
-                    <div className="steps">
-                      <img src={Acc} className="m-3" alt="" />
-                    </div>
-                  </div>
-                  <p className="text-[#537FE7] font-semibold">Accepted</p>
-                  <p className="text-xs text-center">21-06-2023 11.25</p>
-                </div>
-                <div className="step-item active">
-                  <div className="step">
-                    <div className="steps ">
-                      <img src={Wash} className="" alt="" />
-                    </div>
-                  </div>
-                  <p className="text-[#537FE7] font-semibold">Wash</p>
-                  <p className="text-xs text-center">22-06-2023 09.00</p>
-                </div>
-                <div className="step-item active">
-                  <div className="step">
-                    <div className="steps ">
-                      <img src={Dry} className="m-3" alt="" />
-                    </div>
-                  </div>
-                  <p className="text-[#537FE7] font-semibold">Dry </p>
-                  <p className="text-xs text-center">21-06-2023 08.15</p>
-                </div>
-                <div className="step-item complete">
-                  <div className="step">
-                    <div className="steps ">
-                      <img src={Acc} className="m-3" alt="" />
-                    </div>
-                  </div>
-                  <p className="text-[#537FE7] font-semibold">Done</p>
-                  <p className="text-xs text-center">21-06-2023 08.15</p>
-                </div>
-              </div>
-            </div>
-          ) : (
-            ""
-          )}
-          <div className="pt-3 text-black font-semibold text-xl">Main Info</div>
-          <div className="bg-white border border-gray-200 rounded-lg shadow">
-            <div className="p-3 text-black font-semibold">
-              <h1>Driver Information</h1>
-            </div>
-            <hr className=" h-1 bg-gray-100 border-0 rounded  " />
+                  ) : (
+                    ""
+                  )}
+                  <div className="pt-3 text-black font-semibold text-xl">Main Info</div>
+                  {item.status.status === "transit" ? (
+                    <div className="bg-white border border-gray-200 rounded-lg shadow">
+                      <div className="p-3 text-black font-semibold">
+                        <h1>Driver Information</h1>
+                      </div>
+                      <hr className=" h-1 bg-gray-100 border-0 rounded  " />
 
-            <div className="flex flex-col items-center  md:flex-row md:max-w-xl ">
-              <img className="md:h-auto " src={Mbl} alt="" />
-              <div className="w-full pb-5">
-                <h5 className=" pt-3 mb-2  text-xl font-bold tracking-tight text-gray-900 text-center">
-                  Mercedes-Benz Sprinter
-                </h5>
-                <hr className="bg-black h-0" />
-                <div className="flex pl-3">
-                  <div className="w-full pt-5">
-                    <h1>Driver</h1>
-                    <h1 className="font-semibold text-black">John Doe</h1>
-                  </div>
-                  <div className="pl-20 w-full pt-5">
-                    <h1>License Plate</h1>
-                    <h1 className="font-semibold text-black">F 8689 GN</h1>
-                  </div>
-                </div>
-                <div className="flex pl-3">
-                  <div className=" w-full pt-5">
-                    <h1>Weight</h1>
-                    <h1 className="font-semibold text-black">5, 470 KG</h1>
-                  </div>
-                  <div className="pl-20 w-full pt-5">
-                    <h1>Load Volume </h1>
-                    <h1 className="font-semibold text-black">244,32 in3</h1>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="bg-white mt-3 border border-gray-200 rounded-lg shadow">
-            <div className="p-3 text-black font-semibold">
-              <h1>Driver Information</h1>
-            </div>
-            <hr className=" h-1 bg-gray-100 border-0 rounded  " />
+                      <div className="flex flex-col items-center  md:flex-row md:max-w-xl ">
+                        <img className="md:h-auto " src={Mbl} alt="" />
+                        <div className="w-full pb-5">
+                          {/* <h5 className=" pt-3 mb-2  text-xl font-bold tracking-tight text-gray-900 text-center">
+       Mercedes-Benz Sprinter
+     </h5>
+     <hr className="bg-black h-0" /> */}
+                          <div className="flex pl-3">
+                            <div className="w-full pt-5">
+                              <h1>Driver</h1>
+                              <h1 className="font-semibold text-black">{item.status.transit.name}</h1>
+                            </div>
+                            <div className="pl-12 w-full pt-5">
+                              <h1>License Plate</h1>
+                              <h1 className="font-semibold text-black">{item.status.transit.license}</h1>
+                            </div>
+                          </div>
+                          <div className="flex pl-3">
+                            <div className=" w-full pt-5">
+                              <h1>Weight</h1>
+                              <h1 className="font-semibold text-black">{item.status.transit.heavy}</h1>
+                            </div>
+                            <div className="pl-20 w-full pt-5">
+                              {/* <h1>Load Volume </h1>
+         <h1 className="font-semibold text-black">244,32 in3</h1> */}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    ""
+                  )}
+                  {item.status.status === "accepted" ? (
+                    <div className="bg-white border border-gray-200 rounded-lg shadow">
+                      <div className="p-3 text-black font-semibold">
+                        <h1>Driver Information</h1>
+                      </div>
+                      <hr className=" h-1 bg-gray-100 border-0 rounded  " />
 
-            <div className="flex flex-col items-center  md:flex-row md:max-w-xl ">
-              <img className="md:h-auto pl-10" src={Baju} alt="" />
-              <div className="w-full pb-5">
-                <h5 className=" pt-3 mb-2  text-xl font-bold tracking-tight text-gray-900 text-center">
-                  Mercedes-Benz Sprinter
-                </h5>
-                <hr className="bg-black h-0" />
-                <div className="flex pl-3">
-                  <div className="w-full pt-5">
-                    <h1>Category</h1>
-                    <h1 className="font-semibold text-black">Hospital Gown</h1>
-                  </div>
-                  <div className="pl-20 w-full pt-5">
-                    <h1>Amount</h1>
-                    <h1 className="font-semibold text-black">60pcs</h1>
+                      <div className="flex flex-col items-center  md:flex-row md:max-w-xl ">
+                        <img className="md:h-auto " src={Mbl} alt="" />
+                        <div className="w-full pb-5">
+                          {/* <h5 className=" pt-3 mb-2  text-xl font-bold tracking-tight text-gray-900 text-center">
+       Mercedes-Benz Sprinter
+     </h5>
+     <hr className="bg-black h-0" /> */}
+                          <div className="flex pl-3">
+                            <div className="w-full pt-5">
+                              <h1>Driver</h1>
+                              <h1 className="font-semibold text-black">{item.status.transit.name}</h1>
+                            </div>
+                            <div className="pl-12 w-full pt-5">
+                              <h1>License Plate</h1>
+                              <h1 className="font-semibold text-black">{item.status.transit.license}</h1>
+                            </div>
+                          </div>
+                          <div className="flex pl-3">
+                            <div className=" w-full pt-5">
+                              <h1>Weight</h1>
+                              <h1 className="font-semibold text-black">{item.status.transit.heavy}</h1>
+                            </div>
+                            <div className="pl-20 w-full pt-5">
+                              {/* <h1>Load Volume </h1>
+         <h1 className="font-semibold text-black">244,32 in3</h1> */}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    ""
+                  )}
+                  {item.status.status === "washing" ? (
+                    <div className="bg-white border border-gray-200 rounded-lg shadow">
+                      <div className="p-3 text-black font-semibold">
+                        <h1>Driver Information</h1>
+                      </div>
+                      <hr className=" h-1 bg-gray-100 border-0 rounded  " />
+
+                      <div className="flex flex-col items-center  md:flex-row md:max-w-xl ">
+                        <img className="md:h-auto " src={Mbl} alt="" />
+                        <div className="w-full pb-5">
+                          {/* <h5 className=" pt-3 mb-2  text-xl font-bold tracking-tight text-gray-900 text-center">
+       Mercedes-Benz Sprinter
+     </h5>
+     <hr className="bg-black h-0" /> */}
+                          <div className="flex pl-3">
+                            <div className="w-full pt-5">
+                              <h1>Driver</h1>
+                              <h1 className="font-semibold text-black">{item.status.transit.name}</h1>
+                            </div>
+                            <div className="pl-12 w-full pt-5">
+                              <h1>License Plate</h1>
+                              <h1 className="font-semibold text-black">{item.status.transit.license}</h1>
+                            </div>
+                          </div>
+                          <div className="flex pl-3">
+                            <div className=" w-full pt-5">
+                              <h1>Weight</h1>
+                              <h1 className="font-semibold text-black">{item.status.transit.heavy}</h1>
+                            </div>
+                            <div className="pl-20 w-full pt-5">
+                              {/* <h1>Load Volume </h1>
+         <h1 className="font-semibold text-black">244,32 in3</h1> */}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    ""
+                  )}
+                  {item.status.status === "drying" ? (
+                    <div className="bg-white border border-gray-200 rounded-lg shadow">
+                      <div className="p-3 text-black font-semibold">
+                        <h1>Driver Information</h1>
+                      </div>
+                      <hr className=" h-1 bg-gray-100 border-0 rounded  " />
+
+                      <div className="flex flex-col items-center  md:flex-row md:max-w-xl ">
+                        <img className="md:h-auto " src={Mbl} alt="" />
+                        <div className="w-full pb-5">
+                          {/* <h5 className=" pt-3 mb-2  text-xl font-bold tracking-tight text-gray-900 text-center">
+       Mercedes-Benz Sprinter
+     </h5>
+     <hr className="bg-black h-0" /> */}
+                          <div className="flex pl-3">
+                            <div className="w-full pt-5">
+                              <h1>Driver</h1>
+                              <h1 className="font-semibold text-black">{item.status.transit.name}</h1>
+                            </div>
+                            <div className="pl-12 w-full pt-5">
+                              <h1>License Plate</h1>
+                              <h1 className="font-semibold text-black">{item.status.transit.license}</h1>
+                            </div>
+                          </div>
+                          <div className="flex pl-3">
+                            <div className=" w-full pt-5">
+                              <h1>Weight</h1>
+                              <h1 className="font-semibold text-black">{item.status.transit.heavy}</h1>
+                            </div>
+                            <div className="pl-20 w-full pt-5">
+                              {/* <h1>Load Volume </h1>
+         <h1 className="font-semibold text-black">244,32 in3</h1> */}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    ""
+                  )}
+                  {item.status.status === "success" ? (
+                    <div className="bg-white border border-gray-200 rounded-lg shadow">
+                      <div className="p-3 text-black font-semibold">
+                        <h1>Driver Information</h1>
+                      </div>
+                      <hr className=" h-1 bg-gray-100 border-0 rounded  " />
+
+                      <div className="flex flex-col items-center  md:flex-row md:max-w-xl ">
+                        <img className="md:h-auto " src={Mbl} alt="" />
+                        <div className="w-full pb-5">
+                          {/* <h5 className=" pt-3 mb-2  text-xl font-bold tracking-tight text-gray-900 text-center">
+       Mercedes-Benz Sprinter
+     </h5>
+     <hr className="bg-black h-0" /> */}
+                          <div className="flex pl-3">
+                            <div className="w-full pt-5">
+                              <h1>Driver</h1>
+                              <h1 className="font-semibold text-black">{item.status.transit.name}</h1>
+                            </div>
+                            <div className="pl-12 w-full pt-5">
+                              <h1>License Plate</h1>
+                              <h1 className="font-semibold text-black">{item.status.transit.license}</h1>
+                            </div>
+                          </div>
+                          <div className="flex pl-3">
+                            <div className=" w-full pt-5">
+                              <h1>Weight</h1>
+                              <h1 className="font-semibold text-black">{item.status.transit.heavy}</h1>
+                            </div>
+                            <div className="pl-20 w-full pt-5">
+                              {/* <h1>Load Volume </h1>
+         <h1 className="font-semibold text-black">244,32 in3</h1> */}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    ""
+                  )}
+
+                  <div className="bg-white mt-3 border border-gray-200 rounded-lg shadow">
+                    <div className="p-3 text-black font-semibold">
+                      <h1>Linen information</h1>
+                    </div>
+                    <hr className=" h-1 bg-gray-100 border-0 rounded  " />
+
+                    <div className="flex flex-col items-center  md:flex-row md:max-w-xl ">
+                      <img className="md:h-auto pl-10" src={Baju} alt="" />
+                      <div className="w-full pb-5">
+                        <h5 className=" pt-3 mb-2  text-xl font-bold tracking-tight text-gray-900 text-center">
+                          {item.customer.name}
+                        </h5>
+                        <hr className="bg-black h-0" />
+                        <div className="flex pl-3">
+                          <div className="w-full pt-5">
+                            <h1>Category</h1>
+                            <h1 className="font-semibold text-black"> {item.category.name}</h1>
+                          </div>
+                          <div className="pl-20 w-full pt-5">
+                            <h1>Amount</h1>
+                            <h1 className="font-semibold text-black"> {item.amount}</h1>
+                          </div>
+                        </div>
+                        <div className="flex pl-3">
+                          <div className=" w-full pt-5">
+                            <h1>Weight</h1>
+                            <h1 className="font-semibold text-black">{item.weight}</h1>
+                          </div>
+                          <div className="pl-20 w-full pt-5">
+                            <h1>Quality</h1>
+                            <h1 className="font-semibold text-black">{item.quality}</h1>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <div className="flex pl-3">
-                  <div className=" w-full pt-5">
-                    <h1>Weight</h1>
-                    <h1 className="font-semibold text-black">25KG</h1>
-                  </div>
-                  <div className="pl-20 w-full pt-5">
-                    <h1>Quality</h1>
-                    <h1 className="font-semibold text-black">Good</h1>
-                  </div>
-                </div>
-              </div>
+              )}
             </div>
-          </div>
-        </div>
-      ))}
-      {/* <div className=" px-4 w-full  bg-[#D7DAE2] h-auto min-h-full -pl-20">
+          ))}
+          {/* <div className=" px-4 w-full  bg-[#D7DAE2] h-auto min-h-full -pl-20">
         <div className="pt-20">
           <div className="bg-white  rounded-lg shadow-lg h-full">
             <div className="h-auto p-7 w-auto rounded-md">
@@ -782,7 +970,9 @@ const Tracking = () => {
           </div>
         </div>
       </div> */}
-    </div>
+        </div>
+      </div>
+    </>
   );
 };
 

@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { BsFillClipboard2CheckFill, BsGridFill, BsList, BsPeopleFill } from "react-icons/bs";
 import { NavLink, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
 import { CgLogOut } from "react-icons/cg";
 import Logo from "../../assets/logo.png";
 import { FaClipboardList, FaCubes, FaHospitalAlt, FaRegListAlt, FaTags, FaTruck } from "react-icons/fa";
 import axios from "axios";
+
+import Swal from "sweetalert2";
 
 const Layout = ({ children }) => {
   const [users, setUser] = useState([]);
@@ -72,7 +73,10 @@ const Layout = ({ children }) => {
 
   const logout = () => {
     localStorage.clear();
-    // window.location.reload();
+    Swal.fire({
+      icon: "success",
+      text: "Anda Berhasil Logout",
+    });
     navigate("/login");
   };
   useEffect(() => {
