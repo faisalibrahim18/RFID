@@ -70,9 +70,9 @@ const Tracking = () => {
             {data.map((item) => (
               <div>
                 {item.status === null ? (
-                  <div className="bg-gray-300 p-5 mt-20 -ml-12">
+                  <div className="w-full -ml-1 bg-gray-300 p-5 md:mt-20 md:-ml-12">
                     <h1>
-                      Proses Harus di Confirm terlebih dahulu Untuk Melihat Tracking{" "}
+                      Proses Harus di Confirm terlebih dahulu Untuk Melihat Tracking,{" "}
                       <Link to={"/distribusi"} className="text-red-600 hover:text-red-400 ">
                         Klik untuk Ke Halaman.
                       </Link>
@@ -191,45 +191,273 @@ const Tracking = () => {
                             ""
                           )}
                         </div>
-                        <div>
-                          {" "}
-                          <div className="absolute text-gray-200 text-sm ">21 JUN</div>
-                          <ol className=" mt-3 ml-16 relative border-l border-white">
-                            <li className="ml-4 ">
-                              <div className="absolute w-3 h-3 bg-white rounded-full items-center justify-between mb-3 sm:flex  -left-1.5 border border-white"></div>
-                              <div className="pt-0">
-                                <time className="mb-1 text-xs font-normal text-gray-200">10.10 AM</time>
-                                <div className="text-sm font-normal text-white">In transit</div>
-                              </div>
-                            </li>
-                          </ol>
-                        </div>
-                        <div>
-                          {" "}
-                          <div className="absolute text-gray-200 text-sm ">21 JUN</div>
-                          <ol className=" ml-16 relative border-l border-white">
-                            <li className="ml-4 ">
-                              <div className="absolute w-3 h-3 bg-white rounded-full items-center justify-between mb-3 sm:flex  -left-1.5 border border-white"></div>
-                              <div className="pt-0">
-                                <time className="mb-1 text-xs font-normal text-gray-200">11.25 AM</time>
-                                <div className="text-sm font-normal text-white">Accepted</div>
-                              </div>
-                            </li>
-                          </ol>
-                        </div>
-                        <div>
-                          {" "}
-                          <div className="absolute text-gray-200 text-sm ">22 JUN</div>
-                          <ol className=" ml-16 relative border-l border-white">
-                            <li className="ml-4 ">
-                              <div className="absolute w-3 h-3 bg-white rounded-full items-center justify-between mb-3 sm:flex  -left-1.5 border border-white"></div>
-                              <div className="pt-0">
-                                <time className="mb-1 text-xs font-normal text-gray-200">09.00 AM</time>
-                                <div className="text-sm font-normal text-white">Wash</div>
-                              </div>
-                            </li>
-                          </ol>
-                        </div>
+                        {item.status.status === "checking" ? (
+                          <div>
+                            <ol className=" mt-3 ml-16 relative border-l border-white">
+                              <li className="ml-4 ">
+                                <div className="absolute w-3 h-3 bg-white rounded-full items-center justify-between mb-3 sm:flex  -left-1.5 border border-white"></div>
+                                <div className="pt-0">
+                                  <time className="mb-1 text-xs font-normal text-gray-200">
+                                    {item.status.checking.date}
+                                  </time>
+                                  <div className="text-sm font-normal text-white">{item.status.status}</div>
+                                </div>
+                              </li>
+                            </ol>
+                          </div>
+                        ) : (
+                          ""
+                        )}
+                        {item.status.status === "transit" ? (
+                          <div>
+                            <ol className=" mt-3 ml-16 relative border-l border-white">
+                              <li className="ml-4 ">
+                                <div className="absolute w-3 h-3 bg-white rounded-full items-center justify-between mb-3 sm:flex  -left-1.5 border border-white"></div>
+                                <div className="pt-0">
+                                  <time className="mb-1 text-xs font-normal text-gray-200">
+                                    {item.status.checking.date}
+                                  </time>
+                                  <div className="text-sm font-normal text-white">Checking</div>
+                                </div>
+                              </li>
+                            </ol>
+                            <ol className=" ml-16 relative border-l border-white">
+                              <li className="ml-4 ">
+                                <div className="absolute w-3 h-3 bg-white rounded-full items-center justify-between mb-3 sm:flex  -left-1.5 border border-white"></div>
+                                <div className="pt-0">
+                                  <time className="mb-1 text-xs font-normal text-gray-200">
+                                    {item.status.transit.date}
+                                  </time>
+                                  <div className="text-sm font-normal text-white">Transit</div>
+                                </div>
+                              </li>
+                            </ol>
+                          </div>
+                        ) : (
+                          ""
+                        )}
+                        {item.status.status === "accepted" ? (
+                          <div>
+                            <ol className=" mt-3 ml-16 relative border-l border-white">
+                              <li className="ml-4 ">
+                                <div className="absolute w-3 h-3 bg-white rounded-full items-center justify-between mb-3 sm:flex  -left-1.5 border border-white"></div>
+                                <div className="pt-0">
+                                  <time className="mb-1 text-xs font-normal text-gray-200">
+                                    {item.status.checking.date}
+                                  </time>
+                                  <div className="text-sm font-normal text-white">Checking</div>
+                                </div>
+                              </li>
+                            </ol>
+                            <ol className=" ml-16 relative border-l border-white">
+                              <li className="ml-4 ">
+                                <div className="absolute w-3 h-3 bg-white rounded-full items-center justify-between mb-3 sm:flex  -left-1.5 border border-white"></div>
+                                <div className="pt-0">
+                                  <time className="mb-1 text-xs font-normal text-gray-200">
+                                    {item.status.transit.date}
+                                  </time>
+                                  <div className="text-sm font-normal text-white">Transit</div>
+                                </div>
+                              </li>
+                            </ol>
+                            <ol className=" ml-16 relative border-l border-white">
+                              <li className="ml-4 ">
+                                <div className="absolute w-3 h-3 bg-white rounded-full items-center justify-between mb-3 sm:flex  -left-1.5 border border-white"></div>
+                                <div className="pt-0">
+                                  <time className="mb-1 text-xs font-normal text-gray-200">
+                                    {item.status.accepted.date}
+                                  </time>
+                                  <div className="text-sm font-normal text-white">Accepted</div>
+                                </div>
+                              </li>
+                            </ol>
+                          </div>
+                        ) : (
+                          ""
+                        )}
+                        {item.status.status === "washing" ? (
+                          <div>
+                            <ol className=" mt-3 ml-16 relative border-l border-white">
+                              <li className="ml-4 ">
+                                <div className="absolute w-3 h-3 bg-white rounded-full items-center justify-between mb-3 sm:flex  -left-1.5 border border-white"></div>
+                                <div className="pt-0">
+                                  <time className="mb-1 text-xs font-normal text-gray-200">
+                                    {item.status.checking.date}
+                                  </time>
+                                  <div className="text-sm font-normal text-white">Checking</div>
+                                </div>
+                              </li>
+                            </ol>
+                            <ol className=" ml-16 relative border-l border-white">
+                              <li className="ml-4 ">
+                                <div className="absolute w-3 h-3 bg-white rounded-full items-center justify-between mb-3 sm:flex  -left-1.5 border border-white"></div>
+                                <div className="pt-0">
+                                  <time className="mb-1 text-xs font-normal text-gray-200">
+                                    {item.status.transit.date}
+                                  </time>
+                                  <div className="text-sm font-normal text-white">Transit</div>
+                                </div>
+                              </li>
+                            </ol>
+                            <ol className=" ml-16 relative border-l border-white">
+                              <li className="ml-4 ">
+                                <div className="absolute w-3 h-3 bg-white rounded-full items-center justify-between mb-3 sm:flex  -left-1.5 border border-white"></div>
+                                <div className="pt-0">
+                                  <time className="mb-1 text-xs font-normal text-gray-200">
+                                    {item.status.accepted.date}
+                                  </time>
+                                  <div className="text-sm font-normal text-white">Accepted</div>
+                                </div>
+                              </li>
+                            </ol>
+                            <ol className=" ml-16 relative border-l border-white">
+                              <li className="ml-4 ">
+                                <div className="absolute w-3 h-3 bg-white rounded-full items-center justify-between mb-3 sm:flex  -left-1.5 border border-white"></div>
+                                <div className="pt-0">
+                                  <time className="mb-1 text-xs font-normal text-gray-200">
+                                    {item.status.wash.date}
+                                  </time>
+                                  <div className="text-sm font-normal text-white">Washing</div>
+                                </div>
+                              </li>
+                            </ol>
+                          </div>
+                        ) : (
+                          ""
+                        )}
+                        {item.status.status === "drying" ? (
+                          <div>
+                            <ol className=" mt-3 ml-16 relative border-l border-white">
+                              <li className="ml-4 ">
+                                <div className="absolute w-3 h-3 bg-white rounded-full items-center justify-between mb-3 sm:flex  -left-1.5 border border-white"></div>
+                                <div className="pt-0">
+                                  <time className="mb-1 text-xs font-normal text-gray-200">
+                                    {item.status.checking.date}
+                                  </time>
+                                  <div className="text-sm font-normal text-white">Checking</div>
+                                </div>
+                              </li>
+                            </ol>
+                            <ol className=" ml-16 relative border-l border-white">
+                              <li className="ml-4 ">
+                                <div className="absolute w-3 h-3 bg-white rounded-full items-center justify-between mb-3 sm:flex  -left-1.5 border border-white"></div>
+                                <div className="pt-0">
+                                  <time className="mb-1 text-xs font-normal text-gray-200">
+                                    {item.status.transit.date}
+                                  </time>
+                                  <div className="text-sm font-normal text-white">Transit</div>
+                                </div>
+                              </li>
+                            </ol>
+                            <ol className=" ml-16 relative border-l border-white">
+                              <li className="ml-4 ">
+                                <div className="absolute w-3 h-3 bg-white rounded-full items-center justify-between mb-3 sm:flex  -left-1.5 border border-white"></div>
+                                <div className="pt-0">
+                                  <time className="mb-1 text-xs font-normal text-gray-200">
+                                    {item.status.accepted.date}
+                                  </time>
+                                  <div className="text-sm font-normal text-white">Accepted</div>
+                                </div>
+                              </li>
+                            </ol>
+                            <ol className=" ml-16 relative border-l border-white">
+                              <li className="ml-4 ">
+                                <div className="absolute w-3 h-3 bg-white rounded-full items-center justify-between mb-3 sm:flex  -left-1.5 border border-white"></div>
+                                <div className="pt-0">
+                                  <time className="mb-1 text-xs font-normal text-gray-200">
+                                    {item.status.wash.date}
+                                  </time>
+                                  <div className="text-sm font-normal text-white">Washing</div>
+                                </div>
+                              </li>
+                            </ol>
+                            <ol className=" ml-16 relative border-l border-white">
+                              <li className="ml-4 ">
+                                <div className="absolute w-3 h-3 bg-white rounded-full items-center justify-between mb-3 sm:flex  -left-1.5 border border-white"></div>
+                                <div className="pt-0">
+                                  <time className="mb-1 text-xs font-normal text-gray-200">
+                                    {item.status.dry.date}
+                                  </time>
+                                  <div className="text-sm font-normal text-white">Drying</div>
+                                </div>
+                              </li>
+                            </ol>
+                          </div>
+                        ) : (
+                          ""
+                        )}
+                        {item.status.status === "success" ? (
+                          <div>
+                            <ol className=" mt-3 ml-16 relative border-l border-white">
+                              <li className="ml-4 ">
+                                <div className="absolute w-3 h-3 bg-white rounded-full items-center justify-between mb-3 sm:flex  -left-1.5 border border-white"></div>
+                                <div className="pt-0">
+                                  <time className="mb-1 text-xs font-normal text-gray-200">
+                                    {item.status.checking.date}
+                                  </time>
+                                  <div className="text-sm font-normal text-white">Checking</div>
+                                </div>
+                              </li>
+                            </ol>
+                            <ol className=" ml-16 relative border-l border-white">
+                              <li className="ml-4 ">
+                                <div className="absolute w-3 h-3 bg-white rounded-full items-center justify-between mb-3 sm:flex  -left-1.5 border border-white"></div>
+                                <div className="pt-0">
+                                  <time className="mb-1 text-xs font-normal text-gray-200">
+                                    {item.status.transit.date}
+                                  </time>
+                                  <div className="text-sm font-normal text-white">Transit</div>
+                                </div>
+                              </li>
+                            </ol>
+                            <ol className=" ml-16 relative border-l border-white">
+                              <li className="ml-4 ">
+                                <div className="absolute w-3 h-3 bg-white rounded-full items-center justify-between mb-3 sm:flex  -left-1.5 border border-white"></div>
+                                <div className="pt-0">
+                                  <time className="mb-1 text-xs font-normal text-gray-200">
+                                    {item.status.accepted.date}
+                                  </time>
+                                  <div className="text-sm font-normal text-white">Accepted</div>
+                                </div>
+                              </li>
+                            </ol>
+                            <ol className=" ml-16 relative border-l border-white">
+                              <li className="ml-4 ">
+                                <div className="absolute w-3 h-3 bg-white rounded-full items-center justify-between mb-3 sm:flex  -left-1.5 border border-white"></div>
+                                <div className="pt-0">
+                                  <time className="mb-1 text-xs font-normal text-gray-200">
+                                    {item.status.wash.date}
+                                  </time>
+                                  <div className="text-sm font-normal text-white">Washing</div>
+                                </div>
+                              </li>
+                            </ol>
+                            <ol className=" ml-16 relative border-l border-white">
+                              <li className="ml-4 ">
+                                <div className="absolute w-3 h-3 bg-white rounded-full items-center justify-between mb-3 sm:flex  -left-1.5 border border-white"></div>
+                                <div className="pt-0">
+                                  <time className="mb-1 text-xs font-normal text-gray-200">
+                                    {item.status.dry.date}
+                                  </time>
+                                  <div className="text-sm font-normal text-white">Drying</div>
+                                </div>
+                              </li>
+                            </ol>
+                            <ol className=" ml-16 relative ">
+                              <li className="ml-4 ">
+                                <div className="absolute w-3 h-3 bg-white rounded-full items-center justify-between mb-3 sm:flex  -left-1.5 border border-white"></div>
+                                <div className="pt-0">
+                                  <time className="mb-1 text-xs font-normal text-gray-200">
+                                    {item.status.done.date}
+                                  </time>
+                                  <div className="text-sm font-normal text-white">Done</div>
+                                </div>
+                              </li>
+                            </ol>
+                          </div>
+                        ) : (
+                          ""
+                        )}
                       </div>
                     </div>
                   </div>
@@ -245,7 +473,7 @@ const Tracking = () => {
           {data.map((item) => (
             <div>
               {item.status === null ? (
-                "tidak Ada data"
+                ""
               ) : (
                 <div className="bg-gray-200 p-7 w-full " key={item._id}>
                   <h1 className="md:mt-28 text-lg font-bold">Tracking view</h1>
@@ -315,9 +543,9 @@ const Tracking = () => {
                   {item.status.status === "checking" ? (
                     <div className="p-3 bg-white rounded-md    md:w-[630px] ">
                       <div className="flex">
-                        <div className="step-item active">
+                        <div className="step-item active1">
                           <div className="step">
-                            <div className="steps active ">
+                            <div className="steps active1 ">
                               <img src={Check} className="m-3 " alt="" />
                             </div>
                           </div>
@@ -378,9 +606,9 @@ const Tracking = () => {
                   {item.status.status === "transit" ? (
                     <div className="p-3 bg-white rounded-md    md:w-[630px] ">
                       <div className="flex">
-                        <div className="step-item active">
+                        <div className="step-item active1">
                           <div className="step">
-                            <div className="steps active ">
+                            <div className="steps active1 ">
                               <img src={Check} className="m-3 " alt="" />
                             </div>
                           </div>
@@ -388,7 +616,7 @@ const Tracking = () => {
                           <p className="text-[#537FE7] font-semibold">Cheking</p>
                           <p className="text-xs text-center">21-06-2023 08.15</p>
                         </div>
-                        <div className="step-item active">
+                        <div className="step-item active1">
                           <div className="step">
                             <div className="steps">
                               <img src={Transit} className="m-3" alt="" />
@@ -441,9 +669,9 @@ const Tracking = () => {
                   {item.status.status === "accepted" ? (
                     <div className="p-3 bg-white rounded-md    md:w-[630px] ">
                       <div className="flex">
-                        <div className="step-item active">
+                        <div className="step-item active1">
                           <div className="step">
-                            <div className="steps active ">
+                            <div className="steps active1 ">
                               <img src={Check} className="m-3 " alt="" />
                             </div>
                           </div>
@@ -451,7 +679,7 @@ const Tracking = () => {
                           <p className="text-[#537FE7] font-semibold">Cheking</p>
                           <p className="text-xs text-center">21-06-2023 08.15</p>
                         </div>
-                        <div className="step-item active">
+                        <div className="step-item active1">
                           <div className="step">
                             <div className="steps">
                               <img src={Transit} className="m-3" alt="" />
@@ -460,7 +688,7 @@ const Tracking = () => {
                           <p className="text-[#537FE7] font-semibold">In transit</p>
                           <p className="text-xs text-center">21-06-2023 10.10</p>
                         </div>
-                        <div className="step-item active">
+                        <div className="step-item active1">
                           <div className="step">
                             <div className="steps">
                               <img src={Acc} className="m-3" alt="" />
@@ -504,9 +732,9 @@ const Tracking = () => {
                   {item.status.status === "washing" ? (
                     <div className="p-3 bg-white rounded-md    md:w-[630px] ">
                       <div className="flex">
-                        <div className="step-item active">
+                        <div className="step-item active1">
                           <div className="step">
-                            <div className="steps active ">
+                            <div className="steps active1 ">
                               <img src={Check} className="m-3 " alt="" />
                             </div>
                           </div>
@@ -514,7 +742,7 @@ const Tracking = () => {
                           <p className="text-[#537FE7] font-semibold">Cheking</p>
                           <p className="text-xs text-center">21-06-2023 08.15</p>
                         </div>
-                        <div className="step-item active">
+                        <div className="step-item active1">
                           <div className="step">
                             <div className="steps">
                               <img src={Transit} className="m-3" alt="" />
@@ -523,7 +751,7 @@ const Tracking = () => {
                           <p className="text-[#537FE7] font-semibold">In transit</p>
                           <p className="text-xs text-center">21-06-2023 10.10</p>
                         </div>
-                        <div className="step-item active">
+                        <div className="step-item active1">
                           <div className="step">
                             <div className="steps">
                               <img src={Acc} className="m-3" alt="" />
@@ -532,7 +760,7 @@ const Tracking = () => {
                           <p className="text-[#537FE7] font-semibold">Accepted</p>
                           <p className="text-xs text-center">21-06-2023 11.25</p>
                         </div>
-                        <div className="step-item active">
+                        <div className="step-item active1">
                           <div className="step">
                             <div className="steps ">
                               <img src={Wash} className="" alt="" />
@@ -567,9 +795,9 @@ const Tracking = () => {
                   {item.status.status === "drying" ? (
                     <div className="p-3 bg-white rounded-md    md:w-[630px] ">
                       <div className="flex">
-                        <div className="step-item active">
+                        <div className="step-item active1">
                           <div className="step">
-                            <div className="steps active ">
+                            <div className="steps active1 ">
                               <img src={Check} className="m-3 " alt="" />
                             </div>
                           </div>
@@ -577,7 +805,7 @@ const Tracking = () => {
                           <p className="text-[#537FE7] font-semibold">Cheking</p>
                           <p className="text-xs text-center">21-06-2023 08.15</p>
                         </div>
-                        <div className="step-item active">
+                        <div className="step-item active1">
                           <div className="step">
                             <div className="steps">
                               <img src={Transit} className="m-3" alt="" />
@@ -586,7 +814,7 @@ const Tracking = () => {
                           <p className="text-[#537FE7] font-semibold">In transit</p>
                           <p className="text-xs text-center">21-06-2023 10.10</p>
                         </div>
-                        <div className="step-item active">
+                        <div className="step-item active1">
                           <div className="step">
                             <div className="steps">
                               <img src={Acc} className="m-3" alt="" />
@@ -595,7 +823,7 @@ const Tracking = () => {
                           <p className="text-[#537FE7] font-semibold">Accepted</p>
                           <p className="text-xs text-center">21-06-2023 11.25</p>
                         </div>
-                        <div className="step-item active">
+                        <div className="step-item active1">
                           <div className="step">
                             <div className="steps ">
                               <img src={Wash} className="" alt="" />
@@ -604,7 +832,7 @@ const Tracking = () => {
                           <p className="text-[#537FE7] font-semibold">Wash</p>
                           <p className="text-xs text-center">22-06-2023 09.00</p>
                         </div>
-                        <div className="step-item active">
+                        <div className="step-item active1">
                           <div className="step">
                             <div className="steps ">
                               <img src={Dry} className="m-3" alt="" />
@@ -630,9 +858,9 @@ const Tracking = () => {
                   {item.status.status === "success" ? (
                     <div className="p-3 bg-white rounded-md  md:w-[630px] ">
                       <div className="flex">
-                        <div className="step-item active">
+                        <div className="step-item active1">
                           <div className="step">
-                            <div className="steps active ">
+                            <div className="steps active1 ">
                               <img src={Check} className="m-3 " alt="" />
                             </div>
                           </div>
@@ -640,7 +868,7 @@ const Tracking = () => {
                           <p className="text-[#537FE7] font-semibold">Cheking</p>
                           <p className="text-xs text-center">21-06-2023 08.15</p>
                         </div>
-                        <div className="step-item active">
+                        <div className="step-item active1">
                           <div className="step">
                             <div className="steps">
                               <img src={Transit} className="m-3" alt="" />
@@ -649,7 +877,7 @@ const Tracking = () => {
                           <p className="text-[#537FE7] font-semibold">In transit</p>
                           <p className="text-xs text-center">21-06-2023 10.10</p>
                         </div>
-                        <div className="step-item active">
+                        <div className="step-item active1">
                           <div className="step">
                             <div className="steps">
                               <img src={Acc} className="m-3" alt="" />
@@ -658,7 +886,7 @@ const Tracking = () => {
                           <p className="text-[#537FE7] font-semibold">Accepted</p>
                           <p className="text-xs text-center">21-06-2023 11.25</p>
                         </div>
-                        <div className="step-item active">
+                        <div className="step-item active1">
                           <div className="step">
                             <div className="steps ">
                               <img src={Wash} className="" alt="" />
@@ -667,7 +895,7 @@ const Tracking = () => {
                           <p className="text-[#537FE7] font-semibold">Wash</p>
                           <p className="text-xs text-center">22-06-2023 09.00</p>
                         </div>
-                        <div className="step-item active">
+                        <div className="step-item active1">
                           <div className="step">
                             <div className="steps ">
                               <img src={Dry} className="m-3" alt="" />

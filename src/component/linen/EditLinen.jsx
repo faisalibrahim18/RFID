@@ -4,7 +4,9 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 
 const EditLinen = () => {
-  const [name, setName] = useState("");
+  const [epc, setEpc] = useState("");
+  const [category, setCategory] = useState("");
+  const [dataCategory, setDataCategory] = useState([]);
   const [message, setMsg] = useState("");
   const navigate = useNavigate();
   const { id } = useParams();
@@ -20,7 +22,8 @@ const EditLinen = () => {
         });
         // console.log(response);
 
-        setName(response.data.data.name);
+        setEpc(response.data.data.epc);
+        setCategory(response.data.data.category);
       } catch (error) {
         if (error.response) {
           setMsg(error.response.data.msg);
@@ -30,6 +33,22 @@ const EditLinen = () => {
     getLinenById();
   }, [id]);
 
+  useEffect(() => {
+    getKategori();
+  }, []);
+
+  const getKategori = async () => {
+    const token = localStorage.getItem("token");
+    const response = await axios.get("http://localhost:9000/api/v1/rfid/category", {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    // console.log(response.data.data);
+    setDataCategory(response.data.data);
+  };
+
   const updateLinen = async (e) => {
     e.preventDefault();
     try {
@@ -38,7 +57,8 @@ const EditLinen = () => {
         .put(
           `http://localhost:9000/api/v1/rfid/linen/${id}`,
           {
-            name: name,
+            epc: epc,
+            category: category,
           },
           {
             headers: {
@@ -82,16 +102,31 @@ const EditLinen = () => {
         )}
         <form className="" onSubmit={updateLinen}>
           <div className="mb-2">
-            <label for="Nama Linen" className=" text-sm font-semibold text-gray-800">
-              Nama Linen
-            </label>
+            <label className=" text-sm font-semibold text-gray-800">Linen</label>
             <input
               type="text"
-              value={name}
+              value={epc}
               onChange={(e) => setName(e.target.value)}
+              hidden
               className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
               placeholder="Masukan Nama Linen..."
             />
+          </div>
+          <div className="mb-2">
+            <label className=" text-sm font-semibold text-gray-800">Kategori</label>
+            <select
+              className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+            >
+              <option selected>Pilih Kategori </option>
+
+              {dataCategory.map((d, i) => (
+                <option value={d._id}>
+                  {d.kode} - {d.name}
+                </option>
+              ))}
+            </select>
           </div>
 
           <div className="mt-6 flex ">

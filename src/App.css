@@ -9,3 +9,7 @@
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
 }
+
+.active {
+  @apply bg-[#E5F5E5] rounded-md;
+}

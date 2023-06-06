@@ -2,7 +2,6 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
-
 const User = () => {
   const [users, setUsers] = useState([]);
   useEffect(() => {
@@ -64,7 +63,6 @@ const User = () => {
         });
       });
   };
-
   return (
     <>
       <div className=" p-2">
@@ -84,36 +82,24 @@ const User = () => {
             <div className="p-6 bg-white  rounded-lg shadow-lg mb-6">
               <div className="overflow-x-auto">
                 <table className=" w-full ltr:text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                  <thead className="border-b bg-white font-medium ">
+                  <thead>
                     <tr>
-                      <th scope="col" className="px-6 py-4">
-                        No
-                      </th>
-                      <th scope="col" className="px-6 py-4">
-                        Name
-                      </th>
-                      <th scope="col" className="px-6 py-4">
-                        Usename
-                      </th>
-                      <th scope="col" className="px-6 py-4">
-                        Email
-                      </th>
-                      <th scope="col" className="px-6 py-4">
-                        Role
-                      </th>
-                      <th scope="col" className="px-6 py-4">
-                        Action
-                      </th>
+                      <th className="td-head ">No</th>
+                      <th className="td-head">Name</th>
+                      <th className="td-head">Usename</th>
+                      <th className="td-head">Email</th>
+                      <th className="td-head">Role</th>
+                      <th className="td-head">Action</th>
                     </tr>
                   </thead>
                   <tbody>
                     {users.map((item, index) => (
-                      <tr key={item._id} className="border-b text-center text-gray-600">
-                        <td className="whitespace-nowrap px-6 py-4">{index + 1}</td>
-                        <td className="whitespace-nowrap px-6 py-4">{item.name}</td>
-                        <td className="whitespace-nowrap px-6 py-4">{item.username}</td>
-                        <td className="whitespace-nowrap px-6 py-4">{item.email}</td>
-                        <td className="whitespace-nowrap px-6 py-4">
+                      <tr key={item._id}>
+                        <td className="td-class">{index + 1}</td>
+                        <td className="td-class">{item.name}</td>
+                        <td className="td-class">{item.username}</td>
+                        <td className="td-class">{item.email}</td>
+                        <td className="td-class">
                           {item.role === "admin" ? (
                             <span className="rounded-md bg-[#96CDF4] px-4 py-px text-xs font-semibold uppercase text-gray-900 antialiased">
                               Admin
@@ -164,7 +150,7 @@ const User = () => {
                             ""
                           )}
                         </td>
-                        <td className="whitespace-nowrap px-6 py-4">
+                        <td className="td-class">
                           <Link to={`/users/edit/${item._id}`} className="m-3 ">
                             <i className="fa-solid fa-pen-to-square text-[#96CDF4] hover:text-blue-400"></i>
                           </Link>

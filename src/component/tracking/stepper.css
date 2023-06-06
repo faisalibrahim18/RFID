@@ -10,7 +10,7 @@
 .steps {
   @apply w-12 h-12 flex items-center justify-center z-0 relative bg-[#FFFFFF] rounded-full font-semibold text-white;
 }
-.active .step {
+.active1 .step {
   @apply bg-[#537FE7];
 }
 .in-active .step {
@@ -23,6 +23,6 @@
   @apply text-green-600;
 }
 .complete:not(:first-child):before,
-.active:not(:first-child):before {
+.active1:not(:first-child):before {
   @apply bg-[#537FE7];
 }

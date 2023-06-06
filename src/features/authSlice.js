@@ -19,10 +19,10 @@ export const LoginUser = createAsyncThunk("user/loginUser", async (user, thunkAP
       password: user.password,
     });
 
+    // console.log(response);
     // console.log(response.data?.data?.token);
-    // console.log(response.data?.data?.token?.result);
     localStorage.setItem("token", response.data?.data?.token.token, true);
-    localStorage.setItem("user", JSON.stringify(response.data?.data?.token?.result), true);
+    localStorage.setItem("user", JSON.stringify(response.data?.data?.token.result), true);
     // console.log("Bearer", response);
     // console.log(response.data);
     return response.data;

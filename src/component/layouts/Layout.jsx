@@ -19,53 +19,6 @@ const Layout = ({ children }) => {
     }
   });
 
-  const menus = [
-    {
-      name: "Dashboard",
-      link: "/dashboard",
-      icon: BsGridFill,
-    },
-    {
-      name: "User Management",
-      link: "/users",
-      icon: BsPeopleFill,
-    },
-    {
-      name: "Rumah Sakit",
-      link: "/rumah_sakit",
-      icon: FaHospitalAlt,
-    },
-    {
-      name: "Linen",
-      link: "/linen",
-      icon: FaTags,
-    },
-    {
-      name: "Distribusi",
-      link: "/distribusi",
-      icon: FaRegListAlt,
-    },
-    {
-      name: "Kategori",
-      link: "/kategori",
-      icon: FaCubes,
-    },
-    {
-      name: "Inventory",
-      link: "/inventory",
-      icon: BsFillClipboard2CheckFill,
-    },
-    {
-      name: "Laporan",
-      link: "/laporan",
-      icon: FaClipboardList,
-    },
-    {
-      name: "Tracking",
-      link: "/tracking",
-      icon: FaTruck,
-    },
-  ];
   const [open, setOpen] = useState(false);
   const [isopen, setisOpen] = useState(false);
 
@@ -99,7 +52,7 @@ const Layout = ({ children }) => {
       <div className="flex flex-col  min-h-screen transition-all duration-500 ease-in-out ltr:ml-64 ltr:-mr-64 md:ltr:ml-0 md:ltr:mr-0 rtl:mr-64 rtl:-ml-64 md:rtl:mr-0 md:rtl:ml-0': open, 'ltr:ml-0 ">
         {/* Sidebar */}
         <div
-          className={`fixed z-50  w-0 transition-all duration-500 ease-in-out h-screen bg-white  shadow-sm ${
+          className={`fixed md:z-10 z-50 w-0 transition-all duration-500 ease-in-out h-screen bg-white  shadow-sm ${
             open ? " w-12 md:w-0 lg:56" : " w-0 md:w-56 sm:w-20"
           }`}
         >
@@ -114,33 +67,490 @@ const Layout = ({ children }) => {
             </div>
 
             {/* <!-- Sidebar menu --> */}
-            <div className=" flex md:z-50 flex-col gap-2 md:pt-2 pt-20  w-full text-[#00205F] float-none font-medium ltr:pl-1.5 rtl:pr-1.5">
-              {menus?.map((menu, i) => (
-                <NavLink
-                  to={menu?.link}
-                  key={i}
-                  className="group  flex items-center text-center text-sm gap-3.5 font-medium p-4 hover:bg-[#E5F5E5] rounded-md"
-                >
-                  <div>{React.createElement(menu?.icon, { size: "20" })}</div>
-                  <h2
-                  // style={{
-                  //   transitionDelay: `${i + 0}00ms`,
-                  // }}
-                  // className={` duration-300 ${open ? " " : ""}`}
-                  >
-                    {menu?.name}
-                  </h2>
-                  <h2
-                    className={`${
-                      open && " md:hidden "
-                    } absolute  left-48 md:hidden bg-white font-semibold whitespace-pre text-[#00205F] rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit`}
-                  >
-                    {menu?.name}
-                  </h2>
-                </NavLink>
-              ))}
-            </div>
+            {users.map((item) => (
+              <div className=" flex md:z-50 flex-col gap-2 md:pt-2 pt-20  w-full text-[#00205F] float-none font-medium ltr:pl-1.5 rtl:pr-1.5">
+                {item.role === "admin" ? (
+                  <div>
+                    <NavLink
+                      activeClassName="active"
+                      to={"/dashboard"}
+                      className="group  flex items-center text-center text-sm gap-3.5 font-medium p-4 hover:bg-[#dee7de] rounded-md"
+                    >
+                      <div className="text-lg">
+                        <BsGridFill />
+                      </div>
+                      <h2>Dashboard</h2>
+                      <h2
+                        className={`${
+                          open && " md:hidden "
+                        } absolute  left-44 md:hidden bg-white font-semibold whitespace-pre text-[#00205F] rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit`}
+                      >
+                        Dashboard
+                      </h2>
+                    </NavLink>
 
+                    <NavLink
+                      activeClassName="active"
+                      to={"/users"}
+                      className="group  flex items-center text-center text-sm gap-3.5 font-medium p-4 hover:bg-[#dee7de] rounded-md"
+                    >
+                      <div className="text-lg">
+                        <BsPeopleFill />
+                      </div>
+                      <h2>User Management</h2>
+                      <h2
+                        className={`${
+                          open && " md:hidden "
+                        } absolute  left-44 md:hidden bg-white font-semibold whitespace-pre text-[#00205F] rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit`}
+                      >
+                        User Management
+                      </h2>
+                    </NavLink>
+
+                    <NavLink
+                      activeClassName="active"
+                      to={"/rumah_sakit"}
+                      className="group  flex items-center text-center text-sm gap-3.5 font-medium p-4 hover:bg-[#dee7de] rounded-md"
+                    >
+                      <div className="text-lg">
+                        <FaHospitalAlt />
+                      </div>
+                      <h2>Rumah Sakit</h2>
+                      <h2
+                        className={`${
+                          open && " md:hidden "
+                        } absolute  left-44 md:hidden bg-white font-semibold whitespace-pre text-[#00205F] rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit`}
+                      >
+                        Rumah Sakit
+                      </h2>
+                    </NavLink>
+
+                    <NavLink
+                      activeClassName="active"
+                      to={"/linen"}
+                      className="group  flex items-center text-center text-sm gap-3.5 font-medium p-4 hover:bg-[#dee7de] rounded-md"
+                    >
+                      <div className="text-lg">
+                        <FaTags />
+                      </div>
+                      <h2>Linen</h2>
+                      <h2
+                        className={`${
+                          open && " md:hidden "
+                        } absolute  left-44 md:hidden bg-white font-semibold whitespace-pre text-[#00205F] rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit`}
+                      >
+                        Linen
+                      </h2>
+                    </NavLink>
+
+                    <NavLink
+                      activeClassName="active"
+                      to={"/distribusi"}
+                      className="group  flex items-center text-center text-sm gap-3.5 font-medium p-4 hover:bg-[#dee7de] rounded-md"
+                    >
+                      <div className="text-lg">
+                        <FaRegListAlt />
+                      </div>
+                      <h2>Distribusi</h2>
+                      <h2
+                        className={`${
+                          open && " md:hidden "
+                        } absolute  left-44 md:hidden bg-white font-semibold whitespace-pre text-[#00205F] rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit`}
+                      >
+                        Distribusi
+                      </h2>
+                    </NavLink>
+
+                    <NavLink
+                      activeClassName="active"
+                      to={"/kategori"}
+                      className="group  flex items-center text-center text-sm gap-3.5 font-medium p-4 hover:bg-[#dee7de] rounded-md"
+                    >
+                      <div className="text-lg">
+                        <FaCubes />
+                      </div>
+                      <h2>Kategori</h2>
+                      <h2
+                        className={`${
+                          open && " md:hidden "
+                        } absolute  left-44 md:hidden bg-white font-semibold whitespace-pre text-[#00205F] rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit`}
+                      >
+                        Kategori
+                      </h2>
+                    </NavLink>
+
+                    <NavLink
+                      activeClassName="active"
+                      to={"/inventory"}
+                      className="group  flex items-center text-center text-sm gap-3.5 font-medium p-4 hover:bg-[#dee7de] rounded-md"
+                    >
+                      <div className="text-lg">
+                        <BsFillClipboard2CheckFill />
+                      </div>
+                      <h2>Inventory</h2>
+                      <h2
+                        className={`${
+                          open && " md:hidden "
+                        } absolute  left-44 md:hidden bg-white font-semibold whitespace-pre text-[#00205F] rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit`}
+                      >
+                        Inventory
+                      </h2>
+                    </NavLink>
+
+                    <NavLink
+                      activeClassName="active"
+                      to={"/laporan"}
+                      className="group  flex items-center text-center text-sm gap-3.5 font-medium p-4 hover:bg-[#dee7de] rounded-md"
+                    >
+                      <div className="text-lg">
+                        <FaClipboardList />
+                      </div>
+                      <h2>Laporan</h2>
+                      <h2
+                        className={`${
+                          open && " md:hidden "
+                        } absolute  left-44 md:hidden bg-white font-semibold whitespace-pre text-[#00205F] rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit`}
+                      >
+                        Laporan
+                      </h2>
+                    </NavLink>
+
+                    <NavLink
+                      activeClassName="active"
+                      to={"/tracking"}
+                      className="group  flex items-center text-center text-sm gap-3.5 font-medium p-4 hover:bg-[#dee7de] rounded-md"
+                    >
+                      <div className="text-lg">
+                        <FaTruck />
+                      </div>
+                      <h2>Tracking</h2>
+                      <h2
+                        className={`${
+                          open && " md:hidden "
+                        } absolute  left-44 md:hidden bg-white font-semibold whitespace-pre text-[#00205F] rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit`}
+                      >
+                        Tracking
+                      </h2>
+                    </NavLink>
+                  </div>
+                ) : (
+                  ""
+                )}
+
+                {item.role === "user_laundry" ? (
+                  <div>
+                    <NavLink
+                      activeClassName="active"
+                      to={"/dashboard"}
+                      className="group  flex items-center text-center text-sm gap-3.5 font-medium p-4 hover:bg-[#dee7de] rounded-md"
+                    >
+                      <div className="text-lg">
+                        <BsGridFill />
+                      </div>
+                      <h2>Dashboard</h2>
+                      <h2
+                        className={`${
+                          open && " md:hidden "
+                        } absolute  left-44 md:hidden bg-white font-semibold whitespace-pre text-[#00205F] rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit`}
+                      >
+                        Dashboard
+                      </h2>
+                    </NavLink>
+
+                    <NavLink
+                      activeClassName="active"
+                      to={"/laporanL"}
+                      className="group  flex items-center text-center text-sm gap-3.5 font-medium p-4 hover:bg-[#dee7de] rounded-md"
+                    >
+                      <div className="text-lg">
+                        <i className="fa-solid fa-file-lines"></i>
+                      </div>
+                      <h2>Laporan</h2>
+                      <h2
+                        className={`${
+                          open && " md:hidden "
+                        } absolute  left-44 md:hidden bg-white font-semibold whitespace-pre text-[#00205F] rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit`}
+                      >
+                        Laporan
+                      </h2>
+                    </NavLink>
+
+                    <NavLink
+                      activeClassName="active"
+                      to={"/permintaan"}
+                      className="group  flex items-center text-center text-sm gap-3.5 font-medium p-4 hover:bg-[#dee7de] rounded-md"
+                    >
+                      <div className="text-lg">
+                        <i className="fa-regular fa-bell"></i>
+                      </div>
+                      <h2>Permintaan</h2>
+                      <h2
+                        className={`${
+                          open && " md:hidden "
+                        } absolute  left-44 md:hidden bg-white font-semibold whitespace-pre text-[#00205F] rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit`}
+                      >
+                        Permintaan
+                      </h2>
+                    </NavLink>
+                  </div>
+                ) : (
+                  ""
+                )}
+                {item.role === "user_pabrik" ? (
+                  <div>
+                    <NavLink
+                      activeClassName="active"
+                      to={"/dashboard"}
+                      className="group  flex items-center text-center text-sm gap-3.5 font-medium p-4 hover:bg-[#dee7de] rounded-md"
+                    >
+                      <div className="text-lg">
+                        <BsGridFill />
+                      </div>
+                      <h2>Dashboard</h2>
+                      <h2
+                        className={`${
+                          open && " md:hidden "
+                        } absolute  left-44 md:hidden bg-white font-semibold whitespace-pre text-[#00205F] rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit`}
+                      >
+                        Dashboard
+                      </h2>
+                    </NavLink>
+
+                    <NavLink
+                      activeClassName="active"
+                      to={"/laporanP"}
+                      className="group  flex items-center text-center text-sm gap-3.5 font-medium p-4 hover:bg-[#dee7de] rounded-md"
+                    >
+                      <div className="text-lg">
+                        <i className="fa-solid fa-file-lines"></i>
+                      </div>
+                      <h2>Laporan</h2>
+                      <h2
+                        className={`${
+                          open && " md:hidden "
+                        } absolute  left-44 md:hidden bg-white font-semibold whitespace-pre text-[#00205F] rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit`}
+                      >
+                        Laporan
+                      </h2>
+                    </NavLink>
+
+                    <NavLink
+                      activeClassName="active"
+                      to={"/permintaanP"}
+                      className="group  flex items-center text-center text-sm gap-3.5 font-medium p-4 hover:bg-[#dee7de] rounded-md"
+                    >
+                      <div className="text-lg">
+                        <i className="fa-regular fa-bell"></i>
+                      </div>
+                      <h2>Permintaan</h2>
+                      <h2
+                        className={`${
+                          open && " md:hidden "
+                        } absolute  left-44 md:hidden bg-white font-semibold whitespace-pre text-[#00205F] rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit`}
+                      >
+                        Permintaan
+                      </h2>
+                    </NavLink>
+                  </div>
+                ) : (
+                  ""
+                )}
+                {item.role === "delivery" ? (
+                  <div>
+                    <NavLink
+                      activeClassName="active"
+                      to={"/dashboard"}
+                      className="group  flex items-center text-center text-sm gap-3.5 font-medium p-4 hover:bg-[#dee7de] rounded-md"
+                    >
+                      <div className="text-lg">
+                        <BsGridFill />
+                      </div>
+                      <h2>Dashboard</h2>
+                      <h2
+                        className={`${
+                          open && " md:hidden "
+                        } absolute  left-44 md:hidden bg-white font-semibold whitespace-pre text-[#00205F] rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit`}
+                      >
+                        Dashboard
+                      </h2>
+                    </NavLink>
+                    {/* 
+                    <NavLink
+                      activeClassName="active"
+                      to={"/laporanP"}
+                      className="group  flex items-center text-center text-sm gap-3.5 font-medium p-4 hover:bg-[#dee7de] rounded-md"
+                    >
+                      <div className="text-lg">
+                        <i className="fa-solid fa-file-lines"></i>
+                      </div>
+                      <h2>Laporan</h2>
+                      <h2
+                        className={`${
+                          open && " md:hidden "
+                        } absolute  left-44 md:hidden bg-white font-semibold whitespace-pre text-[#00205F] rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit`}
+                      >
+                        Laporan
+                      </h2>
+                    </NavLink> */}
+
+                    <NavLink
+                      activeClassName="active"
+                      to={"/permintaanD"}
+                      className="group  flex items-center text-center text-sm gap-3.5 font-medium p-4 hover:bg-[#dee7de] rounded-md"
+                    >
+                      <div className="text-lg">
+                        <i className="fa-regular fa-bell"></i>
+                      </div>
+                      <h2>Permintaan</h2>
+                      <h2
+                        className={`${
+                          open && " md:hidden "
+                        } absolute  left-44 md:hidden bg-white font-semibold whitespace-pre text-[#00205F] rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit`}
+                      >
+                        Permintaan
+                      </h2>
+                    </NavLink>
+                  </div>
+                ) : (
+                  ""
+                )}
+                {item.role === "rs" ? (
+                  <div>
+                    <NavLink
+                      activeClassName="active"
+                      to={"/dashboard"}
+                      className="group  flex items-center text-center text-sm gap-3.5 font-medium p-4 hover:bg-[#dee7de] rounded-md"
+                    >
+                      <div className="text-lg">
+                        <BsGridFill />
+                      </div>
+                      <h2>Dashboard</h2>
+                      <h2
+                        className={`${
+                          open && " md:hidden "
+                        } absolute  left-44 md:hidden bg-white font-semibold whitespace-pre text-[#00205F] rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit`}
+                      >
+                        Dashboard
+                      </h2>
+                    </NavLink>
+                    {/* 
+                    <NavLink
+                      activeClassName="active"
+                      to={"/laporanP"}
+                      className="group  flex items-center text-center text-sm gap-3.5 font-medium p-4 hover:bg-[#dee7de] rounded-md"
+                    >
+                      <div className="text-lg">
+                        <i className="fa-solid fa-file-lines"></i>
+                      </div>
+                      <h2>Laporan</h2>
+                      <h2
+                        className={`${
+                          open && " md:hidden "
+                        } absolute  left-44 md:hidden bg-white font-semibold whitespace-pre text-[#00205F] rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit`}
+                      >
+                        Laporan
+                      </h2>
+                    </NavLink> */}
+
+                    <NavLink
+                      activeClassName="active"
+                      to={"/permintaanD"}
+                      className="group  flex items-center text-center text-sm gap-3.5 font-medium p-4 hover:bg-[#dee7de] rounded-md"
+                    >
+                      <div className="text-lg">
+                        <i className="fa-regular fa-bell"></i>
+                      </div>
+                      <h2>Permintaan</h2>
+                      <h2
+                        className={`${
+                          open && " md:hidden "
+                        } absolute  left-44 md:hidden bg-white font-semibold whitespace-pre text-[#00205F] rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit`}
+                      >
+                        Permintaan
+                      </h2>
+                    </NavLink>
+                  </div>
+                ) : (
+                  ""
+                )}
+                {item.role === "super_admin" ? (
+                  <div>
+                    <NavLink
+                      activeClassName="active"
+                      to={"/dashboard"}
+                      className="group  flex items-center text-center text-sm gap-3.5 font-medium p-4 hover:bg-[#dee7de] rounded-md"
+                    >
+                      <div className="text-lg">
+                        <BsGridFill />
+                      </div>
+                      <h2>Dashboard</h2>
+                      <h2
+                        className={`${
+                          open && " md:hidden "
+                        } absolute  left-44 md:hidden bg-white font-semibold whitespace-pre text-[#00205F] rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit`}
+                      >
+                        Dashboard
+                      </h2>
+                    </NavLink>
+
+                    <NavLink
+                      activeClassName="active"
+                      to={"/laporanS"}
+                      className="group  flex items-center text-center text-sm gap-3.5 font-medium p-4 hover:bg-[#dee7de] rounded-md"
+                    >
+                      <div className="text-lg">
+                        <i className="fa-solid fa-file-lines"></i>
+                      </div>
+                      <h2>Laporan</h2>
+                      <h2
+                        className={`${
+                          open && " md:hidden "
+                        } absolute  left-44 md:hidden bg-white font-semibold whitespace-pre text-[#00205F] rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit`}
+                      >
+                        Laporan
+                      </h2>
+                    </NavLink>
+
+                    <NavLink
+                      activeClassName="active"
+                      to={"/peminjaman"}
+                      className="group  flex items-center text-center text-sm gap-3.5 font-medium p-4 hover:bg-[#dee7de] rounded-md"
+                    >
+                      <div className="text-lg">
+                        <i className="fa-regular fa-bell"></i>
+                      </div>
+                      <h2>Peminjaman Linen</h2>
+                      <h2
+                        className={`${
+                          open && " md:hidden "
+                        } absolute  left-44 md:hidden bg-white font-semibold whitespace-pre text-[#00205F] rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit`}
+                      >
+                        Peminjaman Linen
+                      </h2>
+                    </NavLink>
+                    <NavLink
+                      activeClassName="active"
+                      to={"/userS"}
+                      className="group  flex items-center text-center text-sm gap-3.5 font-medium p-4 hover:bg-[#dee7de] rounded-md"
+                    >
+                      <div className="text-lg">
+                        <BsPeopleFill />
+                      </div>
+                      <h2>User</h2>
+                      <h2
+                        className={`${
+                          open && " md:hidden "
+                        } absolute  left-44 md:hidden bg-white font-semibold whitespace-pre text-[#00205F] rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit`}
+                      >
+                        User
+                      </h2>
+                    </NavLink>
+                  </div>
+                ) : (
+                  ""
+                )}
+              </div>
+            ))}
             {/* Footer Sidebar */}
             {/* <div className="px-4 box-banner">
               <div className="my-8 p-4 text-center bg-gray-300  bg-opacity-50 rounded-lg">

@@ -79,23 +79,33 @@ const Inventory = () => {
             <div className="p-6 bg-white  rounded-lg shadow-lg mb-6">
               <div className="overflow-x-auto">
                 <table className=" w-full ltr:text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                  <thead>
+                  <thead className="border-b bg-white font-medium ">
                     <tr>
-                      <th className="td-head">No</th>
-                      <th className="td-head">Kode Barang</th>
-                      <th className="td-head">Nama Barang</th>
-                      <th className="td-head">Jumlah</th>
-                      <th className="td-head">Action</th>
+                      <th scope="col" className="px-6 py-4">
+                        No
+                      </th>
+                      <th scope="col" className="px-6 py-4">
+                        Kode Barang
+                      </th>
+                      <th scope="col" className="px-6 py-4">
+                        Nama Barang
+                      </th>
+                      <th scope="col" className="px-6 py-4">
+                        Jumlah
+                      </th>
+                      <th scope="col" className="px-6 py-4">
+                        Action
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
                     {inventory.map((item, index) => (
-                      <tr key={item._id}>
-                        <td class="td-class">{index + 1}</td>
-                        <td class="td-class">{item.kode}</td>
-                        <td class="td-class">{item.name}</td>
-                        <td class="td-class">{item.amount}</td>
-                        <td class="td-class">
+                      <tr key={item._id} className="border-b text-center text-gray-600">
+                        <td className="whitespace-nowrap px-6 py-4">{index + 1}</td>
+                        <td className="whitespace-nowrap px-6 py-4">{item.kode}</td>
+                        <td className="whitespace-nowrap px-6 py-4">{item.name}</td>
+                        <td className="whitespace-nowrap px-6 py-4">{item.amount}</td>
+                        <td className="whitespace-nowrap px-6 py-4">
                           <Link to={`/inventory/edit/${item._id}`} className="m-3 ">
                             <i className="fa-solid fa-pen-to-square text-[#96CDF4] hover:text-blue-400"></i>
                           </Link>

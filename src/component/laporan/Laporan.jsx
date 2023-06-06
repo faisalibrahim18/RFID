@@ -21,7 +21,7 @@ const Laporan = () => {
           dateOut: dateOut,
         },
       );
-      // console.log(response.data.data);
+      console.log(response.data.data);
       setLaporan(response.data.data);
       setShowLaporan(true);
     } catch (error) {
@@ -113,29 +113,49 @@ const Laporan = () => {
                 </div>
                 <div className="overflow-x-auto">
                   <table className=" w-full ltr:text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                    <thead>
+                    <thead className="border-b bg-white font-medium ">
                       <tr>
-                        <th className="td-head">No</th>
-                        <th className="td-head">Customer</th>
-                        <th className="td-head">Tanggal Masuk</th>
-                        <th className="td-head">Tanggal Keluar</th>
-                        <th className="td-head">Linen</th>
-                        <th className="td-head">Kualitas Linen</th>
-                        <th className="td-head">Jenis Linen</th>
-                        <th className="td-head">Jumlah Linen</th>
-                        <th className="td-head">Status</th>
-                        <th className="td-head">Proses</th>
+                        <th scope="col" className="px-6 py-4">
+                          No
+                        </th>
+                        <th scope="col" className="px-6 py-4">
+                          Customer
+                        </th>
+                        <th scope="col" className="px-6 py-4">
+                          Tanggal Masuk
+                        </th>
+                        <th scope="col" className="px-6 py-4">
+                          Tanggal Keluar
+                        </th>
+                        <th scope="col" className="px-6 py-4">
+                          Linen
+                        </th>
+                        <th scope="col" className="px-6 py-4">
+                          Kualitas Linen
+                        </th>
+                        <th scope="col" className="px-6 py-4">
+                          Jenis Linen
+                        </th>
+                        <th scope="col" className="px-6 py-4">
+                          Jumlah Linen
+                        </th>
+                        <th scope="col" className="px-6 py-4">
+                          Status
+                        </th>
+                        <th scope="col" className="px-6 py-4">
+                          Proses
+                        </th>
                       </tr>
                     </thead>
                     <tbody>
                       {laporan.map((item, index) => (
-                        <tr key={item._id}>
-                          <td className="td-class">{index + 1}</td>
-                          <td className="td-class">{item.customer.name}</td>
-                          <td className="td-class">{item.dateIn}</td>
-                          <td className="td-class">{item.dateOut}</td>
-                          <td className="td-class">{item.linen.name}</td>
-                          <td className="td-class">
+                        <tr key={item._id} className="border-b text-center text-gray-600">
+                          <td className="whitespace-nowrap px-6 py-4">{index + 1}</td>
+                          <td className="whitespace-nowrap px-6 py-4">{item.customer.name}</td>
+                          <td className="whitespace-nowrap px-6 py-4">{item.dateIn}</td>
+                          <td className="whitespace-nowrap px-6 py-4">{item.dateOut}</td>
+                          <td className="whitespace-nowrap px-6 py-4">{item.linen.epc}</td>
+                          <td className="whitespace-nowrap px-6 py-4">
                             {item.quality === "baik" ? (
                               <span className=" rounded-md bg-[#96CDF4] px-4 py-px text-xs font-semibold uppercase text-gray-900 antialiased">
                                 Baik
@@ -151,9 +171,9 @@ const Laporan = () => {
                               ""
                             )}
                           </td>
-                          <td className="td-class">{item.category.name}</td>
-                          <td className="td-class">{item.amount}</td>
-                          <td className="td-class">
+                          <td className="whitespace-nowrap px-6 py-4">{item.category.name}</td>
+                          <td className="whitespace-nowrap px-6 py-4">{item.amount}</td>
+                          <td className="whitespace-nowrap px-6 py-4">
                             {item.service === "cuci" ? (
                               <span className="rounded-md bg-[#FEBF00] px-4 py-px text-xs font-semibold uppercase text-gray-900 antialiased">
                                 cuci
@@ -177,12 +197,10 @@ const Laporan = () => {
                             )}
                           </td>
 
-                          <td className="td-class">
+                          <td className="whitespace-nowrap px-6 py-4">
                             {" "}
                             {item.status === null ? (
-                              <span className="bg-[#b5f1b5]  pr-2 pl-2 rounded-lg">
-                                {isLoading ? "Loading.." : "Confirm"}
-                              </span>
+                              <span className="bg-[#b5f1b5]  pr-2 pl-2 rounded-lg">Confirm</span>
                             ) : (
                               ""
                             )}

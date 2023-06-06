@@ -85,25 +85,37 @@ const Rs = () => {
             <div className="p-6 bg-white  rounded-lg shadow-lg mb-6">
               <div className="overflow-x-auto">
                 <table className=" w-full ltr:text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                  <thead>
+                  <thead className="border-b bg-white font-medium ">
                     <tr>
-                      <th className="td-head">No</th>
-                      <th className="td-head">Kode</th>
-                      <th className="td-head">Nama Rumah Sakit</th>
-                      <th className="td-head">No Telepon</th>
-                      <th className="td-head">Alamat</th>
-                      <th className="td-head">Action</th>
+                      <th scope="col" className="px-6 py-4">
+                        No
+                      </th>
+                      <th scope="col" className="px-6 py-4">
+                        Kode
+                      </th>
+                      <th scope="col" className="px-6 py-4">
+                        Nama Rumah Sakit
+                      </th>
+                      <th scope="col" className="px-6 py-4">
+                        No Telepon
+                      </th>
+                      <th scope="col" className="px-6 py-4">
+                        Alamat
+                      </th>
+                      <th scope="col" className="px-6 py-4">
+                        Action
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
                     {rumah_sakit.map((item, index) => (
-                      <tr key={item._id}>
-                        <td className="td-class">{index + 1}</td>
-                        <td className="td-class">{item.code}</td>
-                        <td className="td-class">{item.name}</td>
-                        <td className="td-class">{item.number_phone}</td>
-                        <td className="td-class">{item.address}</td>
-                        <td className="td-class">
+                      <tr key={item._id} className="border-b text-center text-gray-600">
+                        <td className="whitespace-nowrap px-6 py-4">{index + 1}</td>
+                        <td className="whitespace-nowrap px-6 py-4">{item.code}</td>
+                        <td className="whitespace-nowrap px-6 py-4">{item.name}</td>
+                        <td className="whitespace-nowrap px-6 py-4">{item.number_phone}</td>
+                        <td className="whitespace-nowrap px-6 py-4">{item.address}</td>
+                        <td className="whitespace-nowrap px-6 py-4">
                           <Link to={`/rumah_sakit/edit/${item._id}`} className="m-3">
                             <i className="fa-solid fa-pen-to-square text-[#96CDF4] hover:text-blue-400"></i>
                           </Link>

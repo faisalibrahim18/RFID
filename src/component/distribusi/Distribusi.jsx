@@ -529,38 +529,46 @@ const Distribusi = () => {
   };
 
   //Upload
+  const handleFileChange = (event) => {
+    setFile(event.target.files[0]);
+  };
+  //Upload
   const uploadData = async (e) => {
     e.preventDefault();
 
     try {
+      if (file) {
+        console.log("file", file);
+      }
+
       const formData = new FormData();
       formData.append("excel", file);
+
       const token = localStorage.getItem("token");
-      const response = await axios.post(
-        "http://localhost:9000/api/v1/rfid/distribusi/upload",
-        {
-          body: formData,
+
+      const config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
         },
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
-      console.log(response).then(({ data }) => {
-        Swal.fire({
-          icon: "success",
-          text: data.message,
+      };
+
+      const response = await axios
+        .post("http://localhost:9000/api/v1/rfid/distribusi/upload", formData, config)
+        .then(({ data }) => {
+          Swal.fire({
+            icon: "success",
+            text: data.message,
+          });
         });
-      });
 
       navigate("/inventory");
     } catch (error) {
       if (error.response) {
-        console.log(error.response.data.message);
+        console.log(error.response);
         // setMsg(error.response.data.msg);
       } else {
+        console.log(error.response);
         Swal.fire({
           text: error.data.message,
           icon: "error",
@@ -592,72 +600,64 @@ const Distribusi = () => {
             <div className="p-6 bg-white  rounded-lg shadow-lg mb-6">
               <div className="overflow-x-auto">
                 <table className=" w-full ltr:text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                  <thead>
+                  <thead className="border-b bg-white font-medium">
                     <tr>
-                      <th className="td-head">No</th>
-                      <th className="td-head">Customer</th>
-                      <th className="td-head">Tanggal Masuk</th>
-                      <th className="td-head">Tanggal Keluar</th>
-                      <th className="td-head">Linen</th>
-                      <th className="td-head">Kualitas Linen</th>
-                      <th className="td-head">Jenis Linen</th>
-                      <th className="td-head">Jumlah Linen</th>
-                      <th className="td-head">Status</th>
-                      <th className="td-head">Action</th>
-                      <th className="td-head">Proses</th>
+                      <th scope="col" className="px-6 py-4">
+                        No
+                      </th>
+                      <th scope="col" className="px-6 py-4">
+                        Customer
+                      </th>
+                      <th scope="col" className="px-6 py-4">
+                        Tanggal Masuk
+                      </th>
+                      <th scope="col" className="px-6 py-4">
+                        Tanggal Keluar
+                      </th>
+                      <th scope="col" className="px-6 py-4">
+                        Linen
+                      </th>
+                      <th scope="col" className="px-6 py-4">
+                        Kualitas Linen
+                      </th>
+                      <th scope="col" className="px-6 py-4">
+                        Jenis Linen
+                      </th>
+                      <th scope="col" className="px-6 py-4">
+                        Jumlah Linen
+                      </th>
+                      <th scope="col" className="px-6 py-4">
+                        Status
+                      </th>
+                      <th scope="col" className="px-6 py-4">
+                        Action
+                      </th>
+                      <th scope="col" className="px-6 py-4">
+                        Proses
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
                     {distribusi.map((item, index) => (
-                      <tr key={item._id}>
-                        <td className="td-class">{index + 1}</td>
-                        <td className="td-class">{item.customer.name}</td>
-                        <td className="td-class">{item.dateIn}</td>
-                        <td className="td-class">{item.dateOut}</td>
-                        <td className="td-class">{item.linen.name}</td>
-                        <td className="td-class">
-                          {item.quality === "baik" ? (
-                            <span className=" rounded-md bg-[#96CDF4] px-4 py-px text-xs font-semibold uppercase text-gray-900 antialiased">
-                              Baik
-                            </span>
-                          ) : (
-                            ""
-                          )}
-                          {item.quality === "kurang baik" ? (
-                            <span className="float-right rounded-md bg-[#FEBF00] px-4 py-px text-xs font-semibold uppercase text-gray-900 antialiased">
-                              Kurang Baik
-                            </span>
-                          ) : (
-                            ""
-                          )}
+                      <tr key={item._id} className="border-b text-center text-gray-600">
+                        <td className="whitespace-nowrap px-6 py-4">{index + 1}</td>
+                        <td className="whitespace-nowrap px-6 py-4">{item.customer.name}</td>
+                        <td className="whitespace-nowrap px-6 py-4">{item.dateIn}</td>
+                        <td className="whitespace-nowrap px-6 py-4">{item.dateOut}</td>
+                        <td className="whitespace-nowrap px-6 py-4">{item.linen.epc}</td>
+                        <td className="whitespace-nowrap px-6 py-4">
+                          {item.quality === "baik" ? <span>Baik</span> : ""}
+                          {item.quality === "kurang baik" ? <span>Kurang Baik</span> : ""}
                         </td>
-                        <td className="td-class">{item.category.name}</td>
-                        <td className="td-class">{item.amount}</td>
-                        <td className="td-class">
-                          {item.service === "cuci" ? (
-                            <span className="rounded-md bg-[#FEBF00] px-4 py-px text-xs font-semibold uppercase text-gray-900 antialiased">
-                              cuci
-                            </span>
-                          ) : (
-                            ""
-                          )}
-                          {item.service === "wash" ? (
-                            <span className=" rounded-md bg-[#009800] px-4 py-px text-xs font-semibold uppercase text-gray-900 antialiased">
-                              Wash
-                            </span>
-                          ) : (
-                            ""
-                          )}
-                          {item.service === "setrika" ? (
-                            <span className="float-right rounded-md bg-[#96CDF4] px-4 py-px text-xs font-semibold uppercase text-gray-900 antialiased">
-                              Setrika
-                            </span>
-                          ) : (
-                            ""
-                          )}
+                        <td className="whitespace-nowrap px-6 py-4">{item.category.name}</td>
+                        <td className="whitespace-nowrap px-6 py-4">{item.amount}</td>
+                        <td className="whitespace-nowrap px-6 py-4">
+                          {item.service === "cuci" ? <span>cuci</span> : ""}
+                          {item.service === "wash" ? <span>Wash</span> : ""}
+                          {item.service === "setrika" ? <span>Setrika</span> : ""}
                         </td>
 
-                        <td className="td-class">
+                        <td className="whitespace-nowrap px-6 py-4">
                           <Link to={`/distribusi/edit/${item._id}`} className=" m-3 ">
                             <i className="fa-solid fa-pen-to-square text-[#96CDF4] hover:text-blue-400"></i>
                           </Link>
@@ -665,7 +665,7 @@ const Distribusi = () => {
                             <i className="fa-solid fa-trash-can text-[#FF1818] hover:text-red-400"></i>
                           </Link>
                         </td>
-                        <td className="td-class">
+                        <td className="whitespace-nowrap px-6 py-4">
                           {" "}
                           {item.status === null ? (
                             <button
@@ -779,8 +779,7 @@ const Distribusi = () => {
                     <div className="mb-2">
                       <input
                         type="file"
-                        value={file}
-                        onChange={(e) => setFile(e.target.value)}
+                        onChange={handleFileChange}
                         className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
                       />
                     </div>
@@ -826,6 +825,16 @@ const Distribusi = () => {
                 {status.map((item) => (
                   <div className="relative p-6 flex-auto" key={item._id}>
                     <form className="w-full" onSubmit={() => setShowProses1(item._id)}>
+                      <div className="mb-2">
+                        <input
+                          type="file"
+                          value={name}
+                          // onChange={(e) => setStatus(e.target.value)}
+                          onChange={(e) => setName(e.target.value)}
+                          className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+                          placeholder="Checked by"
+                        />
+                      </div>
                       <div className="mb-2">
                         <input
                           type="text"

@@ -174,7 +174,12 @@ const UserAdd = () => {
                     <option>Pilih Role :</option>
 
                     <option value="admin">Admin</option>
+                    <option value="super_admin">Super Admin</option>
                     <option value="user">User</option>
+                    <option value="user_laundry">User Laundry</option>
+                    <option value="user_pabrik">User Pabrik</option>
+                    <option value=" delivery">Delivery</option>
+                    <option value="rs">User Rumah Sakit</option>
                   </select>
                 </div>
               </div>
