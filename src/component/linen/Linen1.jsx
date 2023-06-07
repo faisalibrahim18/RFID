@@ -1,47 +1,64 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import Pagination from "../pagination/Pagination";
-import Distribusi1 from "../data/distribusi/Distribusi";
+import Linen from "../data/linen/Linen";
 import Loading from "../Spinners/Loading";
 
-const Distribusi = () => {
-  const [showModal, setShowModal] = React.useState(false);
-
-  const [distribusi, setDistribusi] = useState([]);
-
+const Linen1 = () => {
+  const [linen, setLinen] = useState([]);
+  const [datacategory, setDataCategory] = useState([]);
+  const [showModal, setShowModal] = useState(false);
   const [file, setFile] = useState("");
-  const { id } = useParams();
+  const [category, setCategory] = useState("");
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [postPerPage] = useState(10);
 
-  const navigate = useNavigate();
+  useEffect(() => {
+    getCategory();
+  }, []);
+  const getCategory = async () => {
+    const token = localStorage.getItem("token");
 
-  const { isLoading } = useSelector((state) => state.auth);
+    const response = await axios.get("http://localhost:9000/api/v1/rfid/category", {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    // console.log(response.data);
+    setDataCategory(response.data.data);
+  };
+
+  useEffect(() => {
+    getlinen();
+  }, []);
+  const getlinen = async () => {
+    const token = localStorage.getItem("token");
+    setLoading(true);
+    const response = await axios.get("http://localhost:9000/api/v1/rfid/linen", {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    // console.log(response.data);
+    setLinen(response.data.data);
+    setLoading(false);
+  };
+
   // Get current posts
   const indexOfLastPost = currentPage * postPerPage;
   const indexOfFirstPost = indexOfLastPost - postPerPage;
-  const currentPost = distribusi.slice(indexOfFirstPost, indexOfLastPost);
+  const currentPost = linen.slice(indexOfFirstPost, indexOfLastPost);
 
   // Change page
   const paginateFront = () => setCurrentPage(currentPage + 1);
   const paginateBack = () => setCurrentPage(currentPage - 1);
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
-
-  useEffect(() => {
-    getDistribusi();
-  }, []);
-  const getDistribusi = async () => {
-    setLoading(true);
-    const response = await axios.get("http://localhost:9000/api/v1/rfid/distribusi");
-    // console.log(response.data.data);
-    setDistribusi(response.data.data);
-    setLoading(false);
-  };
 
   //Upload
   const handleFileChange = (event) => {
@@ -53,11 +70,13 @@ const Distribusi = () => {
 
     try {
       if (file) {
-        console.log("file", file);
+        // console.log("file", file);
+        // console.log("category", category);
       }
 
       const formData = new FormData();
-      formData.append("excel", file);
+      formData.append("linens", file);
+      formData.append("category", category);
 
       const token = localStorage.getItem("token");
 
@@ -69,21 +88,25 @@ const Distribusi = () => {
       };
 
       const response = await axios
-        .post("http://localhost:9000/api/v1/rfid/distribusi/upload", formData, config)
+        .post("http://localhost:9000/api/v1/rfid/importLinen", formData, config)
         .then(({ data }) => {
           Swal.fire({
             icon: "success",
             text: data.message,
           });
         });
-
+      // console.log(response);
       navigate("/inventory");
     } catch (error) {
       if (error.response) {
-        console.log(error.response);
+        Swal.fire({
+          text: error.response.data.message,
+          icon: "error",
+        });
+        // console.log(error.response.data.message);
         // setMsg(error.response.data.msg);
       } else {
-        console.log(error.response);
+        // console.log(error.response.message);
         Swal.fire({
           text: error.data.message,
           icon: "error",
@@ -93,13 +116,12 @@ const Distribusi = () => {
   };
   return (
     <>
-      {" "}
       <div className=" p-2">
         <div className="flex flex-wrap flex-row">
           <div className="flex-shrink max-w-full px-4 w-1/2">
-            <h1 className="text-3xl font-semibold mt-3 mb-5">Distribusi List</h1>
+            <h1 className="text-3xl font-semibold mt-3 mb-5">Linen List</h1>
           </div>
-          <div className="flex flex-wrap pr-5 pl-5 w-full pt-1 mb-2 content-center font-semibold justify-between md:w-1/2 md:justify-end">
+          <div className="flex w-full mb-5 ml-5 md:ml-auto mr-4 font-semibold justify-between md:w-1/3 md:justify-end">
             <button
               type="button"
               className="bg-[#FEBF00]  m-1 pl-3 pr-3 rounded-md p-2 hover:bg-yellow-400"
@@ -107,6 +129,9 @@ const Distribusi = () => {
             >
               <i className="fa-solid fa-upload"></i> Upload
             </button>
+            {/* <Link to={"/linen/add"} className="bg-[#96CDF4] pl-3 pr-3 mb-2 rounded-md p-2 hover:bg-blue-200">
+              <i className="fa-solid fa-plus"></i> Add Linen
+            </Link> */}
           </div>
         </div>
 
@@ -117,10 +142,10 @@ const Distribusi = () => {
                 <Loading />
               ) : (
                 <div className="overflow-x-auto">
-                  <Distribusi1 distribusi={currentPost} />
+                  <Linen linen={currentPost} />
                   <Pagination
                     postPerPage={postPerPage}
-                    totalPosts={distribusi.length}
+                    totalPosts={linen.length}
                     paginateBack={paginateBack}
                     paginate={paginate}
                     paginateFront={paginateFront}
@@ -154,6 +179,23 @@ const Distribusi = () => {
                 {/*body*/}
                 <div className="relative p-6 flex-auto">
                   <form className="w-full" onSubmit={uploadData}>
+                    <div className="mb-5">
+                      <label className=" text-sm font-semibold text-gray-800">Kategori</label>
+                      <select
+                        className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+                        value={category}
+                        onChange={(e) => setCategory(e.target.value)}
+                      >
+                        <option selected>Pilih Kategori </option>
+
+                        {datacategory.map((d, i) => (
+                          <option value={d._id}>
+                            {d.kode} - {d.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
                     <div className="mb-2">
                       <input
                         type="file"
@@ -183,4 +225,4 @@ const Distribusi = () => {
   );
 };
 
-export default Distribusi;
+export default Linen1;

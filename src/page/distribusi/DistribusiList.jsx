@@ -17,11 +17,13 @@ const DistribusiList = () => {
     }
   });
   return (
-    <Layout>
-      {/* Main */}
-      <Distribusi />
-      {/* Close Main */}
-    </Layout>
+    <div className="scroll-smooth hover:scroll-auto">
+      <Layout>
+        {/* Main */}
+        <Distribusi />
+        {/* Close Main */}
+      </Layout>
+    </div>
   );
 };
 

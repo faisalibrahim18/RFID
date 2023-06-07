@@ -3,8 +3,9 @@ import Dashboard from "./Dashboard";
 import Layout from "./Layout";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import Loading from "../Spinners/Loading";
 
-const Home = () => {
+const Home = ({ loading }) => {
   const navigate = useNavigate();
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -18,11 +19,15 @@ const Home = () => {
   });
   return (
     <>
-      <Layout>
-        {/* Main */}
-        <Dashboard />
-        {/* Close Main */}
-      </Layout>
+      {loading ? (
+        <Loading />
+      ) : (
+        <Layout>
+          {/* Main */}
+          <Dashboard />
+          {/* Close Main */}
+        </Layout>
+      )}
     </>
   );
 };

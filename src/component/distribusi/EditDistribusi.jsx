@@ -293,7 +293,7 @@ const EditDistribusi = () => {
                   <option selected>Pilih Linen: </option>
 
                   {dataLinen.map((d, i) => (
-                    <option value={d._id}>{d.name}</option>
+                    <option value={d._id}>{d.epc}</option>
                   ))}
                 </select>
               </div>

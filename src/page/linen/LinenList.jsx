@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import Layout from "../../component/layouts/Layout";
-import Linen from "../../component/linen/Linen";
+import Linen from "../../component/linen/Linen1";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 

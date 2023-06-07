@@ -31,6 +31,7 @@ const Login = () => {
   useEffect(() => {
     if (user || isSuccess) {
       //
+
       navigate("/dashboard");
     }
     // Authorization = "Bearer" + localStorage.getItem("token");
@@ -104,7 +105,21 @@ const Login = () => {
                 type="submit"
                 className="color w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-blue-950 rounded-md hover:bg-blue-900 focus:outline-none focus:bg-blue-500"
               >
-                {isLoading ? "Loading.." : "Login"}
+                {isLoading ? (
+                  <div>
+                    <h1
+                      className=" mr-2 inline-block h-4 w-4 animate-spin rounded-full border-2 border-solid border-current border-r-transparent align-[-0.125em] text-primary motion-reduce:animate-[spin_1.5s_linear_infinite]"
+                      role="status"
+                    >
+                      <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
+                        Loading...
+                      </span>
+                    </h1>
+                    Loading...
+                  </div>
+                ) : (
+                  "Login"
+                )}
               </button>
             </div>
           </form>

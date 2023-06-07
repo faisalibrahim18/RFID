@@ -1,14 +1,20 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import Swal from "sweetalert2";
+import Pagination from "../pagination/Pagination";
+import Kategori1 from "../data/kategori/Kategori";
+import Loading from "../Spinners/Loading";
 
 const Kategori = () => {
   const [category, setCategory] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [postPerPage] = useState(10);
   useEffect(() => {
     getCategory();
   }, []);
   const getCategory = async () => {
+    setLoading(true);
     const token = localStorage.getItem("token");
     const response = await axios.get("http://localhost:9000/api/v1/rfid/category", {
       headers: {
@@ -18,45 +24,19 @@ const Kategori = () => {
     });
     // console.log(response.data);
     setCategory(response.data.data);
+    setLoading(false);
   };
-  const deleteCategory = async (CategoryId) => {
-    const isConfirm = await Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      return result.isConfirmed;
-    });
 
-    if (!isConfirm) {
-      return;
-    }
-    const token = localStorage.getItem("token");
-    await axios
-      .delete(`http://localhost:9000/api/v1/rfid/category/${CategoryId}`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then(({ data }) => {
-        Swal.fire({
-          icon: "success",
-          text: data.message,
-        });
-        getCategory();
-      })
-      .catch(({ response: { data } }) => {
-        Swal.fire({
-          text: data.message,
-          icon: "error",
-        });
-      });
-  };
+  // Get current posts
+  const indexOfLastPost = currentPage * postPerPage;
+  const indexOfFirstPost = indexOfLastPost - postPerPage;
+  const currentPost = category.slice(indexOfFirstPost, indexOfLastPost);
+
+  // Change page
+  const paginateFront = () => setCurrentPage(currentPage + 1);
+  const paginateBack = () => setCurrentPage(currentPage - 1);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
   return (
     <>
       <div className=" p-2">
@@ -77,43 +57,21 @@ const Kategori = () => {
         <div className="flex flex-wrap flex-row">
           <div className="flex-shrink max-w-full px-4 w-full">
             <div className="p-6 bg-white  rounded-lg shadow-lg mb-6">
-              <div className="overflow-x-auto">
-                <table className=" w-full ltr:text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                  <thead className="border-b bg-white font-medium ">
-                    <tr>
-                      <th scope="col" className="px-6 py-4">
-                        No
-                      </th>
-                      <th scope="col" className="px-6 py-4">
-                        Kode Kategori
-                      </th>
-                      <th scope="col" className="px-6 py-4">
-                        Nama Kategori
-                      </th>
-                      <th scope="col" className="px-6 py-4">
-                        Action
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {category.map((item, index) => (
-                      <tr key={item._id} className="border-b text-center text-gray-600">
-                        <td className="whitespace-nowrap px-6 py-4">{index + 1}</td>
-                        <td className="whitespace-nowrap px-6 py-4">{item.kode}</td>
-                        <td className="whitespace-nowrap px-6 py-4">{item.name}</td>
-                        <td className="whitespace-nowrap px-6 py-4">
-                          <Link to={`/kategori/edit/${item._id}`} className="m-3">
-                            <i className="fa-solid fa-pen-to-square text-[#96CDF4] hover:text-blue-400"></i>
-                          </Link>
-                          <Link onClick={() => deleteCategory(item._id)}>
-                            <i className="fa-solid fa-trash-can text-[#FF1818] hover:text-red-400"></i>
-                          </Link>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+              {loading ? (
+                <Loading />
+              ) : (
+                <div className="overflow-x-auto">
+                  <Kategori1 category={currentPost} />
+                  <Pagination
+                    postPerPage={postPerPage}
+                    totalPosts={category.length}
+                    paginateBack={paginateBack}
+                    paginate={paginate}
+                    paginateFront={paginateFront}
+                    currentPage={currentPage}
+                  />
+                </div>
+              )}
             </div>
           </div>
         </div>

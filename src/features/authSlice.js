@@ -21,7 +21,7 @@ export const LoginUser = createAsyncThunk("user/loginUser", async (user, thunkAP
 
     // console.log(response);
     // console.log(response.data?.data?.token);
-    localStorage.setItem("token", response.data?.data?.token.token, true);
+    localStorage.setItem("token", response.data?.data?.token, true);
     localStorage.setItem("user", JSON.stringify(response.data?.data?.token.result), true);
     // console.log("Bearer", response);
     // console.log(response.data);
