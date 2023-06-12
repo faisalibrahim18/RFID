@@ -69,7 +69,7 @@ const Layout = ({ children }) => {
             {/* <!-- Sidebar menu --> */}
             {users.map((item) => (
               <div className=" flex md:z-50 flex-col gap-2 md:pt-2 pt-20  w-full text-[#00205F] float-none font-medium ltr:pl-1.5 rtl:pr-1.5">
-                {item.role === "admin" ? (
+                {item.role === "super_admin" ? (
                   <div>
                     <NavLink
                       activeClassName="active"
@@ -454,7 +454,7 @@ const Layout = ({ children }) => {
 
                     <NavLink
                       activeClassName="active"
-                      to={"/permintaanD"}
+                      to={"/permintaanR"}
                       className="group  flex items-center text-center text-sm gap-3.5 font-medium p-4 hover:bg-[#dee7de] rounded-md"
                     >
                       <div className="text-lg">
@@ -473,7 +473,7 @@ const Layout = ({ children }) => {
                 ) : (
                   ""
                 )}
-                {item.role === "super_admin" ? (
+                {item.role === "admin" ? (
                   <div>
                     <NavLink
                       activeClassName="active"

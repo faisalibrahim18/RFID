@@ -21,7 +21,7 @@ const Laporan = () => {
           dateOut: dateOut,
         },
       );
-      console.log(response.data.data);
+      // console.log(response.data.data);
       setLaporan(response.data.data);
       setShowLaporan(true);
     } catch (error) {
@@ -37,8 +37,16 @@ const Laporan = () => {
   };
   const cetakLaporanPdf = async () => {
     try {
+      const token = localStorage.getItem("token");
+      // console.log(token);
       window.open(
         `http://localhost:9000/api/v1/rfid/distribusiDownloadPdf?dateIn=${dateIn}&dateOut=${dateOut}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        },
       );
     } catch (error) {
       console.log(error);
@@ -154,7 +162,7 @@ const Laporan = () => {
                           <td className="whitespace-nowrap px-6 py-4">{item.customer.name}</td>
                           <td className="whitespace-nowrap px-6 py-4">{item.dateIn}</td>
                           <td className="whitespace-nowrap px-6 py-4">{item.dateOut}</td>
-                          <td className="whitespace-nowrap px-6 py-4">{item.linen.epc}</td>
+                          <td className="whitespace-nowrap px-6 py-4">{item.linen[0].epc}</td>
                           <td className="whitespace-nowrap px-6 py-4">
                             {item.quality === "baik" ? (
                               <span className=" rounded-md bg-[#96CDF4] px-4 py-px text-xs font-semibold uppercase text-gray-900 antialiased">
@@ -171,7 +179,7 @@ const Laporan = () => {
                               ""
                             )}
                           </td>
-                          <td className="whitespace-nowrap px-6 py-4">{item.category.name}</td>
+                          <td className="whitespace-nowrap px-6 py-4">{item.linen[0].category}</td>
                           <td className="whitespace-nowrap px-6 py-4">{item.amount}</td>
                           <td className="whitespace-nowrap px-6 py-4">
                             {item.service === "cuci" ? (

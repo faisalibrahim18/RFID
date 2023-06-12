@@ -34,6 +34,8 @@ import Permintaan2 from "./page/delivery/Permintaan2";
 import Laporan2 from "./page/Super_admin/Laporan/Laporan2";
 import Peminjaman1 from "./page/Super_admin/Peminjaman/Peminjaman1";
 import User1 from "./page/Super_admin/User/User1";
+import Permintaan3 from "./page/user_rumahsakit/Pemintaan";
+import EditLaporan1 from "./page/user_pabrik/EditLaporan1";
 
 function App() {
   return (
@@ -74,6 +76,7 @@ function App() {
           {/* user_pabrik route */}
           <Route exact path="/permintaanP" element={<Permintaan1 />} />
           <Route exact path="/laporanP" element={<Laporan1 />} />
+          <Route exact path="/laporanP/edit/:id" element={<EditLaporan1 />} />
 
           {/* delivery */}
           <Route exact path="/permintaanD" element={<Permintaan2 />} />
@@ -82,6 +85,8 @@ function App() {
           <Route exact path="/laporanS" element={<Laporan2 />} />
           <Route exact path="/peminjaman" element={<Peminjaman1 />} />
           <Route exact path="/userS" element={<User1 />} />
+
+          <Route exact path="/permintaanR" element={<Permintaan3 />} />
         </Routes>
       </BrowserRouter>
     </>

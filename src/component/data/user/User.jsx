@@ -3,10 +3,11 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 
-const User = ({ users, loading }) => {
+const User = ({ users, loading, searchResults }) => {
   if (loading) {
     return <h2>Loading...</h2>;
   }
+
   const deleteUser = async (userId) => {
     const isConfirm = await Swal.fire({
       title: "Are you sure?",
@@ -73,7 +74,7 @@ const User = ({ users, loading }) => {
           </tr>
         </thead>
         <tbody>
-          {users.map((item, index) => (
+          {searchResults.map((item, index) => (
             <tr key={item._id} className="border-b text-center text-gray-600">
               <td className="whitespace-nowrap px-6 py-4">{index + 1}</td>
               <td className="whitespace-nowrap px-6 py-4">{item.name}</td>

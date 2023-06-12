@@ -26,10 +26,10 @@ const Tracking = () => {
         Authorization: `Bearer ${token}`,
       },
     });
-    // console.log(response);
+    // console.log(response.data.data);
     setTracker(response.data.data);
   };
-
+  // console.log(getTracking);
   const handleTracking = async (id) => {
     console.log(id);
   };
@@ -109,13 +109,20 @@ const Tracking = () => {
                           ) : (
                             ""
                           )}
-                          {item.status.status === "washing" ? (
+                          {item.status.status === "wash" ? (
                             <span className="bg-lime-400  rounded-md p-1 pl-6 pr-6 text-lime-600">Wash</span>
                           ) : (
                             ""
                           )}
                           {item.status.status === "drying" ? (
-                            <span className="bg-sky-400  rounded-md p-1 pl-6 pr-6 text-sky-600">dry</span>
+                            <span className="bg-sky-400  rounded-md p-1 pl-6 pr-6 text-sky-600">Dry</span>
+                          ) : (
+                            ""
+                          )}
+                          {item.status.status === "transit to hospital" ? (
+                            <span className="bg-sky-200  rounded-md p-1 pl-6 pr-6 text-sky-500">
+                              Delivery
+                            </span>
                           ) : (
                             ""
                           )}
@@ -160,12 +167,12 @@ const Tracking = () => {
                           ) : (
                             ""
                           )}
-                          {item.status.status === "washing" ? (
+                          {item.status.status === "wash" ? (
                             <div
                               className="h-full text-center text-xs text-white bg-green-500 rounded-full"
-                              style={{ width: "70%" }}
+                              style={{ width: "60%" }}
                             >
-                              <span className="text-xs text-white text-center">70%</span>
+                              <span className="text-xs text-white text-center">60%</span>
                             </div>
                           ) : (
                             ""
@@ -173,9 +180,19 @@ const Tracking = () => {
                           {item.status.status === "drying" ? (
                             <div
                               className="h-full text-center text-xs text-white bg-green-500 rounded-full"
-                              style={{ width: "90%" }}
+                              style={{ width: "75%" }}
                             >
-                              <span className="text-xs text-white text-center">90%</span>
+                              <span className="text-xs text-white text-center">75%</span>
+                            </div>
+                          ) : (
+                            ""
+                          )}
+                          {item.status.status === "transit to hospital" ? (
+                            <div
+                              className="h-full text-center text-xs text-white bg-green-500 rounded-full"
+                              style={{ width: "85%" }}
+                            >
+                              <span className="text-xs text-white text-center">85%</span>
                             </div>
                           ) : (
                             ""
@@ -275,7 +292,7 @@ const Tracking = () => {
                         ) : (
                           ""
                         )}
-                        {item.status.status === "washing" ? (
+                        {item.status.status === "wash" ? (
                           <div>
                             <ol className=" mt-3 ml-16 relative border-l border-white">
                               <li className="ml-4 ">
@@ -386,6 +403,78 @@ const Tracking = () => {
                         ) : (
                           ""
                         )}
+                        {item.status.status === "transit to hospital" ? (
+                          <div>
+                            <ol className=" mt-3 ml-16 relative border-l border-white">
+                              <li className="ml-4 ">
+                                <div className="absolute w-3 h-3 bg-white rounded-full items-center justify-between mb-3 sm:flex  -left-1.5 border border-white"></div>
+                                <div className="pt-0">
+                                  <time className="mb-1 text-xs font-normal text-gray-200">
+                                    {item.status.checking.date}
+                                  </time>
+                                  <div className="text-sm font-normal text-white">Checking</div>
+                                </div>
+                              </li>
+                            </ol>
+                            <ol className=" ml-16 relative border-l border-white">
+                              <li className="ml-4 ">
+                                <div className="absolute w-3 h-3 bg-white rounded-full items-center justify-between mb-3 sm:flex  -left-1.5 border border-white"></div>
+                                <div className="pt-0">
+                                  <time className="mb-1 text-xs font-normal text-gray-200">
+                                    {item.status.transit.date}
+                                  </time>
+                                  <div className="text-sm font-normal text-white">Transit</div>
+                                </div>
+                              </li>
+                            </ol>
+                            <ol className=" ml-16 relative border-l border-white">
+                              <li className="ml-4 ">
+                                <div className="absolute w-3 h-3 bg-white rounded-full items-center justify-between mb-3 sm:flex  -left-1.5 border border-white"></div>
+                                <div className="pt-0">
+                                  <time className="mb-1 text-xs font-normal text-gray-200">
+                                    {item.status.accepted.date}
+                                  </time>
+                                  <div className="text-sm font-normal text-white">Accepted</div>
+                                </div>
+                              </li>
+                            </ol>
+                            <ol className=" ml-16 relative border-l border-white">
+                              <li className="ml-4 ">
+                                <div className="absolute w-3 h-3 bg-white rounded-full items-center justify-between mb-3 sm:flex  -left-1.5 border border-white"></div>
+                                <div className="pt-0">
+                                  <time className="mb-1 text-xs font-normal text-gray-200">
+                                    {item.status.wash.date}
+                                  </time>
+                                  <div className="text-sm font-normal text-white">Washing</div>
+                                </div>
+                              </li>
+                            </ol>
+                            <ol className=" ml-16 relative border-l border-white">
+                              <li className="ml-4 ">
+                                <div className="absolute w-3 h-3 bg-white rounded-full items-center justify-between mb-3 sm:flex  -left-1.5 border border-white"></div>
+                                <div className="pt-0">
+                                  <time className="mb-1 text-xs font-normal text-gray-200">
+                                    {item.status.dry.date}
+                                  </time>
+                                  <div className="text-sm font-normal text-white">Drying</div>
+                                </div>
+                              </li>
+                            </ol>
+                            <ol className=" ml-16 relative border-l border-white">
+                              <li className="ml-4 ">
+                                <div className="absolute w-3 h-3 bg-white rounded-full items-center justify-between mb-3 sm:flex  -left-1.5 border border-white"></div>
+                                <div className="pt-0">
+                                  <time className="mb-1 text-xs font-normal text-gray-200">
+                                    {item.status.returned.date}
+                                  </time>
+                                  <div className="text-sm font-normal text-white">Delivery</div>
+                                </div>
+                              </li>
+                            </ol>
+                          </div>
+                        ) : (
+                          ""
+                        )}
                         {item.status.status === "success" ? (
                           <div>
                             <ol className=" mt-3 ml-16 relative border-l border-white">
@@ -443,6 +532,17 @@ const Tracking = () => {
                                 </div>
                               </li>
                             </ol>
+                            <ol className=" ml-16 relative border-l border-white">
+                              <li className="ml-4 ">
+                                <div className="absolute w-3 h-3 bg-white rounded-full items-center justify-between mb-3 sm:flex  -left-1.5 border border-white"></div>
+                                <div className="pt-0">
+                                  <time className="mb-1 text-xs font-normal text-gray-200">
+                                    {item.status.returned.date}
+                                  </time>
+                                  <div className="text-sm font-normal text-white">Delivery</div>
+                                </div>
+                              </li>
+                            </ol>
                             <ol className=" ml-16 relative ">
                               <li className="ml-4 ">
                                 <div className="absolute w-3 h-3 bg-white rounded-full items-center justify-between mb-3 sm:flex  -left-1.5 border border-white"></div>
@@ -488,7 +588,6 @@ const Tracking = () => {
                           </div>
 
                           <p className="text-[#537FE7] font-semibold">-</p>
-                          <p className="text-xs text-center">-</p>
                         </div>
                         <div className="step-item in-active">
                           <div className="step">
@@ -497,7 +596,6 @@ const Tracking = () => {
                             </div>
                           </div>
                           <p className="text-[#537FE7] font-semibold">-</p>
-                          <p className="text-xs text-center">-</p>
                         </div>
                         <div className="step-item in-active">
                           <div className="step">
@@ -506,7 +604,6 @@ const Tracking = () => {
                             </div>
                           </div>
                           <p className="text-[#537FE7] font-semibold">-</p>
-                          <p className="text-xs text-center">-</p>
                         </div>
                         <div className="step-item in-active">
                           <div className="step">
@@ -515,7 +612,6 @@ const Tracking = () => {
                             </div>
                           </div>
                           <p className="text-[#537FE7] font-semibold">-</p>
-                          <p className="text-xs text-center">-</p>
                         </div>
                         <div className="step-item in-active">
                           <div className="step">
@@ -524,7 +620,14 @@ const Tracking = () => {
                             </div>
                           </div>
                           <p className="text-[#537FE7] font-semibold">-</p>
-                          <p className="text-xs text-center">-</p>
+                        </div>
+                        <div className="step-item in-active">
+                          <div className="step">
+                            <div className="steps">
+                              <img src={Transit} className="m-3" alt="" />
+                            </div>
+                          </div>
+                          <p className="text-[#537FE7] font-semibold">-</p>
                         </div>
                         <div className="step-item in-active">
                           <div className="step">
@@ -533,7 +636,6 @@ const Tracking = () => {
                             </div>
                           </div>
                           <p className="text-[#537FE7] font-semibold">-</p>
-                          <p className="text-xs text-center">-</p>
                         </div>
                       </div>
                     </div>
@@ -551,7 +653,6 @@ const Tracking = () => {
                           </div>
 
                           <p className="text-[#537FE7] font-semibold">Cheking</p>
-                          <p className="text-xs text-center">21-06-2023 08.15</p>
                         </div>
                         <div className="step-item in-active">
                           <div className="step">
@@ -560,7 +661,6 @@ const Tracking = () => {
                             </div>
                           </div>
                           <p className="text-[#537FE7] font-semibold">-</p>
-                          <p className="text-xs text-center">-</p>
                         </div>
                         <div className="step-item in-active">
                           <div className="step">
@@ -569,7 +669,6 @@ const Tracking = () => {
                             </div>
                           </div>
                           <p className="text-[#537FE7] font-semibold">-</p>
-                          <p className="text-xs text-center">-</p>
                         </div>
                         <div className="step-item in-active">
                           <div className="step">
@@ -578,7 +677,6 @@ const Tracking = () => {
                             </div>
                           </div>
                           <p className="text-[#537FE7] font-semibold">-</p>
-                          <p className="text-xs text-center">-</p>
                         </div>
                         <div className="step-item in-active">
                           <div className="step">
@@ -587,7 +685,14 @@ const Tracking = () => {
                             </div>
                           </div>
                           <p className="text-[#537FE7] font-semibold">-</p>
-                          <p className="text-xs text-center">-</p>
+                        </div>
+                        <div className="step-item in-active">
+                          <div className="step">
+                            <div className="steps">
+                              <img src={Transit} className="m-3" alt="" />
+                            </div>
+                          </div>
+                          <p className="text-[#537FE7] font-semibold">-</p>
                         </div>
                         <div className="step-item in-active">
                           <div className="step">
@@ -596,7 +701,6 @@ const Tracking = () => {
                             </div>
                           </div>
                           <p className="text-[#537FE7] font-semibold">-</p>
-                          <p className="text-xs text-center">-</p>
                         </div>
                       </div>
                     </div>
@@ -614,7 +718,6 @@ const Tracking = () => {
                           </div>
 
                           <p className="text-[#537FE7] font-semibold">Cheking</p>
-                          <p className="text-xs text-center">21-06-2023 08.15</p>
                         </div>
                         <div className="step-item active1">
                           <div className="step">
@@ -623,7 +726,6 @@ const Tracking = () => {
                             </div>
                           </div>
                           <p className="text-[#537FE7] font-semibold">In transit</p>
-                          <p className="text-xs text-center">21-06-2023 10.10</p>
                         </div>
                         <div className="step-item in-active">
                           <div className="step">
@@ -641,7 +743,6 @@ const Tracking = () => {
                             </div>
                           </div>
                           <p className="text-[#537FE7] font-semibold">-</p>
-                          <p className="text-xs text-center">-</p>
                         </div>
                         <div className="step-item in-active">
                           <div className="step">
@@ -650,7 +751,14 @@ const Tracking = () => {
                             </div>
                           </div>
                           <p className="text-[#537FE7] font-semibold">-</p>
-                          <p className="text-xs text-center">-</p>
+                        </div>
+                        <div className="step-item in-active">
+                          <div className="step">
+                            <div className="steps">
+                              <img src={Transit} className="m-3" alt="" />
+                            </div>
+                          </div>
+                          <p className="text-[#537FE7] font-semibold">-</p>
                         </div>
                         <div className="step-item in-active">
                           <div className="step">
@@ -659,7 +767,6 @@ const Tracking = () => {
                             </div>
                           </div>
                           <p className="text-[#537FE7] font-semibold">-</p>
-                          <p className="text-xs text-center">-</p>
                         </div>
                       </div>
                     </div>
@@ -677,7 +784,6 @@ const Tracking = () => {
                           </div>
 
                           <p className="text-[#537FE7] font-semibold">Cheking</p>
-                          <p className="text-xs text-center">21-06-2023 08.15</p>
                         </div>
                         <div className="step-item active1">
                           <div className="step">
@@ -686,7 +792,6 @@ const Tracking = () => {
                             </div>
                           </div>
                           <p className="text-[#537FE7] font-semibold">In transit</p>
-                          <p className="text-xs text-center">21-06-2023 10.10</p>
                         </div>
                         <div className="step-item active1">
                           <div className="step">
@@ -695,7 +800,6 @@ const Tracking = () => {
                             </div>
                           </div>
                           <p className="text-[#537FE7] font-semibold">Accepted</p>
-                          <p className="text-xs text-center">21-06-2023 11.25</p>
                         </div>
                         <div className="step-item in-active">
                           <div className="step">
@@ -704,7 +808,6 @@ const Tracking = () => {
                             </div>
                           </div>
                           <p className="text-[#537FE7] font-semibold">-</p>
-                          <p className="text-xs text-center">-</p>
                         </div>
                         <div className="step-item in-active">
                           <div className="step">
@@ -713,7 +816,14 @@ const Tracking = () => {
                             </div>
                           </div>
                           <p className="text-[#537FE7] font-semibold">-</p>
-                          <p className="text-xs text-center">-</p>
+                        </div>
+                        <div className="step-item in-active">
+                          <div className="step">
+                            <div className="steps">
+                              <img src={Transit} className="m-3" alt="" />
+                            </div>
+                          </div>
+                          <p className="text-[#537FE7] font-semibold">-</p>
                         </div>
                         <div className="step-item in-active">
                           <div className="step">
@@ -722,14 +832,13 @@ const Tracking = () => {
                             </div>
                           </div>
                           <p className="text-[#537FE7] font-semibold">-</p>
-                          <p className="text-xs text-center">-</p>
                         </div>
                       </div>
                     </div>
                   ) : (
                     ""
                   )}
-                  {item.status.status === "washing" ? (
+                  {item.status.status === "wash" ? (
                     <div className="p-3 bg-white rounded-md    md:w-[630px] ">
                       <div className="flex">
                         <div className="step-item active1">
@@ -740,7 +849,6 @@ const Tracking = () => {
                           </div>
 
                           <p className="text-[#537FE7] font-semibold">Cheking</p>
-                          <p className="text-xs text-center">21-06-2023 08.15</p>
                         </div>
                         <div className="step-item active1">
                           <div className="step">
@@ -749,7 +857,6 @@ const Tracking = () => {
                             </div>
                           </div>
                           <p className="text-[#537FE7] font-semibold">In transit</p>
-                          <p className="text-xs text-center">21-06-2023 10.10</p>
                         </div>
                         <div className="step-item active1">
                           <div className="step">
@@ -758,7 +865,6 @@ const Tracking = () => {
                             </div>
                           </div>
                           <p className="text-[#537FE7] font-semibold">Accepted</p>
-                          <p className="text-xs text-center">21-06-2023 11.25</p>
                         </div>
                         <div className="step-item active1">
                           <div className="step">
@@ -767,7 +873,6 @@ const Tracking = () => {
                             </div>
                           </div>
                           <p className="text-[#537FE7] font-semibold">Wash</p>
-                          <p className="text-xs text-center">22-06-2023 09.00</p>
                         </div>
                         <div className="step-item in-active">
                           <div className="step">
@@ -776,7 +881,14 @@ const Tracking = () => {
                             </div>
                           </div>
                           <p className="text-[#537FE7] font-semibold">-</p>
-                          <p className="text-xs text-center">-</p>
+                        </div>
+                        <div className="step-item in-active">
+                          <div className="step">
+                            <div className="steps">
+                              <img src={Transit} className="m-3" alt="" />
+                            </div>
+                          </div>
+                          <p className="text-[#537FE7] font-semibold">-</p>
                         </div>
                         <div className="step-item in-active">
                           <div className="step">
@@ -785,7 +897,6 @@ const Tracking = () => {
                             </div>
                           </div>
                           <p className="text-[#537FE7] font-semibold">-</p>
-                          <p className="text-xs text-center">-</p>
                         </div>
                       </div>
                     </div>
@@ -793,7 +904,7 @@ const Tracking = () => {
                     ""
                   )}
                   {item.status.status === "drying" ? (
-                    <div className="p-3 bg-white rounded-md    md:w-[630px] ">
+                    <div className="p-3 bg-white rounded-md md:w-[630px] ">
                       <div className="flex">
                         <div className="step-item active1">
                           <div className="step">
@@ -803,7 +914,6 @@ const Tracking = () => {
                           </div>
 
                           <p className="text-[#537FE7] font-semibold">Cheking</p>
-                          <p className="text-xs text-center">21-06-2023 08.15</p>
                         </div>
                         <div className="step-item active1">
                           <div className="step">
@@ -812,7 +922,6 @@ const Tracking = () => {
                             </div>
                           </div>
                           <p className="text-[#537FE7] font-semibold">In transit</p>
-                          <p className="text-xs text-center">21-06-2023 10.10</p>
                         </div>
                         <div className="step-item active1">
                           <div className="step">
@@ -821,7 +930,6 @@ const Tracking = () => {
                             </div>
                           </div>
                           <p className="text-[#537FE7] font-semibold">Accepted</p>
-                          <p className="text-xs text-center">21-06-2023 11.25</p>
                         </div>
                         <div className="step-item active1">
                           <div className="step">
@@ -830,7 +938,6 @@ const Tracking = () => {
                             </div>
                           </div>
                           <p className="text-[#537FE7] font-semibold">Wash</p>
-                          <p className="text-xs text-center">22-06-2023 09.00</p>
                         </div>
                         <div className="step-item active1">
                           <div className="step">
@@ -839,7 +946,14 @@ const Tracking = () => {
                             </div>
                           </div>
                           <p className="text-[#537FE7] font-semibold">Dry </p>
-                          <p className="text-xs text-center">21-06-2023 08.15</p>
+                        </div>
+                        <div className="step-item in-active">
+                          <div className="step">
+                            <div className="steps">
+                              <img src={Transit} className="m-3" alt="" />
+                            </div>
+                          </div>
+                          <p className="text-[#537FE7] font-semibold">-</p>
                         </div>
                         <div className="step-item in-active">
                           <div className="step">
@@ -848,7 +962,71 @@ const Tracking = () => {
                             </div>
                           </div>
                           <p className="text-[#537FE7] font-semibold">-</p>
-                          <p className="text-xs text-center">-</p>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    ""
+                  )}
+                  {item.status.status === "transit to hospital" ? (
+                    <div className="p-3 bg-white rounded-md md:w-[630px] ">
+                      <div className="flex">
+                        <div className="step-item active1">
+                          <div className="step">
+                            <div className="steps active1 ">
+                              <img src={Check} className="m-3 " alt="" />
+                            </div>
+                          </div>
+
+                          <p className="text-[#537FE7] font-semibold">Cheking</p>
+                        </div>
+                        <div className="step-item active1">
+                          <div className="step">
+                            <div className="steps">
+                              <img src={Transit} className="m-3" alt="" />
+                            </div>
+                          </div>
+                          <p className="text-[#537FE7] font-semibold">In transit</p>
+                        </div>
+                        <div className="step-item active1">
+                          <div className="step">
+                            <div className="steps">
+                              <img src={Acc} className="m-3" alt="" />
+                            </div>
+                          </div>
+                          <p className="text-[#537FE7] font-semibold">Accepted</p>
+                        </div>
+                        <div className="step-item active1">
+                          <div className="step">
+                            <div className="steps ">
+                              <img src={Wash} className="" alt="" />
+                            </div>
+                          </div>
+                          <p className="text-[#537FE7] font-semibold">Wash</p>
+                        </div>
+                        <div className="step-item active1">
+                          <div className="step">
+                            <div className="steps ">
+                              <img src={Dry} className="m-3" alt="" />
+                            </div>
+                          </div>
+                          <p className="text-[#537FE7] font-semibold">Dry </p>
+                        </div>
+                        <div className="step-item active1">
+                          <div className="step">
+                            <div className="steps">
+                              <img src={Transit} className="m-3" alt="" />
+                            </div>
+                          </div>
+                          <p className="text-[#537FE7] font-semibold">Delivery</p>
+                        </div>
+                        <div className="step-item in-active">
+                          <div className="step">
+                            <div className="steps ">
+                              <img src={Acc} className="m-3" alt="" />
+                            </div>
+                          </div>
+                          <p className="text-[#537FE7] font-semibold">-</p>
                         </div>
                       </div>
                     </div>
@@ -866,7 +1044,6 @@ const Tracking = () => {
                           </div>
 
                           <p className="text-[#537FE7] font-semibold">Cheking</p>
-                          <p className="text-xs text-center">21-06-2023 08.15</p>
                         </div>
                         <div className="step-item active1">
                           <div className="step">
@@ -875,7 +1052,6 @@ const Tracking = () => {
                             </div>
                           </div>
                           <p className="text-[#537FE7] font-semibold">In transit</p>
-                          <p className="text-xs text-center">21-06-2023 10.10</p>
                         </div>
                         <div className="step-item active1">
                           <div className="step">
@@ -884,7 +1060,6 @@ const Tracking = () => {
                             </div>
                           </div>
                           <p className="text-[#537FE7] font-semibold">Accepted</p>
-                          <p className="text-xs text-center">21-06-2023 11.25</p>
                         </div>
                         <div className="step-item active1">
                           <div className="step">
@@ -893,7 +1068,6 @@ const Tracking = () => {
                             </div>
                           </div>
                           <p className="text-[#537FE7] font-semibold">Wash</p>
-                          <p className="text-xs text-center">22-06-2023 09.00</p>
                         </div>
                         <div className="step-item active1">
                           <div className="step">
@@ -902,7 +1076,14 @@ const Tracking = () => {
                             </div>
                           </div>
                           <p className="text-[#537FE7] font-semibold">Dry </p>
-                          <p className="text-xs text-center">21-06-2023 08.15</p>
+                        </div>
+                        <div className="step-item active1">
+                          <div className="step">
+                            <div className="steps">
+                              <img src={Transit} className="m-3" alt="" />
+                            </div>
+                          </div>
+                          <p className="text-[#537FE7] font-semibold">Delivery</p>
                         </div>
                         <div className="step-item complete">
                           <div className="step">
@@ -911,7 +1092,6 @@ const Tracking = () => {
                             </div>
                           </div>
                           <p className="text-[#537FE7] font-semibold">Done</p>
-                          <p className="text-xs text-center">21-06-2023 08.15</p>
                         </div>
                       </div>
                     </div>
@@ -999,7 +1179,7 @@ const Tracking = () => {
                   ) : (
                     ""
                   )}
-                  {item.status.status === "washing" ? (
+                  {item.status.status === "wash" ? (
                     <div className="bg-white border border-gray-200 rounded-lg shadow">
                       <div className="p-3 text-black font-semibold">
                         <h1>Driver Information</h1>
@@ -1040,6 +1220,46 @@ const Tracking = () => {
                     ""
                   )}
                   {item.status.status === "drying" ? (
+                    <div className="bg-white border border-gray-200 rounded-lg shadow">
+                      <div className="p-3 text-black font-semibold">
+                        <h1>Driver Information</h1>
+                      </div>
+                      <hr className=" h-1 bg-gray-100 border-0 rounded  " />
+
+                      <div className="flex flex-col items-center  md:flex-row md:max-w-xl ">
+                        <img className="md:h-auto " src={Mbl} alt="" />
+                        <div className="w-full pb-5">
+                          {/* <h5 className=" pt-3 mb-2  text-xl font-bold tracking-tight text-gray-900 text-center">
+       Mercedes-Benz Sprinter
+     </h5>
+     <hr className="bg-black h-0" /> */}
+                          <div className="flex pl-3">
+                            <div className="w-full pt-5">
+                              <h1>Driver</h1>
+                              <h1 className="font-semibold text-black">{item.status.transit.name}</h1>
+                            </div>
+                            <div className="pl-12 w-full pt-5">
+                              <h1>License Plate</h1>
+                              <h1 className="font-semibold text-black">{item.status.transit.license}</h1>
+                            </div>
+                          </div>
+                          <div className="flex pl-3">
+                            <div className=" w-full pt-5">
+                              <h1>Weight</h1>
+                              <h1 className="font-semibold text-black">{item.status.transit.heavy}</h1>
+                            </div>
+                            <div className="pl-20 w-full pt-5">
+                              {/* <h1>Load Volume </h1>
+         <h1 className="font-semibold text-black">244,32 in3</h1> */}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    ""
+                  )}
+                  {item.status.status === "transit to hospital" ? (
                     <div className="bg-white border border-gray-200 rounded-lg shadow">
                       <div className="p-3 text-black font-semibold">
                         <h1>Driver Information</h1>
@@ -1136,7 +1356,7 @@ const Tracking = () => {
                         <div className="flex pl-3">
                           <div className="w-full pt-5">
                             <h1>Category</h1>
-                            <h1 className="font-semibold text-black"> {item.category.name}</h1>
+                            <h1 className="font-semibold text-black"> {item.linen[0].category}</h1>
                           </div>
                           <div className="pl-20 w-full pt-5">
                             <h1>Amount</h1>

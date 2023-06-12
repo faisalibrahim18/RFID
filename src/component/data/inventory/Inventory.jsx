@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 
-const Inventory = ({ loading, inventory }) => {
+const Inventory = ({ loading, inventory, searchResults }) => {
   if (loading) {
     return <h2>Loading...</h2>;
   }
@@ -70,7 +70,7 @@ const Inventory = ({ loading, inventory }) => {
           </tr>
         </thead>
         <tbody>
-          {inventory.map((item, index) => (
+          {searchResults.map((item, index) => (
             <tr key={item._id} className="border-b text-center text-gray-600">
               <td className="whitespace-nowrap px-6 py-4">{index + 1}</td>
               <td className="whitespace-nowrap px-6 py-4">{item.kode}</td>

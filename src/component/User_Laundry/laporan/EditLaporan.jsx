@@ -84,7 +84,7 @@ const EditLaporan = () => {
     getDistribusiById();
   }, [id]);
 
-  const updateDistribusi = async (e) => {
+  const updateLaporan = async (e) => {
     e.preventDefault();
     try {
       const token = localStorage.getItem("token");
@@ -113,17 +113,22 @@ const EditLaporan = () => {
         .then(({ data }) => {
           Swal.fire({
             icon: "success",
-            text: data.message,
+            text: "Laporan update successfully",
           });
         });
       navigate("/laporanL");
     } catch (error) {
       if (error.response) {
+        Swal.fire({
+          icon: "error",
+          text: error.response.data.msg,
+        });
+
         // console.log(error.response);
         setMsg(error.response.data.msg);
       } else {
         Swal.fire({
-          text: error.data.message,
+          text: error.data.msg,
           icon: "error",
         });
       }
@@ -144,7 +149,7 @@ const EditLaporan = () => {
         {Object.keys(msg).length > 0 && (
           <p className="alert alert-danger rounded text-center p-2 shadow m-3">{msg}</p>
         )}
-        <form className="w-full" onSubmit={updateDistribusi}>
+        <form className="w-full" onSubmit={updateLaporan}>
           <div className="mb-2">
             <select
               className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
@@ -153,8 +158,8 @@ const EditLaporan = () => {
             >
               <option selected>Pilih Hospital : </option>
               {/* <option selected disabled>
-                              Select a Grup:
-                            </option> */}
+                                  Select a Grup:
+                                </option> */}
 
               {custumer.map((d, i) => (
                 <option value={d._id}>
@@ -163,32 +168,42 @@ const EditLaporan = () => {
               ))}
             </select>
           </div>
-          <div className="mb-2">
-            <select
-              className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-            >
-              <option selected>Pilih Category: </option>
 
-              {dataKategori.map((d, i) => (
-                <option value={d._id}>
-                  {d.kode} - {d.name}
-                </option>
-              ))}
-            </select>
+          <div className="flex flex-wrap ">
+            {/* <div className="  md:mb-2  w-full">
+                          <div className="mb-2">
+                            <input
+                              type="text"
+                              className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+                              placeholder="Hospital e-mail"
+                            />
+                          </div>
+                        </div> */}
+            {/* <div className=" md:w-1/2  lg:pl-3 md:pl-3  w-full">
+                          {" "}
+                          <div className="mb-2">
+                            <input
+                              type="text"
+                              value={custumer.number_phone}
+                              onChange={handlePhoneNumberChange}
+                              className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+                              placeholder="Hospital phone number"
+                            />
+                          </div>
+                        </div> */}
           </div>
           <div className="mb-2">
             <select
-              value={quality}
-              onChange={(e) => setQuality(e.target.value)}
+              value={service}
+              onChange={(e) => setService(e.target.value)}
               className="block w-full px-2 py-2 mt-2  bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
             >
               <option value="" className="text-gray-200">
-                Quality
+                Service
               </option>
-              <option value="baik">Baik</option>
-              <option value="kurang baik">Kurang Baik</option>
+              <option value="cuci">Cuci</option>
+              <option value="setrika">Setrika</option>
+              <option value="cuci & setrika">Cuci & Setrika</option>
             </select>
           </div>
 
@@ -218,6 +233,44 @@ const EditLaporan = () => {
             </div>
           </div>
 
+          <div className="flex  ">
+            <h3 className="text-2xl font-semibold">Linen Information</h3>
+          </div>
+          <div className="flex flex-wrap">
+            <div className=" w-full">
+              {" "}
+              <div className="mb-2">
+                <select
+                  value={quality}
+                  onChange={(e) => setQuality(e.target.value)}
+                  className="block w-full px-2 py-2 mt-2  bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+                >
+                  <option value="" className="text-gray-200">
+                    Quality
+                  </option>
+                  <option value="baik">Baik</option>
+                  <option value="kurang baik">Kurang Baik</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          {/* <div className="flex flex-wrap">
+            <div className="md:w-1/2   w-full">
+              <div className="mb-2">
+                <select
+                  className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+                  value={linenn}
+                  onChange={(e) => setLinen(e.target.value)}
+                >
+                  <option selected>Pilih Linen: </option>
+
+                  {dataLinen.map((d, i) => (
+                    <option value={d._id}>{d.epc}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          </div> */}
           <div className="flex flex-wrap">
             <div className="md:w-1/2   w-full">
               <div className="mb-2">
@@ -243,20 +296,27 @@ const EditLaporan = () => {
               </div>
             </div>
           </div>
-
+          <div className="mb-2">
+            <textarea
+              className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+              cols="30"
+              rows="5"
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+              placeholder="Notes"
+            ></textarea>
+          </div>
           {/*footer*/}
-          <div className="flex justify-center pt-10">
-            <div className="mt-6 flex ">
-              <Link
-                to={"/laporanL"}
-                className=" bg-transparent mr-2 w-1/2  border text-center py-2 px-2 pl-5 pr-5 border-black hover:border-transparent text-black hover:text-white rounded-md hover:bg-blue-950"
-              >
-                Back
-              </Link>
-              <button className="color w-1/2 px-2 py-0 tracking-wide text-white transition-colors duration-200 transform bg-blue-950 rounded-md hover:bg-blue-900 focus:outline-none focus:bg-blue-500">
-                Update
-              </button>
-            </div>
+          <div className="flex justify-center pts-10">
+            <Link
+              to={"/laporanL"}
+              className=" bg-transparent mr-2 w-1/2  border text-center py-2 px-2 pl-5 pr-5 border-black hover:border-transparent text-black hover:text-white rounded-md hover:bg-blue-950"
+            >
+              Back
+            </Link>
+            <button className="color w-1/2 px-2 py-0 tracking-wide text-white transition-colors duration-200 transform bg-blue-950 rounded-md hover:bg-blue-900 focus:outline-none focus:bg-blue-500">
+              Update
+            </button>
           </div>
         </form>
       </div>

@@ -5,8 +5,11 @@ import Pagination from "../pagination/Pagination";
 import Users from "../data/user/User";
 import Loading from "../Spinners/Loading";
 
+import Search from "../search/Search";
+
 const User = () => {
   const [users, setUsers] = useState([]);
+  const [searchResults, setSearchResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [postPerPage] = useState(10);
@@ -27,6 +30,7 @@ const User = () => {
       // console.log(response.data.data.msg);
 
       setUsers(response.data.data);
+      setSearchResults(response.data.data);
       setLoading(false);
     } catch (e) {
       console.log(e);
@@ -36,7 +40,7 @@ const User = () => {
   // Get current posts
   const indexOfLastUsers = currentPage * postPerPage;
   const indexOfFistPost = indexOfLastUsers - postPerPage;
-  const currentUsers = users.slice(indexOfFistPost, indexOfLastUsers);
+  const currentUsers = searchResults.slice(indexOfFistPost, indexOfLastUsers);
 
   // Change page
   const paginateFront = () => setCurrentPage(currentPage + 1);
@@ -61,11 +65,12 @@ const User = () => {
         <div className="flex flex-wrap flex-row">
           <div className="flex-shrink max-w-full px-4 w-full">
             <div className="p-6 bg-white  rounded-lg shadow-lg mb-6">
+              <Search users={users} setSearchResults={setSearchResults} />
               {loading ? (
                 <Loading />
               ) : (
                 <div className="overflow-x-auto">
-                  <Users users={currentUsers} />
+                  <Users searchResults={currentUsers} />
                   <Pagination
                     postPerPage={postPerPage}
                     totalPosts={users.length}

@@ -4,9 +4,11 @@ import { Link } from "react-router-dom";
 import Pagination from "../pagination/Pagination";
 import Kategori1 from "../data/kategori/Kategori";
 import Loading from "../Spinners/Loading";
+import SearchKategori from "../search/SearchKategori";
 
 const Kategori = () => {
   const [category, setCategory] = useState([]);
+  const [searchResults, setSearchResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [postPerPage] = useState(10);
@@ -24,13 +26,14 @@ const Kategori = () => {
     });
     // console.log(response.data);
     setCategory(response.data.data);
+    setSearchResults(response.data.data);
     setLoading(false);
   };
 
   // Get current posts
   const indexOfLastPost = currentPage * postPerPage;
   const indexOfFirstPost = indexOfLastPost - postPerPage;
-  const currentPost = category.slice(indexOfFirstPost, indexOfLastPost);
+  const currentPost = searchResults.slice(indexOfFirstPost, indexOfLastPost);
 
   // Change page
   const paginateFront = () => setCurrentPage(currentPage + 1);
@@ -57,11 +60,12 @@ const Kategori = () => {
         <div className="flex flex-wrap flex-row">
           <div className="flex-shrink max-w-full px-4 w-full">
             <div className="p-6 bg-white  rounded-lg shadow-lg mb-6">
+              <SearchKategori category={category} setSearchResults={setSearchResults} />
               {loading ? (
                 <Loading />
               ) : (
                 <div className="overflow-x-auto">
-                  <Kategori1 category={currentPost} />
+                  <Kategori1 searchResults={currentPost} />
                   <Pagination
                     postPerPage={postPerPage}
                     totalPosts={category.length}

@@ -53,12 +53,12 @@ const Landing = () => {
           </p>
 
           <div className="flex w-full justify-center md:justify-start lg:pb-0 fade-in">
-            <Link
+            {/* <Link
               to={"/register"}
               className=" bg-blue-950  text-center py-3 px-5 mr-3  text-white rounded-xl hover:bg-blue-900  bounce-top-icons"
             >
               Get Started
-            </Link>
+            </Link> */}
             <Link
               to={"/login"}
               className=" bg-transparent  border text-center py-3 px-5 pl-10 pr-10 border-black hover:border-transparent text-black hover:text-white rounded-xl hover:bg-blue-950 bounce-top-icons"

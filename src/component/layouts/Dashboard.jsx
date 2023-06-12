@@ -22,6 +22,7 @@ const Dashboard = () => {
   const [note, setNote] = useState("");
   const [msg, setMsg] = useState("");
   const [address, setAddress] = useState("");
+  const [file, setFile] = useState("");
   const navigate = useNavigate();
 
   const [users, setUsers] = useState([]);
@@ -132,54 +133,76 @@ const Dashboard = () => {
     // console.log(response.data.data);
     setCustumer(response.data.data);
   };
-
+  //Upload
+  const handleFileChange = (event) => {
+    setFile(event.target.files[0]);
+  };
   const saveDistribusi = async (e) => {
     e.preventDefault();
     try {
+      if (file) {
+        console.log("file", file);
+        console.log("customer", name_customer);
+        // console.log("category", category);
+        console.log("quality", quality);
+        console.log("service", service);
+        console.log("dateIn", dateIn);
+        console.log("dateOut", dateOut);
+        console.log("weight", weight);
+        console.log("note", note);
+      }
+
+      const formData = new FormData();
+      formData.append("distribusi", file);
+      formData.append("customer", name_customer);
+      formData.append("quality", quality);
+      formData.append("service", service);
+      formData.append("dateIn", dateIn);
+      formData.append("dateOut", dateOut);
+      formData.append("weight", weight);
+      formData.append("note", note);
+
       const token = localStorage.getItem("token");
-      await axios
-        .post(
-          "http://localhost:9000/api/v1/rfid/distribusi",
-          {
-            customer: name_customer,
-            category: category,
-            linen: linenn,
-            quality: quality,
-            service: service,
-            dateIn: dateIn,
-            dateOut: dateOut,
-            amount: amount,
-            weight: weight,
-            note: note,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          },
-        )
+
+      const config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const response = await axios
+        .post("http://localhost:9000/api/v1/rfid/distribusi", formData, config)
         .then(({ data }) => {
           Swal.fire({
             icon: "success",
             text: data.message,
           });
         });
-
+      console.log(response);
       navigate("/distribusi");
     } catch (error) {
+      console.log(error);
+      Swal.fire({
+        text: error.response.data.msg,
+        icon: "error",
+      });
       if (error.response) {
-        // console.log(error.response.data);
-        setMsg(error.response.data.msg);
-      } else {
         Swal.fire({
-          text: error.data.msg,
+          text: error.response.data.msg,
+          icon: "error",
+        });
+        // console.log(error.response.data.msg);
+        // setMsg(error.response.data.msg);
+      } else {
+        // console.log(error.data);
+        Swal.fire({
+          text: error.data.response.msg,
           icon: "error",
         });
       }
     }
   };
-
   useEffect(() => {
     const lokasi = custumer.filter((item) => item._id === name_customer);
     setAddress(lokasi[0]?.address);
@@ -226,7 +249,7 @@ const Dashboard = () => {
                       </p>
                     </div>
                   </div>
-                  {item.role === "admin" ? (
+                  {item.role === "super_admin" ? (
                     <div className="flex-shrink max-w-full w-full lg:w-1/2 md:pt-0 pt-10">
                       <button
                         type="button"
@@ -252,7 +275,7 @@ const Dashboard = () => {
               </div>
             </div>
           </div>
-          {item.role === "admin" ? (
+          {item.role === "super_admin" ? (
             <div className="flex flex-wrap flex-row  ">
               <div className="max-w-full px-4 lg:w-auto mb-6 w-full fade-in pl-6">
                 <div className="bg-white border-b-4 mb-5 border-[#2DC8A8] rounded-lg shadow-xl p-5">
@@ -306,7 +329,7 @@ const Dashboard = () => {
                   </div>
                   <hr />
                   <div className="relative pt-5">
-                    <Chart data={chartData} />
+                    <Chart chartData={chartData} />
                     {/* <BarChart width={680} position={"relative"} height={350} data={data} margin={{}} barSize={40}>
                   <XAxis dataKey="name" scale="point" padding={{ left: 30, right: 10 }} />
                   <YAxis />
@@ -345,7 +368,11 @@ const Dashboard = () => {
                     {/*body*/}
                     <div className="relative p-6 flex-auto">
                       {Object.keys(msg).length > 0 && (
-                        <p className="alert alert-danger rounded text-center p-2 shadow m-3">{msg}</p>
+                        <div className="font-semibold">
+                          <p className="bg-red-200 uppercase opacity-75 font-sans  text-red-500 rounded text-center p-2 m-3">
+                            {msg}
+                          </p>
+                        </div>
                       )}
                       <form className="w-full" onSubmit={saveDistribusi}>
                         <div className="mb-2">
@@ -367,6 +394,18 @@ const Dashboard = () => {
                           </select>
                         </div>
 
+                        <div className="flex flex-wrap">
+                          <div className="w-full">
+                            <div className="mb-2">
+                              <input
+                                type="text"
+                                className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+                                placeholder="Address"
+                                value={address}
+                              />
+                            </div>
+                          </div>
+                        </div>
                         <div className="mb-2">
                           <select
                             value={service}
@@ -380,19 +419,6 @@ const Dashboard = () => {
                             <option value="setrika">Setrika</option>
                             <option value="cuci & setrika">Cuci & Setrika</option>
                           </select>
-                        </div>
-
-                        <div className="flex flex-wrap">
-                          <div className="md:w-1/2   w-full">
-                            <div className="mb-2">
-                              <input
-                                type="text"
-                                className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
-                                placeholder="Address"
-                                value={address}
-                              />
-                            </div>
-                          </div>
                         </div>
                         <div className="flex flex-wrap">
                           <div className="md:w-1/2   w-full">
@@ -428,24 +454,7 @@ const Dashboard = () => {
                           <h3 className="text-2xl font-semibold">Linen Information</h3>
                         </div>
                         <div className="flex flex-wrap">
-                          <div className="md:w-1/2   w-full">
-                            <div className="mb-2">
-                              <select
-                                className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
-                                value={category}
-                                onChange={(e) => setCategory(e.target.value)}
-                              >
-                                <option selected>Pilih Category: </option>
-
-                                {dataKategori.map((d, i) => (
-                                  <option value={d._id}>
-                                    {d.kode} - {d.name}
-                                  </option>
-                                ))}
-                              </select>
-                            </div>
-                          </div>
-                          <div className=" md:w-1/2 lg:pl-3 md:pl-3  w-full">
+                          <div className=" w-full">
                             {" "}
                             <div className="mb-2">
                               <select
@@ -462,38 +471,17 @@ const Dashboard = () => {
                             </div>
                           </div>
                         </div>
-                        <div className="flex flex-wrap">
-                          <div className="md:w-1/2   w-full">
-                            <div className="mb-2">
-                              <select
-                                className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
-                                value={linenn}
-                                onChange={(e) => setLinen(e.target.value)}
-                              >
-                                <option selected>Pilih Linen: </option>
 
-                                {dataLinen.map((d, i) => (
-                                  <option value={d._id}>
-                                    {d.epc} - {d.category?.name}
-                                  </option>
-                                ))}
-                              </select>
-                            </div>
-                          </div>
+                        <div className="mb-2">
+                          <label className="block text-sm font-semibold text-gray-800">Upload Linen</label>
+                          <input
+                            type="file"
+                            onChange={handleFileChange}
+                            className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+                          />
                         </div>
                         <div className="flex flex-wrap">
-                          <div className="md:w-1/2   w-full">
-                            <div className="mb-2">
-                              <input
-                                type="text"
-                                value={amount}
-                                onChange={(e) => setAmount(e.target.value)}
-                                className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
-                                placeholder="Amount"
-                              />
-                            </div>
-                          </div>
-                          <div className=" md:w-1/2 lg:pl-3 md:pl-3  w-full">
+                          <div className=" w-full">
                             {" "}
                             <div className="mb-2">
                               <input

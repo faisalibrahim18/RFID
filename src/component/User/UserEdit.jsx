@@ -97,9 +97,13 @@ const UserEdit = () => {
           <div className="flex w-full pt-1 content-center justify-between md:w-1/2 md:justify-end"></div>
         </div>
 
-        <div className="container mx-auto bg-white rounded-md p-10 shadow-md">
+        <div className="container mx-auto bg-white rounded-md  p-10 shadow-md">
           {Object.keys(message).length > 0 && (
-            <p className="alert alert-danger rounded text-center p-2 shadow m-3">{message}</p>
+            <div className="font-semibold">
+              <p className="bg-red-200 uppercase opacity-75 font-sans  text-red-500 rounded text-center p-2 m-3">
+                {message}
+              </p>
+            </div>
           )}
           <form className="w-full" onSubmit={updateUser}>
             <div className="mb-2">
@@ -206,7 +210,7 @@ const UserEdit = () => {
                     <option value="user">User</option>
                     <option value="user_laundry">User Laundry</option>
                     <option value="user_pabrik">User Pabrik</option>
-                    <option value=" delivery">Delivery</option>
+                    <option value="delivery">Delivery</option>
                     <option value="rs">User Rumah Sakit</option>
                   </select>
                 </div>

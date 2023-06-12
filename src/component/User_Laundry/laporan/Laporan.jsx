@@ -118,7 +118,7 @@ const Laporan = () => {
         <div className="flex-shrink max-w-full px-4 w-1/2">
           <h1 className="text-3xl font-semibold mt-3 mb-5">Laporan</h1>
         </div>
-        <div className="flex w-full mb-7 ml-5 md:ml-auto mr-4  font-semibold justify-between md:w-1/3 md:justify-end">
+        {/* <div className="flex w-full mb-7 ml-5 md:ml-auto mr-4  font-semibold justify-between md:w-1/3 md:justify-end">
           <button
             type="button"
             className="bg-[#FEBF00]  m-1 pl-3 pr-3 rounded-md p-2 hover:bg-yellow-400"
@@ -126,7 +126,7 @@ const Laporan = () => {
           >
             <i className="fa-solid fa-upload"></i> Upload
           </button>
-        </div>
+        </div> */}
       </div>
 
       <div className="flex flex-wrap flex-row px-4 ">

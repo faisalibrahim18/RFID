@@ -4,12 +4,13 @@ import Pagination from "../pagination/Pagination";
 import Inventory1 from "../data/inventory/Inventory";
 import axios from "axios";
 import Loading from "../Spinners/Loading";
+import SearchInventory from "../search/SearchInventory";
 
 const Inventory = () => {
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [postPerPage] = useState(10);
-
+  const [searchResults, setSearchResults] = useState([]);
   const [inventory, setInventory] = useState([]);
   useEffect(() => {
     getInventory();
@@ -25,13 +26,14 @@ const Inventory = () => {
     });
     // console.log(response.data);
     setInventory(response.data.data);
+    setSearchResults(response.data.data);
     setLoading(false);
   };
 
   // Get current posts
   const indexOfLastPost = currentPage * postPerPage;
   const indexOfFirstPost = indexOfLastPost - postPerPage;
-  const currentPost = inventory.slice(indexOfFirstPost, indexOfLastPost);
+  const currentPost = searchResults.slice(indexOfFirstPost, indexOfLastPost);
 
   // Change page
   const paginateFront = () => setCurrentPage(currentPage + 1);
@@ -59,11 +61,12 @@ const Inventory = () => {
         <div className="flex flex-wrap flex-row">
           <div className="flex-shrink max-w-full px-4 w-full">
             <div className="p-6 bg-white  rounded-lg shadow-lg mb-6">
+              <SearchInventory inventory={inventory} setSearchResults={setSearchResults} />
               {loading ? (
                 <Loading />
               ) : (
                 <div className="overflow-x-auto">
-                  <Inventory1 inventory={currentPost} />
+                  <Inventory1 searchResults={currentPost} />
                   <Pagination
                     postPerPage={postPerPage}
                     totalPosts={inventory.length}

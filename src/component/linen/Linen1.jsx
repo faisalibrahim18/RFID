@@ -5,9 +5,11 @@ import Swal from "sweetalert2";
 import Pagination from "../pagination/Pagination";
 import Linen from "../data/linen/Linen";
 import Loading from "../Spinners/Loading";
+import SearchLinen from "../search/SearchLinen";
 
 const Linen1 = () => {
   const [linen, setLinen] = useState([]);
+  const [searchResults, setSearchResults] = useState([]);
   const [datacategory, setDataCategory] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [file, setFile] = useState("");
@@ -46,13 +48,14 @@ const Linen1 = () => {
     });
     // console.log(response.data);
     setLinen(response.data.data);
+    setSearchResults(response.data.data);
     setLoading(false);
   };
 
   // Get current posts
   const indexOfLastPost = currentPage * postPerPage;
   const indexOfFirstPost = indexOfLastPost - postPerPage;
-  const currentPost = linen.slice(indexOfFirstPost, indexOfLastPost);
+  const currentPost = searchResults.slice(indexOfFirstPost, indexOfLastPost);
 
   // Change page
   const paginateFront = () => setCurrentPage(currentPage + 1);
@@ -97,18 +100,24 @@ const Linen1 = () => {
         });
       // console.log(response);
       navigate("/inventory");
+      window.location.reload();
     } catch (error) {
+      // console.log(error);
+      Swal.fire({
+        text: error.response.data.msg,
+        icon: "error",
+      });
       if (error.response) {
         Swal.fire({
-          text: error.response.data.message,
+          text: error.response.data.msg,
           icon: "error",
         });
-        // console.log(error.response.data.message);
+        // console.log(error.response.data.msg);
         // setMsg(error.response.data.msg);
       } else {
-        // console.log(error.response.message);
+        // console.log(error.data);
         Swal.fire({
-          text: error.data.message,
+          text: error.data.response.msg,
           icon: "error",
         });
       }
@@ -138,11 +147,12 @@ const Linen1 = () => {
         <div className="flex flex-wrap flex-row">
           <div className="flex-shrink max-w-full px-4 w-full">
             <div className="p-6 bg-white  rounded-lg shadow-lg mb-6">
+              <SearchLinen linen={linen} setSearchResults={setSearchResults} />
               {loading ? (
                 <Loading />
               ) : (
                 <div className="overflow-x-auto">
-                  <Linen linen={currentPost} />
+                  <Linen searchResults={currentPost} />
                   <Pagination
                     postPerPage={postPerPage}
                     totalPosts={linen.length}
@@ -184,20 +194,20 @@ const Linen1 = () => {
                       <select
                         className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
                         value={category}
+                        required
                         onChange={(e) => setCategory(e.target.value)}
                       >
                         <option selected>Pilih Kategori </option>
 
                         {datacategory.map((d, i) => (
-                          <option value={d._id}>
-                            {d.kode} - {d.name}
-                          </option>
+                          <option value={d._id}>{d.name}</option>
                         ))}
                       </select>
                     </div>
 
                     <div className="mb-2">
                       <input
+                        required
                         type="file"
                         onChange={handleFileChange}
                         className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"

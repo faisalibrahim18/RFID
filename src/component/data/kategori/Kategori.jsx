@@ -1,9 +1,9 @@
 import axios from "axios";
-import React from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
-const Kategori = ({ category, loading }) => {
+const Kategori = ({ category, loading, searchResults }) => {
   if (loading) {
     return <h2>Loading...</h2>;
   }
@@ -57,9 +57,7 @@ const Kategori = ({ category, loading }) => {
             <th scope="col" className="px-6 py-4">
               No
             </th>
-            <th scope="col" className="px-6 py-4">
-              Kode Kategori
-            </th>
+
             <th scope="col" className="px-6 py-4">
               Nama Kategori
             </th>
@@ -69,10 +67,10 @@ const Kategori = ({ category, loading }) => {
           </tr>
         </thead>
         <tbody>
-          {category.map((item, index) => (
+          {searchResults.map((item, index) => (
             <tr key={item._id} className="border-b text-center text-gray-600">
               <td className="whitespace-nowrap px-6 py-4">{index + 1}</td>
-              <td className="whitespace-nowrap px-6 py-4">{item.kode}</td>
+
               <td className="whitespace-nowrap px-6 py-4">{item.name}</td>
               <td className="whitespace-nowrap px-6 py-4">
                 <Link to={`/kategori/edit/${item._id}`} className="m-3">

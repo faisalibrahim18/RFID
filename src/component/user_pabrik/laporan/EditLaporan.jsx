@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 
-const EditDistribusi = () => {
+const EditLaporan = () => {
   const [name_customer, setNameCustomer] = useState("");
   const [category, setCategory] = useState("");
   const [linenn, setLinen] = useState("");
@@ -20,37 +20,37 @@ const EditDistribusi = () => {
 
   const { id } = useParams();
 
-  // useEffect(() => {
-  //   getLinen();
-  // }, []);
+  //   useEffect(() => {
+  //     getLinen();
+  //   }, []);
 
-  // const getLinen = async () => {
-  //   const token = localStorage.getItem("token");
-  //   const response = await axios.get("http://localhost:9000/api/v1/rfid/linen", {
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //       Authorization: `Bearer ${token}`,
-  //     },
-  //   });
-  //   // console.log(response.data.data);
-  //   setdataLinen(response.data.data);
-  // };
+  //   const getLinen = async () => {
+  //     const token = localStorage.getItem("token");
+  //     const response = await axios.get("http://localhost:9000/api/v1/rfid/linen", {
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //     });
+  //     // console.log(response.data.data);
+  //     setdataLinen(response.data.data);
+  //   };
 
-  // useEffect(() => {
-  //   getKategori();
-  // }, []);
+  //   useEffect(() => {
+  //     getKategori();
+  //   }, []);
 
-  // const getKategori = async () => {
-  //   const token = localStorage.getItem("token");
-  //   const response = await axios.get("http://localhost:9000/api/v1/rfid/category", {
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //       Authorization: `Bearer ${token}`,
-  //     },
-  //   });
-  //   // console.log(response.data.data);
-  //   setdataKategori(response.data.data);
-  // };
+  //   const getKategori = async () => {
+  //     const token = localStorage.getItem("token");
+  //     const response = await axios.get("http://localhost:9000/api/v1/rfid/category", {
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //     });
+  //     // console.log(response.data.data);
+  //     setdataKategori(response.data.data);
+  //   };
 
   useEffect(() => {
     getCustumer();
@@ -99,7 +99,7 @@ const EditDistribusi = () => {
     getDistribusiById();
   }, [id]);
 
-  const updateDistribusi = async (e) => {
+  const updateLaporan = async (e) => {
     e.preventDefault();
     try {
       const token = localStorage.getItem("token");
@@ -131,7 +131,7 @@ const EditDistribusi = () => {
             text: data.message,
           });
         });
-      navigate("/distribusi");
+      navigate("/laporanP");
     } catch (error) {
       if (error.response) {
         // console.log(error.response);
@@ -149,7 +149,7 @@ const EditDistribusi = () => {
       {/* Title */}
       <div className="lg:flex lg:flex-wrap pb-6">
         <div className="  text-3xl font-semibold  ">
-          <h1>Edit Distribusi</h1>
+          <h1>Edit Laporan</h1>
         </div>
 
         <div className="flex w-full pt-1 content-center justify-between md:w-1/2 md:justify-end"></div>
@@ -159,7 +159,7 @@ const EditDistribusi = () => {
         {Object.keys(msg).length > 0 && (
           <p className="alert alert-danger rounded text-center p-2 shadow m-3">{msg}</p>
         )}
-        <form className="w-full" onSubmit={updateDistribusi}>
+        <form className="w-full" onSubmit={updateLaporan}>
           <div className="mb-2">
             <select
               className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
@@ -168,8 +168,8 @@ const EditDistribusi = () => {
             >
               <option selected>Pilih Hospital : </option>
               {/* <option selected disabled>
-                                  Select a Grup:
-                                </option> */}
+                                Select a Grup:
+                              </option> */}
 
               {custumer.map((d, i) => (
                 <option value={d._id}>
@@ -181,26 +181,26 @@ const EditDistribusi = () => {
 
           <div className="flex flex-wrap ">
             {/* <div className="  md:mb-2  w-full">
-                          <div className="mb-2">
-                            <input
-                              type="text"
-                              className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
-                              placeholder="Hospital e-mail"
-                            />
-                          </div>
-                        </div> */}
+                        <div className="mb-2">
+                          <input
+                            type="text"
+                            className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+                            placeholder="Hospital e-mail"
+                          />
+                        </div>
+                      </div> */}
             {/* <div className=" md:w-1/2  lg:pl-3 md:pl-3  w-full">
-                          {" "}
-                          <div className="mb-2">
-                            <input
-                              type="text"
-                              value={custumer.number_phone}
-                              onChange={handlePhoneNumberChange}
-                              className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
-                              placeholder="Hospital phone number"
-                            />
-                          </div>
-                        </div> */}
+                        {" "}
+                        <div className="mb-2">
+                          <input
+                            type="text"
+                            value={custumer.number_phone}
+                            onChange={handlePhoneNumberChange}
+                            className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+                            placeholder="Hospital phone number"
+                          />
+                        </div>
+                      </div> */}
           </div>
           <div className="mb-2">
             <select
@@ -265,22 +265,22 @@ const EditDistribusi = () => {
             </div>
           </div>
           {/* <div className="flex flex-wrap">
-            <div className="md:w-1/2   w-full">
-              <div className="mb-2">
-                <select
-                  className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
-                  value={linenn}
-                  onChange={(e) => setLinen(e.target.value)}
-                >
-                  <option selected>Pilih Linen: </option>
+          <div className="md:w-1/2   w-full">
+            <div className="mb-2">
+              <select
+                className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+                value={linenn}
+                onChange={(e) => setLinen(e.target.value)}
+              >
+                <option selected>Pilih Linen: </option>
 
-                  {dataLinen.map((d, i) => (
-                    <option value={d._id}>{d.epc}</option>
-                  ))}
-                </select>
-              </div>
+                {dataLinen.map((d, i) => (
+                  <option value={d._id}>{d.epc}</option>
+                ))}
+              </select>
             </div>
-          </div> */}
+          </div>
+        </div> */}
           <div className="flex flex-wrap">
             <div className="md:w-1/2   w-full">
               <div className="mb-2">
@@ -319,7 +319,7 @@ const EditDistribusi = () => {
           {/*footer*/}
           <div className="flex justify-center pt-10">
             <Link
-              to={"/distribusi"}
+              to={"/laporanP"}
               className=" bg-transparent mr-2 w-1/2  border text-center py-2 px-2 pl-5 pr-5 border-black hover:border-transparent text-black hover:text-white rounded-md hover:bg-blue-950"
             >
               Back
@@ -334,4 +334,4 @@ const EditDistribusi = () => {
   );
 };
 
-export default EditDistribusi;
+export default EditLaporan;

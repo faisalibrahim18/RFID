@@ -3,12 +3,21 @@ import Ds from "../../../assets/ds.png";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { Link, useNavigate } from "react-router-dom";
+import Pagination from "../../pagination/Pagination";
+import Peminjaman1 from "../../data/peminjaman/Peminjaman";
+import Loading from "../../Spinners/Loading";
+import SearchPeminjaman from "../../search/Searchpeminjaman";
 
 const Peminjaman = () => {
   const [file, setFile] = useState("");
+  const [openTab, setOpenTab] = useState(1);
 
+  const [searchResults, setSearchResults] = useState([]);
   const [distribusi, setDistribusi] = useState([]);
   const [show, setShowModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [postPerPage] = useState(10);
 
   const navigate = useNavigate();
 
@@ -16,48 +25,12 @@ const Peminjaman = () => {
     getDistribusi();
   }, []);
   const getDistribusi = async () => {
+    setLoading(true);
     const response = await axios.get("http://localhost:9000/api/v1/rfid/distribusi");
     // console.log(response.data.data);
     setDistribusi(response.data.data);
-  };
-  const deleteDistribusi = async (distribusiId) => {
-    const isConfirm = await Swal.fire({
-      title: "Are youtd_clas sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      return result.isConfirmed;
-    });
-
-    if (!isConfirm) {
-      return;
-    }
-    const token = localStorage.getItem("token");
-    const response = await axios
-      .delete(`http://localhost:9000/api/v1/rfid/distribusi/${distribusiId}`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
-
-      .then(({ data }) => {
-        Swal.fire({
-          icon: "success",
-          text: data.message,
-        });
-        getDistribusi();
-      })
-      .catch(({ response: { data } }) => {
-        Swal.fire({
-          text: data.message,
-          icon: "error",
-        });
-      });
+    setSearchResults(response.data.data);
+    setLoading(false);
   };
 
   //Upload
@@ -95,6 +68,7 @@ const Peminjaman = () => {
         });
 
       navigate("/laporanL");
+      window.location.reload();
     } catch (error) {
       if (error.response) {
         Swal.fire({
@@ -112,6 +86,18 @@ const Peminjaman = () => {
       }
     }
   };
+
+  // Get current posts
+  const indexOfLastPost = currentPage * postPerPage;
+  const indexOfFirstPost = indexOfLastPost - postPerPage;
+  const currentPost = searchResults.slice(indexOfFirstPost, indexOfLastPost);
+
+  // Change page
+  const paginateFront = () => setCurrentPage(currentPage + 1);
+  const paginateBack = () => setCurrentPage(currentPage - 1);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
   return (
     <div className=" p-2">
       <div className="flex flex-wrap flex-row">
@@ -132,57 +118,23 @@ const Peminjaman = () => {
         <div className="flex-shrink max-w-full w-full rounded-md bg-white shadow-lg">
           <div className="p-6  rounded-lg ">
             <div className="overflow-x-auto">
-              <table className=" w-full ltr:text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                <thead>
-                  <tr>
-                    <th className="td-head ">No</th>
-                    <th className="td-head">Custumer</th>
-                    <th className="td-head">Tgl Peminjaman</th>
-                    <th className="td-head">Tgl Pengembalian</th>
-                    <th className="td-head">Kualitas Linen</th>
-                    <th className="td-head">Jumlah Linen</th>
+              <SearchPeminjaman distribusi={distribusi} setSearchResults={setSearchResults} />
 
-                    <th className="td-head">Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {distribusi.map((item, index) => (
-                    <tr key={item._id}>
-                      <td className="td-class">{index + 1}</td>
-                      <td className="td-class">{item.customer.name}</td>
-                      <td className="td-class">{item.dateIn}</td>
-                      <td className="td-class">{item.dateOut}</td>
-                      <td className="td-class">
-                        {item.quality === "baik" ? (
-                          <span className=" rounded-md bg-[#96CDF4] px-4 py-px text-xs font-semibold uppercase text-gray-900 antialiased">
-                            Baik
-                          </span>
-                        ) : (
-                          ""
-                        )}
-                        {item.quality === "kurang baik" ? (
-                          <span className="float-right rounded-md bg-[#FEBF00] px-4 py-px text-xs font-semibold uppercase text-gray-900 antialiased">
-                            Kurang Baik
-                          </span>
-                        ) : (
-                          ""
-                        )}
-                      </td>
-
-                      <td className="td-class">{item.amount}</td>
-
-                      <td className="td-class">
-                        <Link to={`/laporanL/edit/${item._id}`} className=" m-3 ">
-                          <i className="fa-solid fa-pen-to-square text-[#96CDF4] hover:text-blue-400"></i>
-                        </Link>
-                        <Link onClick={() => deleteDistribusi(item._id)}>
-                          <i className="fa-solid fa-trash-can text-[#FF1818] hover:text-red-400"></i>
-                        </Link>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+              {loading ? (
+                <Loading />
+              ) : (
+                <div className="overflow-x-auto">
+                  <Peminjaman1 searchResults={currentPost} />
+                </div>
+              )}
+              <Pagination
+                postPerPage={postPerPage}
+                totalPosts={distribusi.length}
+                paginateBack={paginateBack}
+                paginate={paginate}
+                paginateFront={paginateFront}
+                currentPage={currentPage}
+              />
             </div>
           </div>
           <div className="relative">

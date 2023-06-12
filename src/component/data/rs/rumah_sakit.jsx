@@ -3,10 +3,12 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 
-const rumah_sakit = ({ rumah_sakit, loading }) => {
+const rumah_sakit = ({ loading, searchRs, rumah_sakit }) => {
   if (loading) {
     return <h2>Loading...</h2>;
   }
+  // console.log(rumah_sakit);
+  // console.log(searchRs);
 
   const deleteHospital = async (hospitalId) => {
     const isConfirm = await Swal.fire({
@@ -73,7 +75,7 @@ const rumah_sakit = ({ rumah_sakit, loading }) => {
           </tr>
         </thead>
         <tbody>
-          {rumah_sakit.map((item, index) => (
+          {searchRs.map((item, index) => (
             <tr key={item._id} className="border-b text-center text-gray-600">
               <td className="whitespace-nowrap px-6 py-4">{index + 1}</td>
               <td className="whitespace-nowrap px-6 py-4">{item.code}</td>

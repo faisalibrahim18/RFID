@@ -3,12 +3,19 @@ import Ds from "../../../assets/ds.png";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { Link, useNavigate } from "react-router-dom";
+import Loading from "../../Spinners/Loading";
+import Pagination from "../../pagination/Pagination";
+import Laporan1 from "../../data/pabrik/Laporan";
 
 const Laporan = () => {
   const [file, setFile] = useState("");
 
   const [distribusi, setDistribusi] = useState([]);
   const [show, setShowModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [postPerPage] = useState(10);
+  const [openTab, setOpenTab] = useState(1);
 
   const navigate = useNavigate();
 
@@ -16,9 +23,11 @@ const Laporan = () => {
     getDistribusi();
   }, []);
   const getDistribusi = async () => {
+    setLoading(true);
     const response = await axios.get("http://localhost:9000/api/v1/rfid/distribusi");
     // console.log(response.data.data);
     setDistribusi(response.data.data);
+    setLoading(false);
   };
   const deleteDistribusi = async (distribusiId) => {
     const isConfirm = await Swal.fire({
@@ -94,22 +103,43 @@ const Laporan = () => {
           });
         });
 
-      navigate("/laporanL");
+      navigate("/laporanP");
+      window.location.reload();
     } catch (error) {
       if (error.response) {
         Swal.fire({
-          text: error.response.data.message,
+          text: error.response.data.msg,
           icon: "error",
         });
         // console.log(error.response);
-        setMsg(error.response.data.message);
+        setMsg(error.response.data.msg);
       } else {
         // console.log(error.response);
         Swal.fire({
-          text: error.data.message,
+          text: error.data.msg,
           icon: "error",
         });
       }
+    }
+  };
+
+  // Get current posts
+  const indexOfLastPost = currentPage * postPerPage;
+  const indexOfFirstPost = indexOfLastPost - postPerPage;
+  const currentPost = distribusi.slice(indexOfFirstPost, indexOfLastPost);
+
+  // Change page
+  const paginateFront = () => setCurrentPage(currentPage + 1);
+  const paginateBack = () => setCurrentPage(currentPage - 1);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  // export excel
+  const donwloadTemplate = async () => {
+    try {
+      window.open("http://localhost:9000/api/v1/rfid/distribusiDownloadTemplate");
+    } catch (error) {
+      console.log(error);
     }
   };
   return (
@@ -132,124 +162,21 @@ const Laporan = () => {
       <div className="flex flex-wrap flex-row px-4 ">
         <div className="flex-shrink max-w-full w-full rounded-md bg-white shadow-lg">
           <div className="p-6  rounded-lg ">
-            <div className="overflow-x-auto">
-              <table className=" w-full ltr:text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                <thead className="border-b bg-white font-medium ">
-                  <tr>
-                    <th scope="col" className="px-6 py-4">
-                      No
-                    </th>
-                    <th scope="col" className="px-6 py-4">
-                      Custumer
-                    </th>
-                    <th scope="col" className="px-6 py-4">
-                      Tgl Masuk
-                    </th>
-                    <th scope="col" className="px-6 py-4">
-                      Tgl Keluar
-                    </th>
-                    <th scope="col" className="px-6 py-4">
-                      Kualitas Linen
-                    </th>
-                    <th scope="col" className="px-6 py-4">
-                      Jumlah Linen
-                    </th>
-                    <th scope="col" className="px-6 py-4">
-                      Proses
-                    </th>
-                    <th scope="col" className="px-6 py-4">
-                      Action
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {distribusi.map((item, index) => (
-                    <tr key={item._id} className="border-b text-center text-gray-600">
-                      <td className="whitespace-nowrap px-6 py-4">{index + 1}</td>
-                      <td className="whitespace-nowrap px-6 py-4">{item.customer.name}</td>
-                      <td className="whitespace-nowrap px-6 py-4">{item.dateIn}</td>
-                      <td className="whitespace-nowrap px-6 py-4">{item.dateOut}</td>
-                      <td className="whitespace-nowrap px-6 py-4">
-                        {item.quality === "baik" ? (
-                          <span className=" rounded-md bg-[#96CDF4] px-4 py-px text-xs font-semibold uppercase text-gray-900 antialiased">
-                            Baik
-                          </span>
-                        ) : (
-                          ""
-                        )}
-                        {item.quality === "kurang baik" ? (
-                          <span className="float-right rounded-md bg-[#FEBF00] px-4 py-px text-xs font-semibold uppercase text-gray-900 antialiased">
-                            Kurang Baik
-                          </span>
-                        ) : (
-                          ""
-                        )}
-                      </td>
-
-                      <td className="whitespace-nowrap px-6 py-4">{item.amount}</td>
-                      <td className="whitespace-nowrap px-6 py-4">
-                        {" "}
-                        {item.status === null ? (
-                          <button
-                            onClick={() => handleUpdateProses(item._id)}
-                            className="bg-[#b5f1b5] hover:bg-[#88f588] pr-2 pl-2 rounded-lg"
-                          >
-                            Confirm
-                          </button>
-                        ) : (
-                          ""
-                        )}
-                        {item?.status?.status === "processing" ? (
-                          <span className="bg-[#96CDF4]  pr-2 pl-2 rounded-lg">CheckIn</span>
-                        ) : (
-                          ""
-                        )}
-                        {item?.status?.status === "checking" ? (
-                          <span className="bg-[#FEBF00] pr-2 pl-2 rounded-lg">Transit</span>
-                        ) : (
-                          ""
-                        )}
-                        {item?.status?.status === "transit" ? (
-                          <span className="bg-[#5eebc7]  pr-2 pl-2 rounded-lg">Accepted</span>
-                        ) : (
-                          ""
-                        )}
-                        {item?.status?.status === "accepted" ? (
-                          <span className="bg-[#65a0f8]  pr-2 pl-2 rounded-lg">Wash</span>
-                        ) : (
-                          ""
-                        )}
-                        {item?.status?.status === "washing" ? (
-                          <span className="bg-[#82f865]  pr-2 pl-2 rounded-lg">Dry</span>
-                        ) : (
-                          ""
-                        )}
-                        {item?.status?.status === "drying" ? (
-                          <span className="bg-[#54e2f5]  pr-2 pl-2 rounded-lg">Done</span>
-                        ) : (
-                          ""
-                        )}
-                        {item?.status?.status === "success" ? (
-                          <span className=" rounded-md bg-[#10e04f] px-4 py-px text-xs font-semibold uppercase text-gray-900 antialiased">
-                            Success
-                          </span>
-                        ) : (
-                          ""
-                        )}
-                      </td>
-                      <td className="whitespace-nowrap px-6 py-4">
-                        <Link to={`/laporanL/edit/${item._id}`} className=" m-3 ">
-                          <i className="fa-solid fa-pen-to-square text-[#96CDF4] hover:text-blue-400"></i>
-                        </Link>
-                        <Link onClick={() => deleteDistribusi(item._id)}>
-                          <i className="fa-solid fa-trash-can text-[#FF1818] hover:text-red-400"></i>
-                        </Link>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            {loading ? (
+              <Loading />
+            ) : (
+              <div className="overflow-x-auto">
+                <Laporan1 distribusi={currentPost} />
+                <Pagination
+                  postPerPage={postPerPage}
+                  totalPosts={distribusi.length}
+                  paginateBack={paginateBack}
+                  paginate={paginate}
+                  paginateFront={paginateFront}
+                  currentPage={currentPage}
+                />
+              </div>
+            )}
           </div>
           <div className="relative">
             <img src={Ds} alt="" className="rounded-lg" />
@@ -276,25 +203,69 @@ const Laporan = () => {
                 </div>
                 {/*body*/}
                 <div className="relative p-6 flex-auto">
-                  <form className="w-full" onSubmit={uploadData}>
-                    <div className="mb-2">
-                      <input
-                        type="file"
-                        onChange={handleFileChange}
-                        className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
-                      />
-                    </div>
+                  <div className="container mx-auto">
+                    <div className="flex flex-col max-w-xl">
+                      <ul className="flex ">
+                        <li>
+                          <a
+                            href="#"
+                            onClick={() => setOpenTab(1)}
+                            className={` ${
+                              openTab === 1 ? "border-b-4 border-green-200 text-black" : ""
+                            } inline-block px-4 py-2 text-gray-600 hover:border-b-4 border-green-200 `}
+                          >
+                            Upload File Excel
+                          </a>
+                        </li>
+                        <li>
+                          <a
+                            href="#"
+                            onClick={() => setOpenTab(2)}
+                            className={` ${
+                              openTab === 2 ? "border-b-4 border-green-200" : ""
+                            } inline-block px-4 py-2 text-gray-600 hover:border-b-4 border-green-200`}
+                          >
+                            Download Template Excel
+                          </a>
+                        </li>
+                      </ul>
+                      <div className="pt-4">
+                        <div className={openTab === 1 ? "block" : "hidden"}>
+                          <form className="w-full" onSubmit={uploadData}>
+                            <div className="mb-2">
+                              <label htmlFor="file" className="font-semibold text-gray-500">
+                                Upload File
+                              </label>
+                              <input
+                                type="file"
+                                onChange={(e) => handleFileChange(e)}
+                                className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+                              />
+                            </div>
 
-                    {/*footer*/}
-                    <div className="flex justify-center pt-10">
-                      <button
-                        className="bg-[#A4BC92] text-white active:bg-[#C7E9B0] font-semibold text-sm px-5 py-2 rounded-lg shadow hover:shadow-lg outline-none focus:outline-none mb-1 ease-linear transition-all duration-150"
-                        type="submit"
-                      >
-                        Upload
-                      </button>
+                            {/*footer*/}
+                            <div className="flex justify-center md:pl-28 pt-10">
+                              <button
+                                className="bg-[#A4BC92] text-white active:bg-[#C7E9B0] font-semibold text-sm px-5 py-2 rounded-lg shadow hover:shadow-lg outline-none focus:outline-none mb-1 ease-linear transition-all duration-150"
+                                type="submit"
+                              >
+                                Upload
+                              </button>
+                            </div>
+                          </form>
+                        </div>
+                        <div className={openTab === 2 ? "block" : "hidden"}>
+                          <button
+                            onClick={donwloadTemplate}
+                            type="button"
+                            className="bg-[#1cc939] text-white  m-1 pl-3 pr-3 rounded-md p-2 hover:bg-[#40d859]"
+                          >
+                            <i className="fa-solid fa-file-excel"></i> Cetak Excel
+                          </button>
+                        </div>
+                      </div>
                     </div>
-                  </form>
+                  </div>
                 </div>
               </div>
             </div>

@@ -62,18 +62,6 @@ const AddKategori = () => {
         )}
         <form className="" onSubmit={saveKategori}>
           <div className="mb-2">
-            <label for="Kode Kategori" className=" text-sm font-semibold text-gray-800">
-              Kode Kategori
-            </label>
-            <input
-              type="text"
-              value={kode}
-              onChange={(e) => setKode(e.target.value)}
-              className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
-              placeholder="Masukan Kode Kategori..."
-            />
-          </div>
-          <div className="mb-2">
             <label for="Nama Kategori" className=" text-sm font-semibold text-gray-800">
               Nama Kategori
             </label>

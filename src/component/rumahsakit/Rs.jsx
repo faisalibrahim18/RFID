@@ -1,13 +1,14 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import Swal from "sweetalert2";
 import Pagination from "../pagination/Pagination";
 import Rumah_Sakit from "../data/rs/rumah_sakit";
 import Loading from "../Spinners/Loading";
+import SearchRS from "../search/SearchRS";
 
 const Rs = () => {
   const [rumah_sakit, setRs] = useState([]);
+  const [searchRs, setSearchRs] = useState([]);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [postPerPage] = useState(10);
@@ -26,16 +27,19 @@ const Rs = () => {
         },
       });
       // console.log(response.data.data);
+      setSearchRs(response.data.data);
       setRs(response.data.data);
       setLoading(false);
     } catch (e) {
       console.log(e);
     }
   };
+  // console.log(searchRs);
+  // console.log(rumahsakit);
   // Get current posts
   const indexOfLastUsers = currentPage * postPerPage;
   const indexOfFistPost = indexOfLastUsers - postPerPage;
-  const currentPost = rumah_sakit.slice(indexOfFistPost, indexOfLastUsers);
+  const currentPost = searchRs.slice(indexOfFistPost, indexOfLastUsers);
 
   // Change page
   const paginateFront = () => setCurrentPage(currentPage + 1);
@@ -63,11 +67,12 @@ const Rs = () => {
         <div className="flex flex-wrap flex-row">
           <div className="flex-shrink max-w-full px-4 w-full">
             <div className="p-6 bg-white  rounded-lg shadow-lg mb-6">
+              <SearchRS rumah_sakit={rumah_sakit} setSearchRs={setSearchRs} />
               {loading ? (
                 <Loading />
               ) : (
                 <div className="overflow-x-auto">
-                  <Rumah_Sakit rumah_sakit={currentPost} />
+                  <Rumah_Sakit searchRs={currentPost} />
                   <Pagination
                     postPerPage={postPerPage}
                     totalPosts={rumah_sakit.length}

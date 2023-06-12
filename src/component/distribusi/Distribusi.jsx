@@ -6,10 +6,13 @@ import Swal from "sweetalert2";
 import Pagination from "../pagination/Pagination";
 import Distribusi1 from "../data/distribusi/Distribusi";
 import Loading from "../Spinners/Loading";
+import SearchDistribusi from "../search/SearchDistribusi";
 
 const Distribusi = () => {
   const [showModal, setShowModal] = React.useState(false);
+  const [openTab, setOpenTab] = useState(1);
 
+  const [searchResults, setSearchResults] = useState([]);
   const [distribusi, setDistribusi] = useState([]);
 
   const [file, setFile] = useState("");
@@ -24,7 +27,7 @@ const Distribusi = () => {
   // Get current posts
   const indexOfLastPost = currentPage * postPerPage;
   const indexOfFirstPost = indexOfLastPost - postPerPage;
-  const currentPost = distribusi.slice(indexOfFirstPost, indexOfLastPost);
+  const currentPost = searchResults.slice(indexOfFirstPost, indexOfLastPost);
 
   // Change page
   const paginateFront = () => setCurrentPage(currentPage + 1);
@@ -38,8 +41,9 @@ const Distribusi = () => {
   const getDistribusi = async () => {
     setLoading(true);
     const response = await axios.get("http://localhost:9000/api/v1/rfid/distribusi");
-    // console.log(response.data.data);
+    console.log(response.data.data);
     setDistribusi(response.data.data);
+    setSearchResults(response.data.data);
     setLoading(false);
   };
 
@@ -53,7 +57,7 @@ const Distribusi = () => {
 
     try {
       if (file) {
-        console.log("file", file);
+        // console.log("file", file);
       }
 
       const formData = new FormData();
@@ -76,19 +80,34 @@ const Distribusi = () => {
             text: data.message,
           });
         });
-
-      navigate("/inventory");
+      // console.log(response);
+      navigate("/distribusi");
+      window.location.reload();
     } catch (error) {
+      console.log(error.response);
       if (error.response) {
         console.log(error.response);
+        Swal.fire({
+          text: error.response.data.msg,
+          icon: "error",
+        });
         // setMsg(error.response.data.msg);
       } else {
         console.log(error.response);
         Swal.fire({
-          text: error.data.message,
+          text: error.response,
           icon: "error",
         });
       }
+    }
+  };
+
+  // export excel
+  const donwloadTemplate = async () => {
+    try {
+      window.open("http://localhost:9000/api/v1/rfid/distribusiDownloadTemplate");
+    } catch (error) {
+      console.log(error);
     }
   };
   return (
@@ -113,21 +132,22 @@ const Distribusi = () => {
         <div className="flex flex-wrap flex-row">
           <div className="flex-shrink max-w-full px-4 w-full">
             <div className="p-6 bg-white  rounded-lg shadow-lg mb-6">
+              <SearchDistribusi distribusi={distribusi} setSearchResults={setSearchResults} />
               {loading ? (
                 <Loading />
               ) : (
                 <div className="overflow-x-auto">
-                  <Distribusi1 distribusi={currentPost} />
-                  <Pagination
-                    postPerPage={postPerPage}
-                    totalPosts={distribusi.length}
-                    paginateBack={paginateBack}
-                    paginate={paginate}
-                    paginateFront={paginateFront}
-                    currentPage={currentPage}
-                  />
+                  <Distribusi1 searchResults={currentPost} />
                 </div>
               )}
+              <Pagination
+                postPerPage={postPerPage}
+                totalPosts={distribusi.length}
+                paginateBack={paginateBack}
+                paginate={paginate}
+                paginateFront={paginateFront}
+                currentPage={currentPage}
+              />
             </div>
           </div>
         </div>
@@ -153,25 +173,69 @@ const Distribusi = () => {
                 </div>
                 {/*body*/}
                 <div className="relative p-6 flex-auto">
-                  <form className="w-full" onSubmit={uploadData}>
-                    <div className="mb-2">
-                      <input
-                        type="file"
-                        onChange={handleFileChange}
-                        className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
-                      />
-                    </div>
+                  <div className="container mx-auto">
+                    <div className="flex flex-col max-w-xl">
+                      <ul className="flex ">
+                        <li>
+                          <a
+                            href="#"
+                            onClick={() => setOpenTab(1)}
+                            className={` ${
+                              openTab === 1 ? "border-b-4 border-green-200 text-black" : ""
+                            } inline-block px-4 py-2 text-gray-600 hover:border-b-4 border-green-200 `}
+                          >
+                            Upload File Excel
+                          </a>
+                        </li>
+                        <li>
+                          <a
+                            href="#"
+                            onClick={() => setOpenTab(2)}
+                            className={` ${
+                              openTab === 2 ? "border-b-4 border-green-200" : ""
+                            } inline-block px-4 py-2 text-gray-600 hover:border-b-4 border-green-200`}
+                          >
+                            Download Template Excel
+                          </a>
+                        </li>
+                      </ul>
+                      <div className="pt-4">
+                        <div className={openTab === 1 ? "block" : "hidden"}>
+                          <form className="w-full" onSubmit={uploadData}>
+                            <div className="mb-2">
+                              <label htmlFor="file" className="font-semibold text-gray-500">
+                                Upload File
+                              </label>
+                              <input
+                                type="file"
+                                onChange={(e) => handleFileChange(e)}
+                                className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+                              />
+                            </div>
 
-                    {/*footer*/}
-                    <div className="flex justify-center pt-10">
-                      <button
-                        className="bg-[#A4BC92] text-white active:bg-[#C7E9B0] font-semibold text-sm px-5 py-2 rounded-lg shadow hover:shadow-lg outline-none focus:outline-none mb-1 ease-linear transition-all duration-150"
-                        type="submit"
-                      >
-                        Upload
-                      </button>
+                            {/*footer*/}
+                            <div className="flex justify-center md:pl-28 pt-10">
+                              <button
+                                className="bg-[#A4BC92] text-white active:bg-[#C7E9B0] font-semibold text-sm px-5 py-2 rounded-lg shadow hover:shadow-lg outline-none focus:outline-none mb-1 ease-linear transition-all duration-150"
+                                type="submit"
+                              >
+                                Upload
+                              </button>
+                            </div>
+                          </form>
+                        </div>
+                        <div className={openTab === 2 ? "block" : "hidden"}>
+                          <button
+                            onClick={donwloadTemplate}
+                            type="button"
+                            className="bg-[#1cc939] text-white  m-1 pl-3 pr-3 rounded-md p-2 hover:bg-[#40d859]"
+                          >
+                            <i className="fa-solid fa-file-excel"></i> Cetak Excel
+                          </button>
+                        </div>
+                      </div>
                     </div>
-                  </form>
+                  </div>
                 </div>
               </div>
             </div>
