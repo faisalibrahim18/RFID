@@ -70,6 +70,9 @@ const rumah_sakit = ({ loading, searchRs, rumah_sakit }) => {
               Alamat
             </th>
             <th scope="col" className="px-6 py-4">
+              Stok Linen
+            </th>
+            <th scope="col" className="px-6 py-4">
               Action
             </th>
           </tr>
@@ -82,6 +85,7 @@ const rumah_sakit = ({ loading, searchRs, rumah_sakit }) => {
               <td className="whitespace-nowrap px-6 py-4">{item.name}</td>
               <td className="whitespace-nowrap px-6 py-4">{item.number_phone}</td>
               <td className="whitespace-nowrap px-6 py-4">{item.address}</td>
+              <td className="whitespace-nowrap px-6 py-4">{item.stock}</td>
               <td className="whitespace-nowrap px-6 py-4">
                 <Link to={`/rumah_sakit/edit/${item._id}`} className="m-3">
                   <i className="fa-solid fa-pen-to-square text-[#96CDF4] hover:text-blue-400"></i>

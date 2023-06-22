@@ -6,6 +6,7 @@ import Swal from "sweetalert2";
 const AddInventory = () => {
   const [kode, setKode] = useState("");
   const [name, setName] = useState("");
+  const [status, setStatus] = useState("");
   const [amount, setAmount] = useState("");
   const [message, setMsg] = useState("");
 
@@ -22,6 +23,7 @@ const AddInventory = () => {
             kode: kode,
             name: name,
             amount: amount,
+            status: status,
           },
           {
             headers: {
@@ -100,6 +102,21 @@ const AddInventory = () => {
               className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
               placeholder="Masukan Jumlah..."
             />
+          </div>
+          <div className="mb-2">
+            <label for="email" className="block text-sm font-semibold text-gray-800">
+              Pilih Status
+            </label>
+            <select
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+              className="block w-full px-2 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+            >
+              <option>Pilih Status :</option>
+
+              <option value="operasional">Operasional</option>
+              <option value="emergency">Emergency</option>
+            </select>
           </div>
 
           <div className="mt-6 flex ">

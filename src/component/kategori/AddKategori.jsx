@@ -5,7 +5,8 @@ import Swal from "sweetalert2";
 
 const AddKategori = () => {
   const [name, setName] = useState("");
-  const [kode, setKode] = useState("");
+  const [expired, setExpired] = useState("");
+  const [unit, setUnit] = useState("");
   const [message, setMsg] = useState("");
   const navigate = useNavigate();
   const saveKategori = async (e) => {
@@ -16,8 +17,9 @@ const AddKategori = () => {
         .post(
           "http://localhost:9000/api/v1/rfid/category",
           {
-            kode: kode,
             name: name,
+            expired: expired,
+            unit: unit,
           },
           {
             headers: {
@@ -71,6 +73,29 @@ const AddKategori = () => {
               onChange={(e) => setName(e.target.value)}
               className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
               placeholder="Masukan Nama Kategori..."
+            />
+          </div>
+          <div className="mb-2">
+            <label for="Nama Kategori" className=" text-sm font-semibold text-gray-800">
+              Expired
+            </label>
+            <input
+              type="date"
+              value={expired}
+              onChange={(e) => setExpired(e.target.value)}
+              className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+            />
+          </div>
+          <div className="mb-2">
+            <label for="Nama Kategori" className=" text-sm font-semibold text-gray-800">
+              Unit
+            </label>
+            <input
+              type="text"
+              value={unit}
+              onChange={(e) => setUnit(e.target.value)}
+              placeholder="Masukan Unit..."
+              className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
             />
           </div>
 

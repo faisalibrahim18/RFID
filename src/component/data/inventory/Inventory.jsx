@@ -65,6 +65,9 @@ const Inventory = ({ loading, inventory, searchResults }) => {
               Jumlah
             </th>
             <th scope="col" className="px-6 py-4">
+              status
+            </th>
+            <th scope="col" className="px-6 py-4">
               Action
             </th>
           </tr>
@@ -76,6 +79,7 @@ const Inventory = ({ loading, inventory, searchResults }) => {
               <td className="whitespace-nowrap px-6 py-4">{item.kode}</td>
               <td className="whitespace-nowrap px-6 py-4">{item.name}</td>
               <td className="whitespace-nowrap px-6 py-4">{item.amount}</td>
+              <td className="whitespace-nowrap px-6 py-4">{item.status}</td>
               <td className="whitespace-nowrap px-6 py-4">
                 <Link to={`/inventory/edit/${item._id}`} className="m-3 ">
                   <i className="fa-solid fa-pen-to-square text-[#96CDF4] hover:text-blue-400"></i>

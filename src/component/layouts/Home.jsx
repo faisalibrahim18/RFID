@@ -4,10 +4,12 @@ import Layout from "./Layout";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import Loading from "../Spinners/Loading";
+import { checkTokenExpiration } from "../../utils/token";
 
 const Home = ({ loading }) => {
   const navigate = useNavigate();
   useEffect(() => {
+    checkTokenExpiration();
     const token = localStorage.getItem("token");
     if (!token) {
       Swal.fire({

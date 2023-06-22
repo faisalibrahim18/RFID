@@ -56,10 +56,20 @@ const Linen = ({ linen, searchResults, loading }) => {
               No
             </th>
             <th scope="col" className="px-6 py-4">
+              Kode
+            </th>
+            <th scope="col" className="px-6 py-4">
+              Rumah Sakit
+            </th>
+            <th scope="col" className="px-6 py-4">
               Linen
             </th>
             <th scope="col" className="px-6 py-4">
               Kategori
+            </th>
+
+            <th scope="col" className="px-6 py-4">
+              Counter
             </th>
             <th scope="col" className="px-6 py-4">
               Action
@@ -70,8 +80,11 @@ const Linen = ({ linen, searchResults, loading }) => {
           {searchResults.map((item, index) => (
             <tr key={item._id} className="border-b text-center text-gray-600">
               <td className="whitespace-nowrap px-6 py-4">{index + 1}</td>
+              <td className="whitespace-nowrap px-6 py-4">{item.code}</td>
+              <td className="whitespace-nowrap px-6 py-4">{item.hospital.name}</td>
               <td className="whitespace-nowrap px-6 py-4">{item.epc}</td>
               <td className="whitespace-nowrap px-6 py-4">{item.category?.name}</td>
+              <td className="whitespace-nowrap px-6 py-4">{item.counter}</td>
               <td className="whitespace-nowrap px-6 py-4">
                 <Link to={`/linen/edit/${item._id}`} className=" m-3">
                   <i className="fa-solid fa-pen-to-square text-[#96CDF4] hover:text-blue-400"></i>

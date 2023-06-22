@@ -3,10 +3,12 @@ import Inventory from "../../component/inventory/Inventory";
 import Layout from "../../component/layouts/Layout";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import { checkTokenExpiration } from "../../utils/token";
 
 const InventoryList = () => {
   const navigate = useNavigate();
   useEffect(() => {
+    checkTokenExpiration();
     const token = localStorage.getItem("token");
     if (!token) {
       Swal.fire({

@@ -6,7 +6,9 @@ import { store } from "./app/store";
 import { Provider } from "react-redux";
 import { createRoot } from "react-dom/client";
 import axios from "axios";
+// import { config } from "dotenv";
 
+// config();
 axios.defaults.withCredentials = true;
 const container = document.getElementById("root");
 const root = createRoot(container);

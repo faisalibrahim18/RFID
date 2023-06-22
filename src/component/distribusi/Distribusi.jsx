@@ -7,6 +7,7 @@ import Pagination from "../pagination/Pagination";
 import Distribusi1 from "../data/distribusi/Distribusi";
 import Loading from "../Spinners/Loading";
 import SearchDistribusi from "../search/SearchDistribusi";
+// const API_URL = process.env.REACT_URL_API_URL;
 
 const Distribusi = () => {
   const [showModal, setShowModal] = React.useState(false);
@@ -14,6 +15,7 @@ const Distribusi = () => {
 
   const [searchResults, setSearchResults] = useState([]);
   const [distribusi, setDistribusi] = useState([]);
+  // const API_URL = process.env.REACT_URL_API_URL;
 
   const [file, setFile] = useState("");
   const { id } = useParams();
@@ -40,8 +42,9 @@ const Distribusi = () => {
   }, []);
   const getDistribusi = async () => {
     setLoading(true);
+
     const response = await axios.get("http://localhost:9000/api/v1/rfid/distribusi");
-    console.log(response.data.data);
+    // console.log(response.data.data);
     setDistribusi(response.data.data);
     setSearchResults(response.data.data);
     setLoading(false);

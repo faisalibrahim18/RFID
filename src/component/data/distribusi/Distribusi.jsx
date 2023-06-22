@@ -11,6 +11,9 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
   const [showDry, setShowDry] = React.useState(false);
   const [showDelivery, setShowDelivery] = React.useState(false);
   const [showDone, setShowDone] = React.useState(false);
+  const [openTab, setOpenTab] = React.useState(false);
+  const [openOptions, setOpenOptions] = React.useState(false);
+  const [collapsedIds, setCollapsedIds] = useState([]);
 
   const [file, setFile] = useState("");
   const [msg, setMsg] = useState("");
@@ -26,13 +29,20 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
   const { id } = useParams();
   const navigate = useNavigate();
 
+  const toggleCollapse = (id) => {
+    if (collapsedIds.includes(id)) {
+      setCollapsedIds(collapsedIds.filter((collapsedId) => collapsedId !== id));
+    } else {
+      setCollapsedIds([...collapsedIds, id]);
+    }
+  };
   if (loading) {
     return <h2>Loading...</h2>;
   }
 
   const deleteDistribusi = async (distribusiId) => {
     const isConfirm = await Swal.fire({
-      title: "Are youtd_clas sure?",
+      title: "Are you sure?",
       text: "You won't be able to revert this!",
       icon: "warning",
       showCancelButton: true,
@@ -158,7 +168,7 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
     e.preventDefault();
     try {
       if (file) {
-        console.log("check", file);
+        console.log("file", file);
         console.log("name", name);
         console.log("email", email);
         console.log("no_hp", no_hp);
@@ -166,7 +176,7 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
         console.log("note", note);
       }
       const formData = new FormData();
-      formData.append("check", file);
+      formData.append("file", file);
       formData.append("name", name);
       formData.append("email", email);
       formData.append("no_hp", no_hp);
@@ -305,7 +315,7 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
     e.preventDefault();
     try {
       if (file) {
-        console.log("accept", file);
+        console.log("file", file);
         console.log("name", name);
         console.log("email", email);
         console.log("no_hp", no_hp);
@@ -313,7 +323,7 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
         console.log("note", note);
       }
       const formData = new FormData();
-      formData.append("accept", file);
+      formData.append("file", file);
       formData.append("name", name);
       formData.append("email", email);
       formData.append("no_hp", no_hp);
@@ -334,7 +344,7 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
             text: data.message,
           });
         });
-      console.log(response);
+      // console.log(response);
       navigate("/distribusi");
       window.location.reload();
       // e.preventDefault();
@@ -383,7 +393,7 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
     e.preventDefault();
     try {
       if (file) {
-        console.log("wash", file);
+        console.log("file", file);
         console.log("name", name);
         console.log("email", email);
         console.log("no_hp", no_hp);
@@ -391,7 +401,7 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
         console.log("note", note);
       }
       const formData = new FormData();
-      formData.append("wash", file);
+      formData.append("file", file);
       formData.append("name", name);
       formData.append("email", email);
       formData.append("no_hp", no_hp);
@@ -461,7 +471,7 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
     e.preventDefault();
     try {
       if (file) {
-        console.log("dry", file);
+        console.log("file", file);
         console.log("name", name);
         console.log("email", email);
         console.log("no_hp", no_hp);
@@ -469,7 +479,7 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
         console.log("note", note);
       }
       const formData = new FormData();
-      formData.append("dry", file);
+      formData.append("file", file);
       formData.append("name", name);
       formData.append("email", email);
       formData.append("no_hp", no_hp);
@@ -540,34 +550,33 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
     e.preventDefault();
     try {
       const token = localStorage.getItem("token");
-      const response = await axios
-        .put(
-          `http://localhost:9000/api/v1/rfid/tracker/delivery/${id}`,
+      const response = await axios.put(
+        `http://localhost:9000/api/v1/rfid/tracker/delivery/${id}`,
 
-          {
-            name: name,
-            email: email,
-            no_hp: no_hp,
-            vehicle: vehicle,
-            license: license,
-            amount: amount,
-            heavy: heavy,
-            note: note,
-          },
+        {
+          name: name,
+          email: email,
+          no_hp: no_hp,
+          vehicle: vehicle,
+          license: license,
+          amount: amount,
+          heavy: heavy,
+          note: note,
+        },
 
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
-        )
-        .then(({ data }) => {
-          Swal.fire({
-            icon: "success",
-            text: data.message,
-          });
+        },
+      );
+      console.log(response).then(({ data }) => {
+        Swal.fire({
+          icon: "success",
+          text: data.message,
         });
+      });
       // console.log(response);
       navigate("/distribusi");
       window.location.reload();
@@ -611,7 +620,7 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
     e.preventDefault();
     try {
       if (file) {
-        console.log("done", file);
+        console.log("file", file);
         console.log("name", name);
         console.log("email", email);
         console.log("no_hp", no_hp);
@@ -619,7 +628,7 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
         console.log("note", note);
       }
       const formData = new FormData();
-      formData.append("done", file);
+      formData.append("file", file);
       formData.append("name", name);
       formData.append("email", email);
       formData.append("no_hp", no_hp);
@@ -662,49 +671,35 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
       }
     }
   };
+
   return (
     <>
-      <table className=" w-full ltr:text-left rtl:text-right text-gray-500 dark:text-gray-400">
-        <thead className="border-b bg-white font-medium">
+      <table className=" w-full text-gray-500 dark:text-gray-400">
+        <thead className="border-b bg-white font-medium ">
           <tr>
-            <th scope="col" className="px-6 py-4">
-              No
-            </th>
-            <th scope="col" className="px-6 py-4">
-              Customer
-            </th>
-            <th scope="col" className="px-6 py-4">
-              Tanggal Masuk
-            </th>
-            <th scope="col" className="px-6 py-4">
-              Tanggal Keluar
-            </th>
-            <th scope="col" className="px-6 py-4">
-              Linen
-            </th>
-            <th scope="col" className="px-6 py-4">
-              Kualitas Linen
-            </th>
-            <th scope="col" className="px-6 py-4">
-              Jenis Linen
-            </th>
-            <th scope="col" className="px-6 py-4">
-              Jumlah Linen
-            </th>
-            <th scope="col" className="px-6 py-4">
-              Status
-            </th>
-            <th scope="col" className="px-6 py-4">
-              Action
-            </th>
-            <th scope="col" className="px-6 py-4">
-              Proses
-            </th>
+            <th className="px-6 py-4"></th>
+            <th className="px-6 py-4">No</th>
+            <th className="px-6 py-4">Customer</th>
+            <th className="px-6 py-4">Tanggal Masuk</th>
+            <th className="px-6 py-4">Tanggal Keluar</th>
+            <th className="px-6 py-4">Linen</th>
+            <th className="px-6 py-4">Kualitas Linen</th>
+            <th className="px-6 py-4">Jenis Linen</th>
+            <th className="px-6 py-4">Jumlah Linen</th>
+            <th className="px-6 py-4">Status</th>
+            <th className="px-6 py-4">Action</th>
+            <th className="px-6 py-4">Proses</th>
           </tr>
         </thead>
-        <tbody>
-          {searchResults.map((item, index) => (
-            <tr key={item._id} className="border-b text-center text-gray-600">
+        {searchResults.map((item, index) => (
+          <tbody>
+            <tr key={item._id} className="border-b  text-gray-600">
+              {" "}
+              <td className="whitespace-nowrap px-6">
+                <details className="" onClick={() => toggleCollapse(item._id)}>
+                  <summary className=""></summary>
+                </details>
+              </td>
               <td className="whitespace-nowrap px-6 py-4">{index + 1}</td>
               <td className="whitespace-nowrap px-6 py-4">{item.customer.name}</td>
               <td className="whitespace-nowrap px-6 py-4">{item.dateIn}</td>
@@ -721,7 +716,6 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
                 {item.service === "wash" ? <span>Wash</span> : ""}
                 {item.service === "setrika" ? <span>Setrika</span> : ""}
               </td>
-
               <td className="whitespace-nowrap px-6 py-4">
                 <Link to={`/distribusi/edit/${item._id}`} className=" m-3 ">
                   <i className="fa-solid fa-pen-to-square text-[#96CDF4] hover:text-blue-400"></i>
@@ -821,8 +815,17 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
                 )}
               </td>
             </tr>
-          ))}
-        </tbody>
+
+            <tr className={`border-b  text-gray-600 ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold">Details</td>
+              <tr>
+                <td>saas</td>
+              </tr>
+              <td class="whitespace-nowrap px-6 py-4"></td>
+              <td class="whitespace-nowrap px-6 py-4">{item.customer.name}</td>
+            </tr>
+          </tbody>
+        ))}
       </table>
 
       {showProses ? (
@@ -833,9 +836,7 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
                 {/*header*/}
                 <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
-                  <h3 className="text-2xl font-semibold">
-                    CheckIn <input type="text" />
-                  </h3>
+                  <h3 className="text-2xl font-semibold">CheckIn</h3>
                   <button
                     className="p-1 ml-auto bg-transparent border-0 text-red-600  hover:text-red-400 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
                     onClick={() => setShowProses(false)}
@@ -939,9 +940,7 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
                 {/*header*/}
                 <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
-                  <h3 className="text-2xl font-semibold">
-                    Transit <input type="text" />
-                  </h3>
+                  <h3 className="text-2xl font-semibold">Transit</h3>
                   <button
                     className="p-1 ml-auto bg-transparent border-0 text-red-600  hover:text-red-400 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
                     onClick={() => setShowTransit(false)}
@@ -1282,7 +1281,7 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
                           value={name}
                           onChange={(e) => setName(e.target.value)}
                           className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
-                          placeholder="Washed by"
+                          placeholder="Dry by"
                         />
                       </div>
                       <div className="mb-2">
@@ -1508,7 +1507,7 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
                           value={name}
                           onChange={(e) => setName(e.target.value)}
                           className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
-                          placeholder="Washed by"
+                          placeholder="Done by"
                         />
                       </div>
                       <div className="mb-2">

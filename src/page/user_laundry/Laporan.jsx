@@ -3,10 +3,12 @@ import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import Layout from "../../component/layouts/Layout";
 import Laporan1 from "../../component/User_Laundry/laporan/Laporan";
+import { checkTokenExpiration } from "../../utils/token";
 
 const Laporan = () => {
   const navigate = useNavigate();
   useEffect(() => {
+    checkTokenExpiration();
     const token = localStorage.getItem("token");
     if (!token) {
       Swal.fire({

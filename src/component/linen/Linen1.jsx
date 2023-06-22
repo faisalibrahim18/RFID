@@ -11,13 +11,31 @@ const Linen1 = () => {
   const [linen, setLinen] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
   const [datacategory, setDataCategory] = useState([]);
+  const [datars, setDataRs] = useState([]);
   const [showModal, setShowModal] = useState(false);
+
   const [file, setFile] = useState("");
   const [category, setCategory] = useState("");
+  const [rs, setRs] = useState("");
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [postPerPage] = useState(10);
 
+  useEffect(() => {
+    getRs();
+  }, []);
+  const getRs = async () => {
+    const token = localStorage.getItem("token");
+
+    const response = await axios.get("http://localhost:9000/api/v1/rfid/hospital", {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    // console.log(response.data);
+    setDataRs(response.data.data);
+  };
   useEffect(() => {
     getCategory();
   }, []);
@@ -46,7 +64,7 @@ const Linen1 = () => {
         Authorization: `Bearer ${token}`,
       },
     });
-    // console.log(response.data);
+    console.log(response.data);
     setLinen(response.data.data);
     setSearchResults(response.data.data);
     setLoading(false);
@@ -73,13 +91,15 @@ const Linen1 = () => {
 
     try {
       if (file) {
-        // console.log("file", file);
-        // console.log("category", category);
+        console.log("file", file);
+        console.log("category", category);
+        console.log("hospital", rs);
       }
 
       const formData = new FormData();
-      formData.append("linens", file);
+      formData.append("file", file);
       formData.append("category", category);
+      formData.append("hospital", rs);
 
       const token = localStorage.getItem("token");
 
@@ -98,26 +118,26 @@ const Linen1 = () => {
             text: data.message,
           });
         });
-      // console.log(response);
-      navigate("/inventory");
+      console.log(response);
+
       window.location.reload();
     } catch (error) {
-      // console.log(error);
+      console.log(error);
       Swal.fire({
-        text: error.response.data.msg,
+        text: error.response.data.message,
         icon: "error",
       });
       if (error.response) {
         Swal.fire({
-          text: error.response.data.msg,
+          text: error.response.data.message,
           icon: "error",
         });
-        // console.log(error.response.data.msg);
-        // setMsg(error.response.data.msg);
+        // console.log(error.response.data.message);
+        // setMsg(error.response.data.message);
       } else {
         // console.log(error.data);
         Swal.fire({
-          text: error.data.response.msg,
+          text: error.data.response.message,
           icon: "error",
         });
       }
@@ -190,9 +210,24 @@ const Linen1 = () => {
                 <div className="relative p-6 flex-auto">
                   <form className="w-full" onSubmit={uploadData}>
                     <div className="mb-5">
-                      <label className=" text-sm font-semibold text-gray-800">Kategori</label>
+                      <label className=" text-sm font-semibold text-gray-800">Rumah Sakit</label>
                       <select
                         className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+                        value={rs}
+                        required
+                        onChange={(e) => setRs(e.target.value)}
+                      >
+                        <option selected>Pilih Rumah Sakit </option>
+
+                        {datars.map((d, i) => (
+                          <option value={d._id}>{d.name}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="mb-5">
+                      <label className=" text-sm font-semibold text-gray-800">Kategori</label>
+                      <select
+                        className="block w-full px-4 py-2 mt-2  text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
                         value={category}
                         required
                         onChange={(e) => setCategory(e.target.value)}
@@ -206,6 +241,7 @@ const Linen1 = () => {
                     </div>
 
                     <div className="mb-2">
+                      <label className=" text-sm font-semibold text-gray-800">Masukan File</label>
                       <input
                         required
                         type="file"
@@ -217,7 +253,7 @@ const Linen1 = () => {
                     {/*footer*/}
                     <div className="flex justify-center pt-10">
                       <button
-                        className="bg-[#A4BC92] text-white active:bg-[#C7E9B0] font-semibold text-sm px-5 py-2 rounded-lg shadow hover:shadow-lg outline-none focus:outline-none mb-1 ease-linear transition-all duration-150"
+                        className="bg-[#A4BC92] hover:bg-[#a3c588] text-white active:bg-[#C7E9B0] font-semibold text-sm px-5 py-2 rounded-lg shadow hover:shadow-lg outline-none focus:outline-none mb-1 ease-linear transition-all duration-150"
                         type="submit"
                       >
                         Upload

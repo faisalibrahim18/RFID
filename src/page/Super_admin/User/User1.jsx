@@ -3,10 +3,12 @@ import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import Layout from "../../../component/layouts/Layout";
 import User from "../../../component/super_admin/User/User";
+import { checkTokenExpiration } from "../../../utils/token";
 
 const User1 = () => {
   const navigate = useNavigate();
   useEffect(() => {
+    checkTokenExpiration();
     const token = localStorage.getItem("token");
     if (!token) {
       Swal.fire({

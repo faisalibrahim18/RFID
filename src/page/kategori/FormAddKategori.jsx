@@ -3,10 +3,12 @@ import AddKategori from "../../component/kategori/AddKategori";
 import Layout from "../../component/layouts/Layout";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import { checkTokenExpiration } from "../../utils/token";
 
 const FormAddKategori = () => {
   const navigate = useNavigate();
   useEffect(() => {
+    checkTokenExpiration();
     const token = localStorage.getItem("token");
     if (!token) {
       Swal.fire({

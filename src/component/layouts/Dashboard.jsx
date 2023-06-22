@@ -153,7 +153,7 @@ const Dashboard = () => {
       }
 
       const formData = new FormData();
-      formData.append("distribusi", file);
+      formData.append("file", file);
       formData.append("customer", name_customer);
       formData.append("quality", quality);
       formData.append("service", service);

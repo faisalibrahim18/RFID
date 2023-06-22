@@ -24,7 +24,7 @@ const Kategori = () => {
         Authorization: `Bearer ${token}`,
       },
     });
-    // console.log(response.data);
+    console.log(response.data);
     setCategory(response.data.data);
     setSearchResults(response.data.data);
     setLoading(false);

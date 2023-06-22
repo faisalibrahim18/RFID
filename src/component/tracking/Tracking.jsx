@@ -26,7 +26,7 @@ const Tracking = () => {
         Authorization: `Bearer ${token}`,
       },
     });
-    // console.log(response.data.data);
+    console.log(response.data.data);
     setTracker(response.data.data);
   };
   // console.log(getTracking);
@@ -537,7 +537,7 @@ const Tracking = () => {
                                 <div className="absolute w-3 h-3 bg-white rounded-full items-center justify-between mb-3 sm:flex  -left-1.5 border border-white"></div>
                                 <div className="pt-0">
                                   <time className="mb-1 text-xs font-normal text-gray-200">
-                                    {item.status.returned.date}
+                                    {/* {item.status.returned.date} */}
                                   </time>
                                   <div className="text-sm font-normal text-white">Delivery</div>
                                 </div>
@@ -575,10 +575,10 @@ const Tracking = () => {
               {item.status === null ? (
                 ""
               ) : (
-                <div className="bg-gray-200 p-7 w-full " key={item._id}>
+                <div className="bg-gray-200 p-7 w-full  " key={item._id}>
                   <h1 className="md:mt-28 text-lg font-bold">Tracking view</h1>
                   {item.status.status === "processing" ? (
-                    <div className="p-3 bg-white rounded-md  md:w-[630px] ">
+                    <div className="p-3 bg-white rounded-md  overflow-y-auto ">
                       <div className="flex  ">
                         <div className="step-item in-active">
                           <div className="step">
@@ -1034,8 +1034,8 @@ const Tracking = () => {
                     ""
                   )}
                   {item.status.status === "success" ? (
-                    <div className="p-3 bg-white rounded-md  md:w-[630px] ">
-                      <div className="flex">
+                    <div className="p-3 bg-white rounded-md  overflow-y-auto md:w-[630px] ">
+                      <div className="flex w-[630px]">
                         <div className="step-item active1">
                           <div className="step">
                             <div className="steps active1 ">

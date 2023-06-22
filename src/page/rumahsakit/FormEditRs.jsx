@@ -3,10 +3,12 @@ import EditRs from "../../component/rumahsakit/EditRs";
 import Layout from "../../component/layouts/Layout";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import { checkTokenExpiration } from "../../utils/token";
 
 const FormEditRs = () => {
   const navigate = useNavigate();
   useEffect(() => {
+    checkTokenExpiration();
     const token = localStorage.getItem("token");
     if (!token) {
       Swal.fire({

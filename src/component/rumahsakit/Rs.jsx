@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Pagination from "../pagination/Pagination";
 import Rumah_Sakit from "../data/rs/rumah_sakit";
 import Loading from "../Spinners/Loading";
@@ -8,10 +8,13 @@ import SearchRS from "../search/SearchRS";
 
 const Rs = () => {
   const [rumah_sakit, setRs] = useState([]);
-  const [searchRs, setSearchRs] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [searchRs, setSearchRs] = useState([]);
+  const [rsId, setRsId] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [postPerPage] = useState(10);
+
+  const { id } = useParams();
 
   useEffect(() => {
     getRs();
@@ -26,7 +29,7 @@ const Rs = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      // console.log(response.data.data);
+      console.log(response.data.data);
       setSearchRs(response.data.data);
       setRs(response.data.data);
       setLoading(false);
@@ -34,6 +37,28 @@ const Rs = () => {
       console.log(e);
     }
   };
+
+  useEffect(() => {
+    const getRs1 = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await axios.get(`http://localhost:9000/api/v1/rfid/hospital/${id}/linen`, {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        console.log(response);
+      } catch (error) {
+        console.log(error);
+        if (error.response) {
+          setMsg(error.response.data.msg);
+        }
+      }
+    };
+    getRs1();
+  }, [id]);
+
   // console.log(searchRs);
   // console.log(rumahsakit);
   // Get current posts

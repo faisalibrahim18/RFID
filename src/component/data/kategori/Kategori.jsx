@@ -62,6 +62,9 @@ const Kategori = ({ category, loading, searchResults }) => {
               Nama Kategori
             </th>
             <th scope="col" className="px-6 py-4">
+              Expired
+            </th>
+            <th scope="col" className="px-6 py-4">
               Action
             </th>
           </tr>
@@ -72,6 +75,7 @@ const Kategori = ({ category, loading, searchResults }) => {
               <td className="whitespace-nowrap px-6 py-4">{index + 1}</td>
 
               <td className="whitespace-nowrap px-6 py-4">{item.name}</td>
+              <td className="whitespace-nowrap px-6 py-4">{item.expired}</td>
               <td className="whitespace-nowrap px-6 py-4">
                 <Link to={`/kategori/edit/${item._id}`} className="m-3">
                   <i className="fa-solid fa-pen-to-square text-[#96CDF4] hover:text-blue-400"></i>

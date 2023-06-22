@@ -36,6 +36,7 @@ import Peminjaman1 from "./page/Super_admin/Peminjaman/Peminjaman1";
 import User1 from "./page/Super_admin/User/User1";
 import Permintaan3 from "./page/user_rumahsakit/Pemintaan";
 import EditLaporan1 from "./page/user_pabrik/EditLaporan1";
+import Accordion from "./component/accordion/Accordion";
 
 function App() {
   return (
@@ -85,8 +86,9 @@ function App() {
           <Route exact path="/laporanS" element={<Laporan2 />} />
           <Route exact path="/peminjaman" element={<Peminjaman1 />} />
           <Route exact path="/userS" element={<User1 />} />
-
           <Route exact path="/permintaanR" element={<Permintaan3 />} />
+
+          <Route exact path="/accordion" element={<Accordion />} />
         </Routes>
       </BrowserRouter>
     </>
