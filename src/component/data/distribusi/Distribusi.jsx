@@ -81,6 +81,14 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
       });
   };
 
+  const handleCetakSerahTerima = async (id) => {
+    try {
+      window.open(`http://localhost:9000/api/v1/rfid/generatePDFSerahTerima/${id}`);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleUpdateProses = async (id) => {
     // console.log(id);
 
@@ -550,33 +558,34 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
     e.preventDefault();
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.put(
-        `http://localhost:9000/api/v1/rfid/tracker/delivery/${id}`,
+      const response = await axios
+        .put(
+          `http://localhost:9000/api/v1/rfid/tracker/delivery/${id}`,
 
-        {
-          name: name,
-          email: email,
-          no_hp: no_hp,
-          vehicle: vehicle,
-          license: license,
-          amount: amount,
-          heavy: heavy,
-          note: note,
-        },
-
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+          {
+            name: name,
+            email: email,
+            no_hp: no_hp,
+            vehicle: vehicle,
+            license: license,
+            amount: amount,
+            heavy: heavy,
+            note: note,
           },
-        },
-      );
-      console.log(response).then(({ data }) => {
-        Swal.fire({
-          icon: "success",
-          text: data.message,
+
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        )
+        .then(({ data }) => {
+          Swal.fire({
+            icon: "success",
+            text: data.message,
+          });
         });
-      });
       // console.log(response);
       navigate("/distribusi");
       window.location.reload();
@@ -680,8 +689,8 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
             <th className="px-6 py-4"></th>
             <th className="px-6 py-4">No</th>
             <th className="px-6 py-4">Customer</th>
-            <th className="px-6 py-4">Tanggal Masuk</th>
-            <th className="px-6 py-4">Tanggal Keluar</th>
+            <th className="px-6 py-4">Tanggal</th>
+
             <th className="px-6 py-4">Linen</th>
             <th className="px-6 py-4">Kualitas Linen</th>
             <th className="px-6 py-4">Jenis Linen</th>
@@ -689,6 +698,7 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
             <th className="px-6 py-4">Status</th>
             <th className="px-6 py-4">Action</th>
             <th className="px-6 py-4">Proses</th>
+            <th className="px-6 py-4"></th>
           </tr>
         </thead>
         {searchResults.map((item, index) => (
@@ -703,19 +713,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               <td className="whitespace-nowrap px-6 py-4">{index + 1}</td>
               <td className="whitespace-nowrap px-6 py-4">{item.customer.name}</td>
               <td className="whitespace-nowrap px-6 py-4">{item.dateIn}</td>
-              <td className="whitespace-nowrap px-6 py-4">{item.dateOut}</td>
               <td className="whitespace-nowrap px-6 py-4">{item.linen[0].epc}</td>
-              <td className="whitespace-nowrap px-6 py-4">
-                {item.quality === "baik" ? <span>Baik</span> : ""}
-                {item.quality === "kurang baik" ? <span>Kurang Baik</span> : ""}
-              </td>
+              <td className="whitespace-nowrap px-6 py-4">{item.quality}</td>
               <td className="whitespace-nowrap px-6 py-4">{item.linen[0].category}</td>
               <td className="whitespace-nowrap px-6 py-4">{item.amount}</td>
-              <td className="whitespace-nowrap px-6 py-4">
-                {item.service === "cuci" ? <span>cuci</span> : ""}
-                {item.service === "wash" ? <span>Wash</span> : ""}
-                {item.service === "setrika" ? <span>Setrika</span> : ""}
-              </td>
+              <td className="whitespace-nowrap px-6 py-4">{item.service}</td>
               <td className="whitespace-nowrap px-6 py-4">
                 <Link to={`/distribusi/edit/${item._id}`} className=" m-3 ">
                   <i className="fa-solid fa-pen-to-square text-[#96CDF4] hover:text-blue-400"></i>
@@ -814,16 +816,151 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
                   ""
                 )}
               </td>
+              <td className="whitespace-nowrap px-6 py-4">
+                {item?.status?.status === "processing" ? (
+                  <button
+                    onClick={() => handleCetakSerahTerima(item._id)}
+                    className="bg-[#eb0d0d] text-white hover:bg-[#e93434] p-2 rounded-lg"
+                  >
+                    Cetak Serah Terima
+                  </button>
+                ) : (
+                  ""
+                )}
+                {item?.status?.status === "transit to hospital" ? (
+                  <button
+                    onClick={() => handleCetakSerahTerima(item._id)}
+                    className="bg-[#eb0d0d] text-white hover:bg-[#e93434] p-2 rounded-lg"
+                  >
+                    Cetak Serah Terima
+                  </button>
+                ) : (
+                  ""
+                )}
+              </td>
             </tr>
-
-            <tr className={`border-b  text-gray-600 ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
-              <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold">Details</td>
-              <tr>
-                <td>saas</td>
+            {item?.status?.status === "success" ? (
+              <tr className={`border-b  text-gray-600 ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+                <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold">Checking</td>
               </tr>
-              <td class="whitespace-nowrap px-6 py-4"></td>
-              <td class="whitespace-nowrap px-6 py-4">{item.customer.name}</td>
-            </tr>
+            ) : (
+              ""
+            )}
+            {item?.status?.status === "success" ? (
+              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+                <td className="pl-10">Name</td>
+                <td>:</td>
+                <td>{item.status.checking.name}</td>
+              </tr>
+            ) : (
+              ""
+            )}
+            {item?.status?.status === "success" ? (
+              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+                <td className="pl-10">Email</td>
+                <td>:</td>
+                <td>{item.status.checking.email}</td>
+              </tr>
+            ) : (
+              ""
+            )}
+            {item?.status?.status === "success" ? (
+              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+                <td className="pl-10">No Hp</td>
+                <td>:</td>
+                <td>{item.status.checking.no_hp}</td>
+              </tr>
+            ) : (
+              ""
+            )}
+            {item?.status?.status === "success" ? (
+              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+                <td className="pl-10">amount</td>
+                <td>:</td>
+                <td>{item.status.checking.amount}</td>
+              </tr>
+            ) : (
+              ""
+            )}
+            {item?.status?.status === "success" ? (
+              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+                <td className="pl-10">heavy</td>
+                <td>:</td>
+                <td>{item.status.checking.heavy}</td>
+              </tr>
+            ) : (
+              ""
+            )}
+            {item?.status?.status === "success" ? (
+              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+                <td className="pl-10">note</td>
+                <td>:</td>
+                <td>{item.status.checking.note}</td>
+              </tr>
+            ) : (
+              ""
+            )}
+            {item?.status?.status === "success" ? (
+              <tr className={`border-b text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+                <td className="pl-10">date</td>
+                <td>:</td>
+                <td>{item.status.checking.date}</td>
+              </tr>
+            ) : (
+              ""
+            )}
+            {item?.status?.status === "success" ? (
+              <tr className={`border-b  text-gray-600 ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+                <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold">Transit</td>
+              </tr>
+            ) : (
+              ""
+            )}
+            {item?.status?.status === "success" ? (
+              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+                <td className="pl-10">Name</td>
+                <td>:</td>
+                <td>{item.status.transit.name}</td>
+              </tr>
+            ) : (
+              ""
+            )}
+            {item?.status?.status === "success" ? (
+              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+                <td className="pl-10">Email</td>
+                <td>:</td>
+                <td>{item.status.transit.email}</td>
+              </tr>
+            ) : (
+              ""
+            )}
+            {item?.status?.status === "success" ? (
+              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+                <td className="pl-10">No Hp</td>
+                <td>:</td>
+                <td>{item.status.transit.no_hp}</td>
+              </tr>
+            ) : (
+              ""
+            )}
+            {item?.status?.status === "success" ? (
+              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+                <td className="pl-10">Vehicle</td>
+                <td>:</td>
+                <td>{item.status.transit.vehicle}</td>
+              </tr>
+            ) : (
+              ""
+            )}
+            {item?.status?.status === "success" ? (
+              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+                <td className="pl-10">license</td>
+                <td>:</td>
+                <td>{item.status.transit.license}</td>
+              </tr>
+            ) : (
+              ""
+            )}
           </tbody>
         ))}
       </table>

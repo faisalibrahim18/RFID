@@ -415,12 +415,15 @@ const Dashboard = () => {
                             <option value="" className="text-gray-200">
                               Service
                             </option>
-                            <option value="cuci">Cuci</option>
-                            <option value="setrika">Setrika</option>
-                            <option value="cuci & setrika">Cuci & Setrika</option>
+                            <option value="Dropstock">Dropstock</option>
+                            <option value="Peminjaman">Peminjaman</option>
+                            <option value="Penambahan">Penambahan</option>
+                            <option value="Pengurangan Stock">Pengurangan Stock</option>
+                            <option value="Return">Return</option>
+                            <option value="Rewash">Rewash</option>
                           </select>
                         </div>
-                        <div className="flex flex-wrap">
+                        {/* <div className="flex flex-wrap">
                           <div className="md:w-1/2   w-full">
                             <div className="mb-2">
                               <label className="block text-sm font-semibold text-gray-800">
@@ -448,7 +451,7 @@ const Dashboard = () => {
                               />
                             </div>
                           </div>
-                        </div>
+                        </div> */}
 
                         <div className="flex  ">
                           <h3 className="text-2xl font-semibold">Linen Information</h3>

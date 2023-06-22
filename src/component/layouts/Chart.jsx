@@ -4,8 +4,8 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 const Chart = ({ chartData }) => {
   // console.log(chartData);
   return (
-    <div className="overflow-x-auto overflow-scroll">
-      <ResponsiveContainer width={680} height={350}>
+    <div className="overflow-x-auto  scrollbars">
+      <ResponsiveContainer width={630} height={350}>
         {/* <BarChart
         data={data}
         margin={{

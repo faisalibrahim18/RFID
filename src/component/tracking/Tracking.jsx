@@ -537,7 +537,7 @@ const Tracking = () => {
                                 <div className="absolute w-3 h-3 bg-white rounded-full items-center justify-between mb-3 sm:flex  -left-1.5 border border-white"></div>
                                 <div className="pt-0">
                                   <time className="mb-1 text-xs font-normal text-gray-200">
-                                    {/* {item.status.returned.date} */}
+                                    {item.status.returned.date}
                                   </time>
                                   <div className="text-sm font-normal text-white">Delivery</div>
                                 </div>

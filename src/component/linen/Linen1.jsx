@@ -13,6 +13,7 @@ const Linen1 = () => {
   const [datacategory, setDataCategory] = useState([]);
   const [datars, setDataRs] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [openTab, setOpenTab] = useState(1);
 
   const [file, setFile] = useState("");
   const [category, setCategory] = useState("");
@@ -208,58 +209,144 @@ const Linen1 = () => {
                 </div>
                 {/*body*/}
                 <div className="relative p-6 flex-auto">
-                  <form className="w-full" onSubmit={uploadData}>
-                    <div className="mb-5">
-                      <label className=" text-sm font-semibold text-gray-800">Rumah Sakit</label>
-                      <select
-                        className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
-                        value={rs}
-                        required
-                        onChange={(e) => setRs(e.target.value)}
-                      >
-                        <option selected>Pilih Rumah Sakit </option>
+                  <div className="container mx-auto">
+                    <div className="flex flex-col">
+                      <ul className="flex ">
+                        <li>
+                          <a
+                            href="#"
+                            onClick={() => setOpenTab(1)}
+                            className={` ${
+                              openTab === 1 ? "border-b-4 border-green-200 text-black" : ""
+                            } inline-block px-4 py-2 text-gray-600 hover:border-b-4 border-green-200 `}
+                          >
+                            Linen Rumah Sakit Tertentu
+                          </a>
+                        </li>
+                        <li>
+                          <a
+                            href="#"
+                            onClick={() => setOpenTab(2)}
+                            className={` ${
+                              openTab === 2 ? "border-b-4 border-green-200" : ""
+                            } inline-block px-4 py-2 text-gray-600 hover:border-b-4 border-green-200`}
+                          >
+                            Linen Rumah sakit umum
+                          </a>
+                        </li>
+                      </ul>
+                      <div className="pt-4">
+                        <div className={openTab === 1 ? "block" : "hidden"}>
+                          <form className="w-full" onSubmit={uploadData}>
+                            <div className="mb-5">
+                              <label className=" text-sm font-semibold text-gray-800">Rumah Sakit</label>
+                              <select
+                                className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+                                value={rs}
+                                required
+                                onChange={(e) => setRs(e.target.value)}
+                              >
+                                <option selected>Pilih Rumah Sakit </option>
 
-                        {datars.map((d, i) => (
-                          <option value={d._id}>{d.name}</option>
-                        ))}
-                      </select>
-                    </div>
-                    <div className="mb-5">
-                      <label className=" text-sm font-semibold text-gray-800">Kategori</label>
-                      <select
-                        className="block w-full px-4 py-2 mt-2  text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
-                        value={category}
-                        required
-                        onChange={(e) => setCategory(e.target.value)}
-                      >
-                        <option selected>Pilih Kategori </option>
+                                {datars.map((d, i) => (
+                                  <option value={d._id}>{d.name}</option>
+                                ))}
+                              </select>
+                            </div>
+                            <div className="mb-5">
+                              <label className=" text-sm font-semibold text-gray-800">Kategori</label>
+                              <select
+                                className="block w-full px-4 py-2 mt-2  text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+                                value={category}
+                                required
+                                onChange={(e) => setCategory(e.target.value)}
+                              >
+                                <option selected>Pilih Kategori </option>
 
-                        {datacategory.map((d, i) => (
-                          <option value={d._id}>{d.name}</option>
-                        ))}
-                      </select>
-                    </div>
+                                {datacategory.map((d, i) => (
+                                  <option value={d._id}>{d.name}</option>
+                                ))}
+                              </select>
+                            </div>
 
-                    <div className="mb-2">
-                      <label className=" text-sm font-semibold text-gray-800">Masukan File</label>
-                      <input
-                        required
-                        type="file"
-                        onChange={handleFileChange}
-                        className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
-                      />
-                    </div>
+                            <div className="mb-2">
+                              <label className=" text-sm font-semibold text-gray-800">Masukan File</label>
+                              <input
+                                required
+                                type="file"
+                                onChange={handleFileChange}
+                                className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+                              />
+                            </div>
 
-                    {/*footer*/}
-                    <div className="flex justify-center pt-10">
-                      <button
-                        className="bg-[#A4BC92] hover:bg-[#a3c588] text-white active:bg-[#C7E9B0] font-semibold text-sm px-5 py-2 rounded-lg shadow hover:shadow-lg outline-none focus:outline-none mb-1 ease-linear transition-all duration-150"
-                        type="submit"
-                      >
-                        Upload
-                      </button>
+                            {/*footer*/}
+                            <div className="flex justify-center pt-10">
+                              <button
+                                className="bg-[#A4BC92] hover:bg-[#a3c588] text-white active:bg-[#C7E9B0] font-semibold text-sm px-5 py-2 rounded-lg shadow hover:shadow-lg outline-none focus:outline-none mb-1 ease-linear transition-all duration-150"
+                                type="submit"
+                              >
+                                Upload
+                              </button>
+                            </div>
+                          </form>
+                        </div>
+                        <div className={openTab === 2 ? "block" : "hidden"}>
+                          <form className="w-full" onSubmit={uploadData}>
+                            {/* <div className="mb-5">
+                              <label className=" text-sm font-semibold text-gray-800">Rumah Sakit</label>
+                              <select
+                                className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+                                value={rs}
+                                required
+                                onChange={(e) => setRs(e.target.value)}
+                              >
+                                <option selected>Pilih Rumah Sakit </option>
+
+                                {datars.map((d, i) => (
+                                  <option value={d._id}>{d.name}</option>
+                                ))}
+                              </select>
+                            </div> */}
+                            <div className="mb-5">
+                              <label className=" text-sm font-semibold text-gray-800">Kategori</label>
+                              <select
+                                className="block w-full px-4 py-2 mt-2  text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+                                value={category}
+                                required
+                                onChange={(e) => setCategory(e.target.value)}
+                              >
+                                <option selected>Pilih Kategori </option>
+
+                                {datacategory.map((d, i) => (
+                                  <option value={d._id}>{d.name}</option>
+                                ))}
+                              </select>
+                            </div>
+
+                            <div className="mb-2">
+                              <label className=" text-sm font-semibold text-gray-800">Masukan File</label>
+                              <input
+                                required
+                                type="file"
+                                onChange={handleFileChange}
+                                className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+                              />
+                            </div>
+
+                            {/*footer*/}
+                            <div className="flex justify-center pt-10">
+                              <button
+                                className="bg-[#A4BC92] hover:bg-[#a3c588] text-white active:bg-[#C7E9B0] font-semibold text-sm px-5 py-2 rounded-lg shadow hover:shadow-lg outline-none focus:outline-none mb-1 ease-linear transition-all duration-150"
+                                type="submit"
+                              >
+                                Upload
+                              </button>
+                            </div>
+                          </form>
+                        </div>
+                      </div>
                     </div>
-                  </form>
+                  </div>
                 </div>
               </div>
             </div>

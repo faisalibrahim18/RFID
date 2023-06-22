@@ -44,7 +44,7 @@ const Distribusi = () => {
     setLoading(true);
 
     const response = await axios.get("http://localhost:9000/api/v1/rfid/distribusi");
-    // console.log(response.data.data);
+    console.log(response.data.data);
     setDistribusi(response.data.data);
     setSearchResults(response.data.data);
     setLoading(false);
@@ -139,7 +139,7 @@ const Distribusi = () => {
               {loading ? (
                 <Loading />
               ) : (
-                <div className="overflow-x-auto">
+                <div className="overflow-x-auto scrollbars">
                   <Distribusi1 searchResults={currentPost} />
                 </div>
               )}
