@@ -37,6 +37,7 @@ import User1 from "./page/Super_admin/User/User1";
 import Permintaan3 from "./page/user_rumahsakit/Pemintaan";
 import EditLaporan1 from "./page/user_pabrik/EditLaporan1";
 import Accordion from "./component/accordion/Accordion";
+import RolePage from "./page/Role/RolePage";
 
 function App() {
   return (
@@ -67,6 +68,7 @@ function App() {
           <Route exact path="/inventory/edit/:id" element={<FormEditInventory />} />
           <Route exact path="/laporan" element={<LaporanList />} />
           <Route exact path="/tracking" element={<Trackingview />} />
+          <Route exact path="/role" element={<RolePage />} />
 
           {/* user_Laundry route */}
           <Route exact path="/dashboardLaundry" element={<Dashboard />} />

@@ -95,7 +95,7 @@ const Tracking = () => {
                           ) : (
                             ""
                           )}
-                          {item.status.status === "transit" ? (
+                          {item.status.status === "transit to laundry" ? (
                             <span className="bg-blue-400  rounded-md p-1 pl-6 pr-6 text-blue-600">
                               Transit
                             </span>
@@ -147,7 +147,7 @@ const Tracking = () => {
                           ) : (
                             ""
                           )}
-                          {item.status.status === "transit" ? (
+                          {item.status.status === "transit to laundry" ? (
                             <div
                               className="h-full text-center text-xs text-white bg-green-500 rounded-full"
                               style={{ width: "25%" }}
@@ -225,7 +225,7 @@ const Tracking = () => {
                         ) : (
                           ""
                         )}
-                        {item.status.status === "transit" ? (
+                        {item.status.status === "transit to laundry" ? (
                           <div>
                             <ol className=" mt-3 ml-16 relative border-l border-white">
                               <li className="ml-4 ">
@@ -707,7 +707,7 @@ const Tracking = () => {
                   ) : (
                     ""
                   )}
-                  {item.status.status === "transit" ? (
+                  {item.status.status === "transit to laundry" ? (
                     <div className="p-3 bg-white rounded-md    md:w-[630px] ">
                       <div className="flex">
                         <div className="step-item active1">
@@ -1099,7 +1099,7 @@ const Tracking = () => {
                     ""
                   )}
                   <div className="pt-3 text-black font-semibold text-xl">Main Info</div>
-                  {item.status.status === "transit" ? (
+                  {item.status.status === "transit to laundry" ? (
                     <div className="bg-white border border-gray-200 rounded-lg shadow">
                       <div className="p-3 text-black font-semibold">
                         <h1>Driver Information</h1>

@@ -12,6 +12,7 @@ import axios from "axios";
 axios.defaults.withCredentials = true;
 const container = document.getElementById("root");
 const root = createRoot(container);
+// const { PUBLIC_URL } = process.env;
 
 root.render(
   <React.StrictMode>

@@ -106,6 +106,23 @@ const Layout = ({ children }) => {
                         User Management
                       </h2>
                     </NavLink>
+                    <NavLink
+                      activeClassName="active"
+                      to={"/role"}
+                      className="group  flex items-center text-center text-sm gap-3.5 font-medium p-4 hover:bg-[#dee7de] rounded-md"
+                    >
+                      <div className="text-lg">
+                        <BsPeopleFill />
+                      </div>
+                      <h2>Role Management</h2>
+                      <h2
+                        className={`${
+                          open && " md:hidden "
+                        } absolute  left-44 md:hidden bg-white font-semibold whitespace-pre text-[#00205F] rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit`}
+                      >
+                        Role Management
+                      </h2>
+                    </NavLink>
 
                     <NavLink
                       activeClassName="active"

@@ -81,7 +81,7 @@ const Linen = ({ linen, searchResults, loading }) => {
             <tr key={item._id} className="border-b text-center text-gray-600">
               <td className="whitespace-nowrap px-6 py-4">{index + 1}</td>
               <td className="whitespace-nowrap px-6 py-4">{item.code}</td>
-              <td className="whitespace-nowrap px-6 py-4">{item.hospital.name}</td>
+              <td className="whitespace-nowrap px-6 py-4">{item.hospital?.name}</td>
               <td className="whitespace-nowrap px-6 py-4">{item.epc}</td>
               <td className="whitespace-nowrap px-6 py-4">{item.category?.name}</td>
               <td className="whitespace-nowrap px-6 py-4">{item.counter}</td>

@@ -92,15 +92,17 @@ const Linen1 = () => {
 
     try {
       if (file) {
-        console.log("file", file);
-        console.log("category", category);
-        console.log("hospital", rs);
+        // console.log("file", file);
+        // console.log("category", category);
+        // console.log("hospital", rs);
       }
 
       const formData = new FormData();
       formData.append("file", file);
       formData.append("category", category);
-      formData.append("hospital", rs);
+      if (rs) {
+        formData.append("hospital", rs);
+      }
 
       const token = localStorage.getItem("token");
 
@@ -119,7 +121,7 @@ const Linen1 = () => {
             text: data.message,
           });
         });
-      console.log(response);
+      // console.log(response);
 
       window.location.reload();
     } catch (error) {
@@ -136,7 +138,7 @@ const Linen1 = () => {
         // console.log(error.response.data.message);
         // setMsg(error.response.data.message);
       } else {
-        // console.log(error.data);
+        console.log(error.data);
         Swal.fire({
           text: error.data.response.message,
           icon: "error",

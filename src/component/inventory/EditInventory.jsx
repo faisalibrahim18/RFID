@@ -4,9 +4,9 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 
 const EditInventory = () => {
-  const [kode, setKode] = useState("");
   const [name, setName] = useState("");
   const [amount, setAmount] = useState("");
+  const [status, setStatus] = useState("");
   const [message, setMsg] = useState("");
   const navigate = useNavigate();
   const { id } = useParams();
@@ -22,9 +22,9 @@ const EditInventory = () => {
         });
         // console.log(response);
 
-        setKode(response.data.data.kode);
         setName(response.data.data.name);
         setAmount(response.data.data.amount);
+        setStatus(response.data.data.status);
       } catch (error) {
         if (error.response) {
           setMsg(error.response.data.msg);
@@ -41,7 +41,6 @@ const EditInventory = () => {
         .put(
           `http://localhost:9000/api/v1/rfid/inventory/${id}`,
           {
-            kode: kode,
             name: name,
             amount: amount,
           },
@@ -87,18 +86,6 @@ const EditInventory = () => {
         )}
         <form className="" onSubmit={updateinventory}>
           <div className="mb-2">
-            <label for="Kode Barang" className=" text-sm font-semibold text-gray-800">
-              Kode Barang
-            </label>
-            <input
-              type="text"
-              value={kode}
-              onChange={(e) => setKode(e.target.value)}
-              className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
-              placeholder="Masukan Kode Barang..."
-            />
-          </div>
-          <div className="mb-2">
             <label for="Nama Barang" className=" text-sm font-semibold text-gray-800">
               Nama Barang
             </label>
@@ -121,6 +108,21 @@ const EditInventory = () => {
               className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
               placeholder="Masukan Jumlah..."
             />
+          </div>
+          <div className="mb-2">
+            <label for="email" className="block text-sm font-semibold text-gray-800">
+              Pilih Status
+            </label>
+            <select
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+              className="block w-full px-2 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+            >
+              <option>Pilih Status :</option>
+
+              <option value="operasional">Operasional</option>
+              <option value="emergency">Emergency</option>
+            </select>
           </div>
 
           <div className="mt-6 flex ">

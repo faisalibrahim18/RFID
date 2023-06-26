@@ -3,8 +3,8 @@ import React, { useEffect, useState } from "react";
 
 const Laporan = () => {
   const [showLaporan, setShowLaporan] = useState(false);
-  const [dateIn, setDateIn] = useState([]);
-  const [dateOut, setDateOut] = useState([]);
+  const [startDate, setstartDate] = useState([]);
+  const [endDate, setendDate] = useState([]);
   const [laporan, setLaporan] = useState([]);
 
   useEffect(() => {
@@ -15,13 +15,13 @@ const Laporan = () => {
     e.preventDefault();
     try {
       const response = await axios.get(
-        `http://localhost:9000/api/v1/rfid/distribusi?dateIn=${dateIn}&dateOut=${dateOut}`,
+        `http://localhost:9000/api/v1/rfid/distribusi?startDate=${startDate}&endDate=${endDate}`,
         {
-          dateIn: dateIn,
-          dateOut: dateOut,
+          startDate: startDate,
+          endDate: endDate,
         },
       );
-      // console.log(response.data.data);
+      console.log(response.data.data);
       setLaporan(response.data.data);
       setShowLaporan(true);
     } catch (error) {
@@ -30,7 +30,9 @@ const Laporan = () => {
   };
   const cetakLaporanExcel = async () => {
     try {
-      window.open(`http://localhost:9000/api/v1/rfid/distribusiDownload?dateIn=${dateIn}&dateOut=${dateOut}`);
+      window.open(
+        `http://localhost:9000/api/v1/rfid/distribusiDownload?startDate=${startDate}&endDate=${endDate}`,
+      );
     } catch (error) {
       console.log(error);
     }
@@ -40,7 +42,7 @@ const Laporan = () => {
       const token = localStorage.getItem("token");
       // console.log(token);
       window.open(
-        `http://localhost:9000/api/v1/rfid/distribusiDownloadPdf?dateIn=${dateIn}&dateOut=${dateOut}`,
+        `http://localhost:9000/api/v1/rfid/distribusiDownloadPdf?startDate=${startDate}&endDate=${endDate}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -69,8 +71,8 @@ const Laporan = () => {
                     <input
                       type="date"
                       required
-                      value={dateIn}
-                      onChange={(e) => setDateIn(e.target.value)}
+                      value={startDate}
+                      onChange={(e) => setstartDate(e.target.value)}
                       className="block w-full px-4 py-2 mt-2  bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
                     />
                   </div>
@@ -82,8 +84,8 @@ const Laporan = () => {
                     <input
                       type="date"
                       required
-                      value={dateOut}
-                      onChange={(e) => setDateOut(e.target.value)}
+                      value={endDate}
+                      onChange={(e) => setendDate(e.target.value)}
                       className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
                     />
                   </div>
@@ -160,8 +162,8 @@ const Laporan = () => {
                         <tr key={item._id} className="border-b text-center text-gray-600">
                           <td className="whitespace-nowrap px-6 py-4">{index + 1}</td>
                           <td className="whitespace-nowrap px-6 py-4">{item.customer.name}</td>
-                          <td className="whitespace-nowrap px-6 py-4">{item.dateIn}</td>
-                          <td className="whitespace-nowrap px-6 py-4">{item.dateOut}</td>
+                          <td className="whitespace-nowrap px-6 py-4">{item.startDate}</td>
+                          <td className="whitespace-nowrap px-6 py-4">{item.endDate}</td>
                           <td className="whitespace-nowrap px-6 py-4">{item.linen[0].epc}</td>
                           <td className="whitespace-nowrap px-6 py-4">
                             {item.quality === "baik" ? (
