@@ -35,7 +35,7 @@ const Rs = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      // console.log(response.data.data);
+      console.log(response.data.data);
       setSearchRs(response.data.data);
       setRs(response.data.data);
       setLoading(false);

@@ -44,7 +44,7 @@ const Layout = ({ children }) => {
         Authorization: `Bearer ${token}`,
       },
     });
-    // console.log(response.data.data);
+    console.log(response.data.data);
     setUser([response.data.data]);
   };
   return (
@@ -69,7 +69,7 @@ const Layout = ({ children }) => {
             {/* <!-- Sidebar menu --> */}
             {users.map((item) => (
               <div className=" flex md:z-50 flex-col gap-2 md:pt-2 pt-20  w-full text-[#00205F] float-none font-medium ltr:pl-1.5 rtl:pr-1.5">
-                {item.role === "super_admin" ? (
+                {item.role.name === "Superadmin" ? (
                   <div>
                     <NavLink
                       activeClassName="active"

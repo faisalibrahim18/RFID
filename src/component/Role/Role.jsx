@@ -6,7 +6,22 @@ const Role = () => {
   const [showAdd, setShowAdd] = React.useState(false);
   const [privilege, setPrivilege] = useState([]);
   const [role, setRole] = useState([]);
-  const [enabled, setEnabled] = useState(false);
+  const [enabled, setEnabled] = useState([]);
+  const [enabledB, setEnabledB] = useState([]);
+  const toggleSwitch = (id) => {
+    if (enabled.includes(id)) {
+      setEnabled(enabled.filter((enabledId) => enabledId !== id));
+    } else {
+      setEnabled([...enabled, id]);
+    }
+  };
+  const toggleSwitchB = (id) => {
+    if (enabledB.includes(id)) {
+      setEnabledB(enabledB.filter((enabledId) => enabledId !== id));
+    } else {
+      setEnabledB([...enabledB, id]);
+    }
+  };
   useEffect(() => {
     getPrivilege();
   }, []);
@@ -112,7 +127,7 @@ const Role = () => {
       {showAdd ? (
         <>
           <div className=" overflow-x-hidden m-4  scrollbars fixed inset-0 z-50 outline-none focus:outline-none">
-            <div className="relative w-auto my-6 mx-auto max-w-xl">
+            <div className="relative w-auto my-6 mx-auto max-w-3xl">
               {/*content*/}
               <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
                 {/*header*/}
@@ -145,23 +160,24 @@ const Role = () => {
                       <div className=" w-1/2">
                         <div className="font-bold">FrontEnd</div>
                         {privilege.map((item) => (
-                          <div className="mb-4 pl-2 " key={item._id}>
-                            <div>
-                              <label for="Nama Kategori" className=" text-sm font-semibold text-gray-800">
-                                {item.name}
-                              </label>
-                              <div className="inline-flex">
+                          <div className="mb-4 " key={item._id}>
+                            <div className="flex flex-shrink">
+                              <div className="w-1/2">
+                                <label for="Nama Kategori" className=" text-sm font-semibold text-gray-800">
+                                  {item.name}
+                                </label>
+                              </div>
+                              <div className="w-1/2 pl-10">
                                 <Switch
-                                  checked={enabled}
-                                  onChange={setEnabled}
-                                  className={`${enabled ? "bg-green-400" : "bg-gray-300"}
-          relative inline-flex h-[24px] w-[48px] shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2  focus-visible:ring-white focus-visible:ring-opacity-75`}
+                                  onClick={() => toggleSwitch(item._id)}
+                                  className={`${enabled.includes(item._id) ? "bg-green-400" : "bg-gray-300"}
+                                  relative inline-flex h-[24px] w-[48px] shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2  focus-visible:ring-white focus-visible:ring-opacity-75`}
                                 >
-                                  {/* <span className="sr-only">Use setting</span> */}
+                                  <span className="sr-only">Use setting</span>
                                   <span
                                     aria-hidden="true"
                                     className={`${
-                                      enabled
+                                      enabled.includes(item._id)
                                         ? "translate-x-6 pointer-events-none inline-block h-[20px] w-[20px] transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out"
                                         : "translate-x-0 pointer-events-none inline-block h-[20px] w-[20px] transform rounded-full bg-gray-100 shadow-lg ring-0 transition duration-200 ease-in-out"
                                     }
@@ -177,22 +193,23 @@ const Role = () => {
                         <div className="font-bold">BackEnd</div>
                         {privilege.map((item) => (
                           <div className="mb-4 " key={item._id}>
-                            <div>
-                              <label for="Nama Kategori" className=" text-sm font-semibold text-gray-800">
-                                {item.name}
-                              </label>
-                              <div className="inline-flex pl-10 items-center">
+                            <div className="flex flex-shrink">
+                              <div className="w-1/2">
+                                <label for="Nama Kategori" className=" text-sm font-semibold text-gray-800">
+                                  {item.name}
+                                </label>
+                              </div>
+                              <div className="pl-10  w-1/2">
                                 <Switch
-                                  checked={enabled}
-                                  onChange={setEnabled}
-                                  className={`${enabled ? "bg-green-400" : "bg-gray-300"}
-          relative inline-flex h-[24px] w-[48px] shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2  focus-visible:ring-white focus-visible:ring-opacity-75`}
+                                  onClick={() => toggleSwitchB(item._id)}
+                                  className={`${enabledB.includes(item._id) ? "bg-green-400" : "bg-gray-300"}
+                                  relative inline-flex h-[24px] w-[48px] shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2  focus-visible:ring-white focus-visible:ring-opacity-75`}
                                 >
                                   {/* <span className="sr-only">Use setting</span> */}
                                   <span
                                     aria-hidden="true"
                                     className={`${
-                                      enabled
+                                      enabledB.includes(item._id)
                                         ? "translate-x-6 pointer-events-none inline-block h-[20px] w-[20px] transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out"
                                         : "translate-x-0 pointer-events-none inline-block h-[20px] w-[20px] transform rounded-full bg-gray-100 shadow-lg ring-0 transition duration-200 ease-in-out"
                                     }

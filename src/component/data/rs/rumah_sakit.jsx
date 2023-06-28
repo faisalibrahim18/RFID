@@ -14,7 +14,17 @@ const rumah_sakit = ({ loading, searchRs, rumah_sakit }) => {
   const [address, setAddress] = useState("");
   const [msg, setMsg] = useState("");
   const [rumahsakit, setRumahSakit] = useState([]);
+  const [collapsedIds, setCollapsedIds] = useState([]);
   const { id } = useParams();
+
+  const toggleCollapse = (id) => {
+    if (collapsedIds.includes(id)) {
+      setCollapsedIds(collapsedIds.filter((collapsedId) => collapsedId !== id));
+    } else {
+      setCollapsedIds([...collapsedIds, id]);
+    }
+  };
+
   useEffect(() => {
     handleShowEditHospital(id);
   }, [id]);
@@ -123,6 +133,7 @@ const rumah_sakit = ({ loading, searchRs, rumah_sakit }) => {
       <table className=" w-full ltr:text-left rtl:text-right text-gray-500 dark:text-gray-400">
         <thead className="border-b bg-white font-medium ">
           <tr>
+            <th scope="col" className="px-6 py-4"></th>
             <th scope="col" className="px-6 py-4">
               No
             </th>
@@ -146,9 +157,14 @@ const rumah_sakit = ({ loading, searchRs, rumah_sakit }) => {
             </th>
           </tr>
         </thead>
-        <tbody>
-          {searchRs.map((item, index) => (
+        {searchRs.map((item, index) => (
+          <tbody>
             <tr key={item._id} className="border-b text-center text-gray-600">
+              <td className="whitespace-nowrap px-6">
+                <details className="" onClick={() => toggleCollapse(item._id)}>
+                  <summary className=""></summary>
+                </details>
+              </td>
               <td className="whitespace-nowrap px-6 py-4">{index + 1}</td>
               <td className="whitespace-nowrap px-6 py-4">{item.code}</td>
               <td className="whitespace-nowrap px-6 py-4">{item.name}</td>
@@ -164,8 +180,24 @@ const rumah_sakit = ({ loading, searchRs, rumah_sakit }) => {
                 </Link>
               </td>
             </tr>
-          ))}
-        </tbody>
+
+            <tr className={`border-b  text-gray-600 ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <td class="whitespace-nowrap px-6 py-4 text-lg"></td>
+              <td class="whitespace-nowrap px-6 py-4 text-lg"></td>
+              <td class="whitespace-nowrap px-6 py-4 text-lg">Data Linen</td>
+              <td class="whitespace-nowrap px-6 py-4 text-lg"></td>
+            </tr>
+            <tr className={`border-b  text-gray-600 ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <td class="whitespace-nowrap px-6 py-4 text-lg"></td>
+              <td class="whitespace-nowrap px-6 py-4 text-lg"></td>
+              <td class="whitespace-nowrap px-6 py-4 text-lg">
+                {item?.linen.map((item) => (
+                  <p>{item.epc}</p>
+                ))}
+              </td>
+            </tr>
+          </tbody>
+        ))}
       </table>
 
       {showEdit ? (
