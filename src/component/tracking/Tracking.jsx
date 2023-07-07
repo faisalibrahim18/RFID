@@ -578,7 +578,7 @@ const Tracking = () => {
                 <div className="bg-gray-200 p-7 w-full  " key={item._id}>
                   <h1 className="md:mt-28 text-lg font-bold">Tracking view</h1>
                   {item.status.status === "processing" ? (
-                    <div className="p-3 bg-white rounded-md  overflow-y-auto ">
+                    <div className="p-3 bg-white rounded-md overflow-y-auto   md:w-[630px]">
                       <div className="flex  ">
                         <div className="step-item in-active">
                           <div className="step">
@@ -643,7 +643,7 @@ const Tracking = () => {
                     ""
                   )}
                   {item.status.status === "checking" ? (
-                    <div className="p-3 bg-white rounded-md    md:w-[630px] ">
+                    <div className="p-3 bg-white rounded-md overflow-y-auto   md:w-[630px] ">
                       <div className="flex">
                         <div className="step-item active1">
                           <div className="step">
@@ -708,7 +708,7 @@ const Tracking = () => {
                     ""
                   )}
                   {item.status.status === "transit to laundry" ? (
-                    <div className="p-3 bg-white rounded-md    md:w-[630px] ">
+                    <div className="p-3 bg-white rounded-md  overflow-y-auto  md:w-[630px] ">
                       <div className="flex">
                         <div className="step-item active1">
                           <div className="step">
@@ -774,7 +774,7 @@ const Tracking = () => {
                     ""
                   )}
                   {item.status.status === "accepted" ? (
-                    <div className="p-3 bg-white rounded-md    md:w-[630px] ">
+                    <div className="p-3 bg-white rounded-md overflow-y-auto md:w-[630px] ">
                       <div className="flex">
                         <div className="step-item active1">
                           <div className="step">
@@ -839,7 +839,7 @@ const Tracking = () => {
                     ""
                   )}
                   {item.status.status === "wash" ? (
-                    <div className="p-3 bg-white rounded-md    md:w-[630px] ">
+                    <div className="p-3 bg-white rounded-md overflow-y-auto  md:w-[630px] ">
                       <div className="flex">
                         <div className="step-item active1">
                           <div className="step">
@@ -904,7 +904,7 @@ const Tracking = () => {
                     ""
                   )}
                   {item.status.status === "drying" ? (
-                    <div className="p-3 bg-white rounded-md md:w-[630px] ">
+                    <div className="p-3 bg-white rounded-md overflow-y-auto md:w-[630px] ">
                       <div className="flex">
                         <div className="step-item active1">
                           <div className="step">
@@ -969,7 +969,7 @@ const Tracking = () => {
                     ""
                   )}
                   {item.status.status === "transit to hospital" ? (
-                    <div className="p-3 bg-white rounded-md md:w-[630px] ">
+                    <div className="p-3 bg-white rounded-md overflow-y-auto md:w-[630px] ">
                       <div className="flex">
                         <div className="step-item active1">
                           <div className="step">

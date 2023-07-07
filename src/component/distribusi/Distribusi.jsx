@@ -42,9 +42,14 @@ const Distribusi = () => {
   }, []);
   const getDistribusi = async () => {
     setLoading(true);
-
-    const response = await axios.get("http://localhost:9000/api/v1/rfid/distribusi");
-    console.log(response.data.data);
+    const token = localStorage.getItem("token");
+    const response = await axios.get("http://localhost:9000/api/v1/rfid/distribusi", {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    // console.log(response.data.data);
     setDistribusi(response.data.data);
     setSearchResults(response.data.data);
     setLoading(false);

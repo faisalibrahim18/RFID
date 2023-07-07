@@ -4,7 +4,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 
 const EditDistribusi = () => {
-  const [name_customer, setNameCustomer] = useState("");
+  const [customer, setCustomer] = useState("");
   const [category, setCategory] = useState("");
   const [linenn, setLinen] = useState("");
   const [quality, setQuality] = useState("");
@@ -19,38 +19,6 @@ const EditDistribusi = () => {
   const [custumer, setCustumer] = useState([]);
 
   const { id } = useParams();
-
-  // useEffect(() => {
-  //   getLinen();
-  // }, []);
-
-  // const getLinen = async () => {
-  //   const token = localStorage.getItem("token");
-  //   const response = await axios.get("http://localhost:9000/api/v1/rfid/linen", {
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //       Authorization: `Bearer ${token}`,
-  //     },
-  //   });
-  //   // console.log(response.data.data);
-  //   setdataLinen(response.data.data);
-  // };
-
-  // useEffect(() => {
-  //   getKategori();
-  // }, []);
-
-  // const getKategori = async () => {
-  //   const token = localStorage.getItem("token");
-  //   const response = await axios.get("http://localhost:9000/api/v1/rfid/category", {
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //       Authorization: `Bearer ${token}`,
-  //     },
-  //   });
-  //   // console.log(response.data.data);
-  //   setdataKategori(response.data.data);
-  // };
 
   useEffect(() => {
     getCustumer();
@@ -78,15 +46,15 @@ const EditDistribusi = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-        // console.log(response.data.data);
+        // console.log(response.data.data.customer.name);
 
-        setNameCustomer(response.data.data.customer);
-        setCategory(response.data.data.category);
-        setLinen(response.data.data.linen);
+        setCustomer(response.data.data.customer.name);
+        // setCategory(response.data.data.category);
+        // setLinen(response.data.data.linen);
         setQuality(response.data.data.quality);
         setService(response.data.data.service);
-        setDateIn(response.data.data.dateIn);
-        setDateOut(response.data.data.dateOut);
+        // setDateIn(response.data.data.dateIn);
+        // setDateOut(response.data.data.dateOut);
         setAmount(response.data.data.amount);
         setWeight(response.data.data.weight);
         setNote(response.data.data.note);
@@ -160,48 +128,23 @@ const EditDistribusi = () => {
           <p className="alert alert-danger rounded text-center p-2 shadow m-3">{msg}</p>
         )}
         <form className="w-full" onSubmit={updateDistribusi}>
-          <div className="mb-2">
+          <div className="mb-4">
             <select
               className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
-              value={name_customer}
-              onChange={(e) => setNameCustomer(e.target.value)}
+              value={customer}
+              onChange={(e) => setCustomer(e.target.value)}
             >
-              <option selected>Pilih Hospital : </option>
+              <option>Pilih Hospital : </option>
               {/* <option selected disabled>
                                   Select a Grup:
                                 </option> */}
 
               {custumer.map((d, i) => (
-                <option value={d._id}>
-                  {d.code} - {d.name}
-                </option>
+                <option value={d._id}>{d.name}</option>
               ))}
             </select>
           </div>
 
-          <div className="flex flex-wrap ">
-            {/* <div className="  md:mb-2  w-full">
-                          <div className="mb-2">
-                            <input
-                              type="text"
-                              className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
-                              placeholder="Hospital e-mail"
-                            />
-                          </div>
-                        </div> */}
-            {/* <div className=" md:w-1/2  lg:pl-3 md:pl-3  w-full">
-                          {" "}
-                          <div className="mb-2">
-                            <input
-                              type="text"
-                              value={custumer.number_phone}
-                              onChange={handlePhoneNumberChange}
-                              className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
-                              placeholder="Hospital phone number"
-                            />
-                          </div>
-                        </div> */}
-          </div>
           <div className="mb-2">
             <select
               value={service}
@@ -211,38 +154,14 @@ const EditDistribusi = () => {
               <option value="" className="text-gray-200">
                 Service
               </option>
-              <option value="cuci">Cuci</option>
-              <option value="setrika">Setrika</option>
-              <option value="cuci & setrika">Cuci & Setrika</option>
+              <option value="Dropstock">Dropstock</option>
+              <option value="Peminjaman">Peminjaman</option>
+              <option value="Penambahan">Penambahan</option>
+              <option value="Pengurangan Stock">Pengurangan Stock</option>
+              <option value="Return">Return</option>
+              <option value="Rewash">Rewash</option>
             </select>
           </div>
-
-          <div className="flex flex-wrap">
-            <div className="md:w-1/2   w-full">
-              <div className="mb-2">
-                <label className="block text-sm font-semibold text-gray-800">Pick -up date</label>
-                <input
-                  type="date"
-                  value={dateIn}
-                  onChange={(e) => setDateIn(e.target.value)}
-                  className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
-                />
-              </div>
-            </div>
-            <div className=" md:w-1/2 lg:pl-3 md:pl-3  w-full">
-              {" "}
-              <div className="mb-2">
-                <label className="block text-sm font-semibold text-gray-800">Delivery date</label>
-                <input
-                  type="date"
-                  value={dateOut}
-                  onChange={(e) => setDateOut(e.target.value)}
-                  className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
-                />
-              </div>
-            </div>
-          </div>
-
           <div className="flex  ">
             <h3 className="text-2xl font-semibold">Linen Information</h3>
           </div>
@@ -264,23 +183,7 @@ const EditDistribusi = () => {
               </div>
             </div>
           </div>
-          {/* <div className="flex flex-wrap">
-            <div className="md:w-1/2   w-full">
-              <div className="mb-2">
-                <select
-                  className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
-                  value={linenn}
-                  onChange={(e) => setLinen(e.target.value)}
-                >
-                  <option selected>Pilih Linen: </option>
 
-                  {dataLinen.map((d, i) => (
-                    <option value={d._id}>{d.epc}</option>
-                  ))}
-                </select>
-              </div>
-            </div>
-          </div> */}
           <div className="flex flex-wrap">
             <div className="md:w-1/2   w-full">
               <div className="mb-2">

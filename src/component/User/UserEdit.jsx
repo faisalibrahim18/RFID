@@ -14,6 +14,28 @@ const UserEdit = () => {
   const [message, setMsg] = useState("");
   const navigate = useNavigate();
   const { id } = useParams();
+  const [datarole, SetDataRole] = useState([]);
+
+  useEffect(() => {
+    const getRole = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await axios.get("http://localhost:9000/api/v1/rfid/role", {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        // console.log(response);
+        SetDataRole(response.data.data);
+      } catch (error) {
+        if (error.response) {
+          setMsg(error.response.data.msg);
+        }
+      }
+    };
+    getRole();
+  }, []);
 
   useEffect(() => {
     const getUserById = async () => {
@@ -25,7 +47,7 @@ const UserEdit = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-        // console.log(response);
+        console.log(response.data.data.role.name);
 
         setName(response.data.data.name);
         setUsername(response.data.data.username);
@@ -33,8 +55,7 @@ const UserEdit = () => {
         // setConfpassword(response.data.data.confPassword);
         setEmail(response.data.data.email);
         Setnumber_phone(response.data.data.number_phone);
-
-        setRole(response.data.data.role);
+        setRole(response.data.data.role.name);
       } catch (error) {
         if (error.response) {
           setMsg(error.response.data.msg);
@@ -203,15 +224,11 @@ const UserEdit = () => {
                     onChange={(e) => setRole(e.target.value)}
                     className="block w-full px-2 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
                   >
-                    <option>Pilih Role :</option>
+                    {/* <option>Pilih Role :</option> */}
 
-                    <option value="admin">Admin</option>
-                    <option value="super_admin">Super Admin</option>
-                    <option value="user">User</option>
-                    <option value="user_laundry">User Laundry</option>
-                    <option value="user_pabrik">User Pabrik</option>
-                    <option value="delivery">Delivery</option>
-                    <option value="rs">User Rumah Sakit</option>
+                    {datarole.map((i) => (
+                      <option value={i._id}>{i.name}</option>
+                    ))}
                   </select>
                 </div>
               </div>

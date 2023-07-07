@@ -80,7 +80,14 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
 
   const handleCetakSerahTerima = async (id) => {
     try {
-      window.open(`http://localhost:9000/api/v1/rfid/generatePDFSerahTerima/${id}`);
+      const token = localStorage.getItem("token");
+      console.log(token);
+      window.open(`http://localhost:9000/api/v1/rfid/generatePDFSerahTerima/${id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
     } catch (error) {
       console.log(error);
     }
@@ -108,10 +115,12 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
       .then((data) => {
         const newTrackerId = data.data._id;
         // console.log(data.data._id);
+        const token = localStorage.getItem("token");
         fetch(`http://localhost:9000/api/v1/rfid/distribusi/${id}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify({
             status: newTrackerId,

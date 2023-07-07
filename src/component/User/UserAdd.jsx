@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
@@ -12,8 +12,27 @@ const UserAdd = () => {
   const [number_phone, Setnumber_phone] = useState("");
   const [role, setRole] = useState("");
   const [message, setMsg] = useState("");
+  const [datarole, setDatarole] = useState([]);
   const navigate = useNavigate();
+  useEffect(() => {
+    getRole();
+  }, []);
 
+  const getRole = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.get("http://localhost:9000/api/v1/rfid/role", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setDatarole(response.data.data);
+      // console.log(response.data.data);
+    } catch (e) {
+      console.log(e);
+    }
+  };
   const saveUser = async (e) => {
     e.preventDefault();
     try {
@@ -177,13 +196,9 @@ const UserAdd = () => {
                   >
                     <option>Pilih Role :</option>
 
-                    <option value="admin">Admin</option>
-                    <option value="super_admin">Super Admin</option>
-                    <option value="user">User</option>
-                    <option value="user_laundry">User Laundry</option>
-                    <option value="user_pabrik">User Pabrik</option>
-                    <option value="delivery">Delivery</option>
-                    <option value="rs">User Rumah Sakit</option>
+                    {datarole.map((i) => (
+                      <option value={i._id}>{i.name}</option>
+                    ))}
                   </select>
                 </div>
               </div>

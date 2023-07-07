@@ -14,11 +14,18 @@ const Laporan = () => {
   const getLaporan = async (e) => {
     e.preventDefault();
     try {
+      const token = localStorage.getItem("token");
       const response = await axios.get(
         `http://localhost:9000/api/v1/rfid/distribusi?startDate=${startDate}&endDate=${endDate}`,
         {
           startDate: startDate,
           endDate: endDate,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
         },
       );
       console.log(response.data.data);
@@ -132,10 +139,7 @@ const Laporan = () => {
                           Customer
                         </th>
                         <th scope="col" className="px-6 py-4">
-                          Tanggal Masuk
-                        </th>
-                        <th scope="col" className="px-6 py-4">
-                          Tanggal Keluar
+                          Tanggal
                         </th>
                         <th scope="col" className="px-6 py-4">
                           Linen
@@ -162,50 +166,13 @@ const Laporan = () => {
                         <tr key={item._id} className="border-b text-center text-gray-600">
                           <td className="whitespace-nowrap px-6 py-4">{index + 1}</td>
                           <td className="whitespace-nowrap px-6 py-4">{item.customer.name}</td>
-                          <td className="whitespace-nowrap px-6 py-4">{item.startDate}</td>
-                          <td className="whitespace-nowrap px-6 py-4">{item.endDate}</td>
+                          <td className="whitespace-nowrap px-6 py-4">{item.dateIn}</td>
+
                           <td className="whitespace-nowrap px-6 py-4">{item.linen[0].epc}</td>
-                          <td className="whitespace-nowrap px-6 py-4">
-                            {item.quality === "baik" ? (
-                              <span className=" rounded-md bg-[#96CDF4] px-4 py-px text-xs font-semibold uppercase text-gray-900 antialiased">
-                                Baik
-                              </span>
-                            ) : (
-                              ""
-                            )}
-                            {item.quality === "kurang baik" ? (
-                              <span className="float-right rounded-md bg-[#FEBF00] px-4 py-px text-xs font-semibold uppercase text-gray-900 antialiased">
-                                Kurang Baik
-                              </span>
-                            ) : (
-                              ""
-                            )}
-                          </td>
+                          <td className="whitespace-nowrap px-6 py-4">{item.quality}</td>
                           <td className="whitespace-nowrap px-6 py-4">{item.linen[0].category}</td>
                           <td className="whitespace-nowrap px-6 py-4">{item.amount}</td>
-                          <td className="whitespace-nowrap px-6 py-4">
-                            {item.service === "cuci" ? (
-                              <span className="rounded-md bg-[#FEBF00] px-4 py-px text-xs font-semibold uppercase text-gray-900 antialiased">
-                                cuci
-                              </span>
-                            ) : (
-                              ""
-                            )}
-                            {item.service === "wash" ? (
-                              <span className=" rounded-md bg-[#009800] px-4 py-px text-xs font-semibold uppercase text-gray-900 antialiased">
-                                Wash
-                              </span>
-                            ) : (
-                              ""
-                            )}
-                            {item.service === "setrika" ? (
-                              <span className="float-right rounded-md bg-[#96CDF4] px-4 py-px text-xs font-semibold uppercase text-gray-900 antialiased">
-                                Setrika
-                              </span>
-                            ) : (
-                              ""
-                            )}
-                          </td>
+                          <td className="whitespace-nowrap px-6 py-4">{item.service}</td>
 
                           <td className="whitespace-nowrap px-6 py-4">
                             {" "}

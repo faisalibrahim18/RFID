@@ -11,7 +11,7 @@ const User = ({ users, loading, searchResults }) => {
   const deleteUser = async (userId) => {
     const isConfirm = await Swal.fire({
       title: "Are you sure?",
-      text: "You won't be able to revert this!",
+      text: "You won't be table to revert this!",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
@@ -80,57 +80,7 @@ const User = ({ users, loading, searchResults }) => {
               <td className="whitespace-nowrap px-6 py-4">{item.name}</td>
               <td className="whitespace-nowrap px-6 py-4">{item.username}</td>
               <td className="whitespace-nowrap px-6 py-4">{item.email}</td>
-              <td className="whitespace-nowrap px-6 py-4">
-                {item.role === "admin" ? (
-                  <span className="rounded-md bg-[#96CDF4] px-4 py-px text-xs font-semibold uppercase text-gray-900 antialiased">
-                    Admin
-                  </span>
-                ) : (
-                  ""
-                )}
-                {item.role === "super_admin" ? (
-                  <span className="rounded-md bg-[#eebc72] px-4 py-px text-xs font-semibold uppercase text-gray-900 antialiased">
-                    Super Admin
-                  </span>
-                ) : (
-                  ""
-                )}
-                {item.role === "user" ? (
-                  <span className=" rounded-md bg-[#00205F] px-4 py-px text-xs font-semibold uppercase text-gray-200 antialiased">
-                    User
-                  </span>
-                ) : (
-                  ""
-                )}
-                {item.role === "user_laundry" ? (
-                  <span className=" rounded-md bg-[#005f57] px-4 py-px text-xs font-semibold uppercase text-gray-200 antialiased">
-                    User Laundry
-                  </span>
-                ) : (
-                  ""
-                )}
-                {item.role === "user_pabrik" ? (
-                  <span className=" rounded-md bg-[#dbe645] px-4 py-px text-xs font-semibold uppercase text-gray-500 antialiased">
-                    User Pabrik
-                  </span>
-                ) : (
-                  ""
-                )}
-                {item.role === "delivery" ? (
-                  <span className=" rounded-md bg-[#e645cb] px-4 py-px text-xs font-semibold uppercase text-gray-200 antialiased">
-                    Delivery
-                  </span>
-                ) : (
-                  ""
-                )}
-                {item.role === "rs" ? (
-                  <span className=" rounded-md bg-[#4ee692] px-4 py-px text-xs font-semibold uppercase text-gray-100 antialiased">
-                    User Rumah Sakit
-                  </span>
-                ) : (
-                  ""
-                )}
-              </td>
+              <td className="whitespace-nowrap px-6 py-4">{item.role.name}</td>
               <td className="whitespace-nowrap px-6 py-4">
                 <Link to={`/users/edit/${item._id}`} className="m-3 ">
                   <i className="fa-solid fa-pen-to-square text-[#96CDF4] hover:text-blue-400"></i>

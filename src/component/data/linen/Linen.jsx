@@ -69,7 +69,7 @@ const Linen = ({ linen, searchResults, loading }) => {
             </th>
 
             <th scope="col" className="px-6 py-4">
-              Counter
+              Count
             </th>
             <th scope="col" className="px-6 py-4">
               Action

@@ -249,7 +249,7 @@ const Dashboard = () => {
                       </p>
                     </div>
                   </div>
-                  {item.role === "super_admin" ? (
+                  {item.role.name === "Superadmin" ? (
                     <div className="flex-shrink max-w-full w-full lg:w-1/2 md:pt-0 pt-10">
                       <button
                         type="button"
@@ -275,7 +275,7 @@ const Dashboard = () => {
               </div>
             </div>
           </div>
-          {item.role === "super_admin" ? (
+          {item.role.name === "Superadmin" ? (
             <div className="flex flex-wrap flex-row  ">
               <div className="max-w-full px-4 lg:w-auto mb-6 w-full fade-in pl-6">
                 <div className="bg-white border-b-4 mb-5 border-[#2DC8A8] rounded-lg shadow-xl p-5">

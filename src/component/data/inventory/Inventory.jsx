@@ -27,7 +27,7 @@ const Inventory = ({ loading, searchResults }) => {
           Authorization: `Bearer ${token}`,
         },
       });
-      // console.log(response);
+      console.log(response);
       setInventory([response.data.data]);
       setName(response.data.data.name);
       setAmount(response.data.data.amount);
