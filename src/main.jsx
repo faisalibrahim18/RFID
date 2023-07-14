@@ -12,12 +12,12 @@ import axios from "axios";
 axios.defaults.withCredentials = true;
 const container = document.getElementById("root");
 const root = createRoot(container);
-// const { PUBLIC_URL } = process.env;
-
+const { PUBLIC_URL } = import.meta.env;
+// console.log(import.meta.env.VITE_API_KEY);
 root.render(
   <React.StrictMode>
-    <Provider store={store}>
+    <Provider store={store} basename={PUBLIC_URL}>
       <App />
     </Provider>
-  </React.StrictMode>,
+  </React.StrictMode>
 );

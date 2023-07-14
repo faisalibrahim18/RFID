@@ -1,14 +1,15 @@
 import React from "react";
 
-const SearchLinen = ({ linen, setSearchResults }) => {
+const SearchAudit = ({ audit, setSearchResults }) => {
   const handleSubmit = (e) => e.preventDefault();
 
   const handleSearchChange = (e) => {
-    if (!e.target.value) return setSearchResults(linen);
-    const resultsArray = linen.filter(
+    if (!e.target.value) return setSearchResults(audit);
+    const resultsArray = audit.filter(
       (item) =>
-        item.code.toLowerCase().includes(e.target.value.toLowerCase()) ||
-        item.epc.toLowerCase().includes(e.target.value.toLowerCase())
+        item.date.toLowerCase().includes(e.target.value.toLowerCase()) ||
+        item.user.name.toLowerCase().includes(e.target.value.toLowerCase()) ||
+        item.status.toLowerCase().includes(e.target.value.toLowerCase())
     );
     setSearchResults(resultsArray);
   };
@@ -44,4 +45,4 @@ const SearchLinen = ({ linen, setSearchResults }) => {
   );
 };
 
-export default SearchLinen;
+export default SearchAudit;

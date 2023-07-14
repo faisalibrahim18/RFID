@@ -38,6 +38,8 @@ import Permintaan3 from "./page/user_rumahsakit/Pemintaan";
 import EditLaporan1 from "./page/user_pabrik/EditLaporan1";
 import Accordion from "./component/accordion/Accordion";
 import RolePage from "./page/Role/RolePage";
+import Invoice from "./page/invoice/Invoice";
+import Audit from "./page/audit/Audit";
 
 function App() {
   return (
@@ -59,16 +61,30 @@ function App() {
           <Route exact path="/linen/edit/:id" element={<FormEditLinen />} />
           <Route exact path="/distribusi" element={<DistribusiList />} />
           <Route exact path="/distribusi/add" element={<FormAddDistribusi />} />
-          <Route exact path="/distribusi/edit/:id" element={<FormEditDistribusi />} />
+          <Route
+            exact
+            path="/distribusi/edit/:id"
+            element={<FormEditDistribusi />}
+          />
           <Route exact path="/kategori" element={<KategoriList />} />
           <Route exact path="/kategori/add" element={<FormAddKategori />} />
-          <Route exact path="/kategori/edit/:id" element={<FormEditKategori />} />
+          <Route
+            exact
+            path="/kategori/edit/:id"
+            element={<FormEditKategori />}
+          />
           <Route exact path="/inventory" element={<InventoryList />} />
           <Route exact path="/inventory/add" element={<FormAddInventory />} />
-          <Route exact path="/inventory/edit/:id" element={<FormEditInventory />} />
+          <Route
+            exact
+            path="/inventory/edit/:id"
+            element={<FormEditInventory />}
+          />
           <Route exact path="/laporan" element={<LaporanList />} />
           <Route exact path="/tracking" element={<Trackingview />} />
           <Route exact path="/role" element={<RolePage />} />
+          <Route exact path="/invoice" element={<Invoice />} />
+          <Route exact path="/audit" element={<Audit />} />
 
           {/* user_Laundry route */}
           <Route exact path="/dashboardLaundry" element={<Dashboard />} />

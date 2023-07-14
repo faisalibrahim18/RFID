@@ -1,9 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { BsFillClipboard2CheckFill, BsFillPersonBadgeFill, BsGridFill, BsPeopleFill } from "react-icons/bs";
+import {
+  BsFillClipboard2CheckFill,
+  BsFillPersonBadgeFill,
+  BsGridFill,
+  BsPeopleFill,
+} from "react-icons/bs";
 import { NavLink, useNavigate } from "react-router-dom";
 import { CgLogOut } from "react-icons/cg";
 import Logo from "../../assets/logo.png";
-import { FaClipboardList, FaCubes, FaHospitalAlt, FaRegListAlt, FaTags, FaTruck } from "react-icons/fa";
+import {
+  FaClipboardList,
+  FaCubes,
+  FaHospitalAlt,
+  FaRegListAlt,
+  FaTags,
+  FaTruck,
+} from "react-icons/fa";
 import axios from "axios";
 
 import Swal from "sweetalert2";
@@ -56,12 +68,15 @@ const Layout = ({ children }) => {
   const getUsers = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get("http://localhost:9000/api/v1/rfid/getUserSignedIn", {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get(
+        "http://localhost:9000/api/v1/rfid/getUserSignedIn",
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       const rolePrivileges = response.data.data.role.rolePrivileges;
 
@@ -96,39 +111,41 @@ const Layout = ({ children }) => {
         allowValues.every((allow, index) => {
           const privilegeName = Object.keys(privilege)[index];
           if (allow) {
-            console.log(`Pengguna diizinkan untuk ${privilegeName}`);
+            // console.log(`Pengguna diizinkan untuk ${privilegeName}`);
             // Tindakan yang diambil jika izin adalah true
             return true;
           } else {
-            console.log(`Pengguna tidak diizinkan untuk ${privilegeName}`);
+            // console.log(`Pengguna tidak diizinkan untuk ${privilegeName}`);
             // Tindakan yang diambil jika izin adalah false
             return false;
           }
         })
       ) {
-        console.log("Semua izin diizinkan");
+        // console.log("Semua izin diizinkan");
         // Tindakan yang diambil jika semua izin bernilai true
       } else {
-        console.log("Tidak semua izin diizinkan");
+        // console.log("Tidak semua izin diizinkan");
         // Tindakan yang diambil jika ada izin yang bernilai false
       }
 
-      console.log("response data:", response.data.data);
+      // console.log("response data:", response.data.data);
       setUser([response.data.data]);
     } catch (error) {
       console.log("Error:", error.response); // Memperbaiki penanganan kesalahan
     }
   };
-
   const getPrivilege = async () => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get("http://localhost:9000/api/v1/rfid/privilege", {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get(
+        "http://localhost:9000/api/v1/rfid/privilege",
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       console.log(response.data.data);
     } catch (error) {
       console.log(error);
@@ -144,7 +161,7 @@ const Layout = ({ children }) => {
             open ? " w-12 md:w-0 lg:56" : " w-0 md:w-56 sm:w-20"
           }`}
         >
-          <div className="h-full overflow-y-auto scrollbars">
+          <div className="h-full overflow-y-auto scrollbar-thin scrollbar-thumb-rounded-md  scrollbar-thumb-gray-300">
             {/* <!--logo--> */}
             <div className="mh-18 text-center py-5 md:block hidden">
               <a href="#" className="relative">
@@ -197,6 +214,27 @@ const Layout = ({ children }) => {
                       </h2>
                     </NavLink>
                   )}
+                  {/* {privilege.UserPage && ( */}
+                  <NavLink
+                    activeClassName="active"
+                    to={"/audit"}
+                    className={`group flex items-center text-center text-sm gap-3.5 font-medium p-4 hover:bg-[#dee7de] rounded-md ${
+                      privilege.allowed ? "allowed" : "not-allowed"
+                    }`}
+                  >
+                    <div className="text-lg">
+                      <i className="fa-solid fa-user-secret"></i>
+                    </div>
+                    <h2>Audit Log</h2>
+                    <h2
+                      className={`${
+                        open && " md:hidden "
+                      } absolute  left-44 md:hidden bg-white font-semibold whitespace-pre text-[#00205F] rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit`}
+                    >
+                      Audit Log
+                    </h2>
+                  </NavLink>
+                  {/* )} */}
 
                   {privilege.RolePage && (
                     <NavLink
@@ -339,6 +377,25 @@ const Layout = ({ children }) => {
                       </h2>
                     </NavLink>
                   )}
+                  {/* {privilege.ReportPage && ( */}
+                  <NavLink
+                    activeClassName="active"
+                    to={"/invoice"}
+                    className="group  flex items-center text-center text-sm gap-3.5 font-medium p-4 hover:bg-[#dee7de] rounded-md"
+                  >
+                    <div className="text-lg">
+                      <i className="fa-sharp fa-solid fa-file-invoice"></i>
+                    </div>
+                    <h2>Invoice</h2>
+                    <h2
+                      className={`${
+                        open && " md:hidden "
+                      } absolute  left-44 md:hidden bg-white font-semibold whitespace-pre text-[#00205F] rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit`}
+                    >
+                      Invoice
+                    </h2>
+                  </NavLink>
+                  {/* )} */}
 
                   {privilege.TrackingPage && (
                     <NavLink
@@ -436,7 +493,10 @@ const Layout = ({ children }) => {
                     ></span>
                   </div>
                   {users.map((item) => (
-                    <span className="hidden md:block ml-1 mr-1 self-center" key={item._id}>
+                    <span
+                      className="hidden md:block ml-1 mr-1 self-center"
+                      key={item._id}
+                    >
                       {" "}
                       {item.name}
                     </span>

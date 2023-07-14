@@ -2,14 +2,11 @@ import React from "react";
 
 const SearchL = ({ distribusi, setSearchResults }) => {
   const handleSubmit = (e) => e.preventDefault();
-
   const handleSearchChange = (e) => {
     if (!e.target.value) return setSearchResults(distribusi);
-
-    const resultsArray = distribusi.filter(
-      (item) => item.dateIn.includes(e.target.value) || item.customer.name.includes(e.target.value),
+    const resultsArray = distribusi.filter((item) =>
+      item.customer.name.toLowerCase().includes(e.target.value.toLowerCase())
     );
-
     setSearchResults(resultsArray);
   };
 

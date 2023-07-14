@@ -20,8 +20,9 @@ const User = () => {
   const getUsers = async () => {
     setLoading(true);
     try {
+      const API_URL = import.meta.env.VITE_API_KEY;
       const token = localStorage.getItem("token");
-      const response = await axios.get("http://localhost:9000/api/v1/rfid/user", {
+      const response = await axios.get(`${API_URL}/api/v1/rfid/user`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -56,7 +57,10 @@ const User = () => {
             <h1 className="text-3xl font-semibold mt-3 mb-5">UserList</h1>
           </div>
           <div className="flex w-full mb-7 ml-5 md:ml-auto mr-4  font-semibold justify-between md:w-1/3 md:justify-end">
-            <Link to={"/users/add"} className="bg-[#96CDF4] p-2 rounded-md  hover:bg-blue-200">
+            <Link
+              to={"/users/add"}
+              className="bg-[#96CDF4] p-2 rounded-md  hover:bg-blue-200"
+            >
               <i className="fa-solid fa-user-plus"></i> Add User
             </Link>
           </div>

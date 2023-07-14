@@ -5,13 +5,13 @@ const SearchKategori = ({ category, setSearchResults }) => {
 
   const handleSearchChange = (e) => {
     if (!e.target.value) return setSearchResults(category);
-
-    const resultsArray = category.filter((item) => item.name.includes(e.target.value));
-
+    const resultsArray = category.filter((item) =>
+      item.name.toLowerCase().includes(e.target.value.toLowerCase())
+    );
     setSearchResults(resultsArray);
   };
 
-  return (
+  return ( 
     <div className="flex justify-end">
       {" "}
       <form className="max-w-sm px-4" onSubmit={handleSubmit}>

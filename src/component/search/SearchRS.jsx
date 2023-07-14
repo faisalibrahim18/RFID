@@ -5,12 +5,12 @@ const SearchRS = ({ rumah_sakit, setSearchRs }) => {
   //   console.log(rumah_sakit);
   const handleSearchChange = (e) => {
     if (!e.target.value) return setSearchRs(rumah_sakit);
-
-    const resultsArrayRs = rumah_sakit.filter(
-      (rs) => rs.code.includes(e.target.value) || rs.name.includes(e.target.value),
+    const resultsArray = rumah_sakit.filter(
+      (item) =>
+        item.code.toLowerCase().includes(e.target.value.toLowerCase()) ||
+        item.name.toLowerCase().includes(e.target.value.toLowerCase())
     );
-
-    setSearchRs(resultsArrayRs);
+    setSearchRs(resultsArray);
   };
   return (
     <div className="flex justify-end">

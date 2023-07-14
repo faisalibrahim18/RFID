@@ -1,18 +1,15 @@
 import React from "react";
 
-const SearchLinen = ({ linen, setSearchResults }) => {
+const SearchRole = ({ role, setSearchResults }) => {
   const handleSubmit = (e) => e.preventDefault();
 
   const handleSearchChange = (e) => {
-    if (!e.target.value) return setSearchResults(linen);
-    const resultsArray = linen.filter(
-      (item) =>
-        item.code.toLowerCase().includes(e.target.value.toLowerCase()) ||
-        item.epc.toLowerCase().includes(e.target.value.toLowerCase())
+    if (!e.target.value) return setSearchResults(role);
+    const resultsArray = role.filter((item) =>
+      item.name.toLowerCase().includes(e.target.value.toLowerCase())
     );
     setSearchResults(resultsArray);
   };
-
   return (
     <div className="flex justify-end">
       {" "}
@@ -44,4 +41,4 @@ const SearchLinen = ({ linen, setSearchResults }) => {
   );
 };
 
-export default SearchLinen;
+export default SearchRole;

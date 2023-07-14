@@ -1,18 +1,15 @@
 import React from "react";
 
-const SearchLinen = ({ linen, setSearchResults }) => {
+const SearchPrice = ({ price, setSearchResults2 }) => {
   const handleSubmit = (e) => e.preventDefault();
 
   const handleSearchChange = (e) => {
-    if (!e.target.value) return setSearchResults(linen);
-    const resultsArray = linen.filter(
-      (item) =>
-        item.code.toLowerCase().includes(e.target.value.toLowerCase()) ||
-        item.epc.toLowerCase().includes(e.target.value.toLowerCase())
+    if (!e.target.value) return setSearchResults2(price);
+    const resultsArray = price.filter((item) =>
+      item.name.toLowerCase().includes(e.target.value.toLowerCase())
     );
-    setSearchResults(resultsArray);
+    setSearchResults2(resultsArray);
   };
-
   return (
     <div className="flex justify-end">
       {" "}
@@ -44,4 +41,4 @@ const SearchLinen = ({ linen, setSearchResults }) => {
   );
 };
 
-export default SearchLinen;
+export default SearchPrice;

@@ -28,8 +28,9 @@ const Rs = () => {
   const getRs = async () => {
     setLoading(true);
     try {
+      const API_URL = import.meta.env.VITE_API_KEY;
       const token = localStorage.getItem("token");
-      const response = await axios.get("http://localhost:9000/api/v1/rfid/hospital", {
+      const response = await axios.get(`${API_URL}/api/v1/rfid/hospital`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -58,10 +59,11 @@ const Rs = () => {
   const saveHospital = async (e) => {
     e.preventDefault();
     try {
+      const API_URL = import.meta.env.VITE_API_KEY;
       const token = localStorage.getItem("token");
       const response = await axios
         .post(
-          "http://localhost:9000/api/v1/rfid/hospital",
+          `${API_URL}/api/v1/rfid/hospital`,
           {
             code: code,
             name: name,
@@ -73,7 +75,7 @@ const Rs = () => {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
-          },
+          }
         )
         .then(({ data }) => {
           Swal.fire({
@@ -106,7 +108,9 @@ const Rs = () => {
       <div className=" p-2">
         <div className="flex flex-wrap flex-row">
           <div className="flex-shrink max-w-full px-4 w-1/2">
-            <h1 className="text-3xl font-semibold mt-3 mb-5">Rumah Sakit List</h1>
+            <h1 className="text-3xl font-semibold mt-3 mb-5">
+              Rumah Sakit List
+            </h1>
           </div>
           <div className="flex w-full mb-5 ml-5 md:ml-auto mr-4 font-semibold justify-between md:w-1/3 md:justify-end">
             <button
@@ -164,11 +168,15 @@ const Rs = () => {
 
                 <div className="relative p-6 flex-auto">
                   {Object.keys(msg).length > 0 && (
-                    <p className="alert alert-danger rounded text-center p-2 shadow m-3">{msg}</p>
+                    <p className="alert alert-danger rounded text-center p-2 shadow m-3">
+                      {msg}
+                    </p>
                   )}
                   <form className="w-full" onSubmit={saveHospital}>
                     <div className="mb-4">
-                      <label className=" text-sm font-semibold text-gray-800">Kode Rumah Sakit</label>
+                      <label className=" text-sm font-semibold text-gray-800">
+                        Kode Rumah Sakit
+                      </label>
                       <input
                         required
                         type="text"
@@ -179,7 +187,9 @@ const Rs = () => {
                       />
                     </div>
                     <div className="mb-4">
-                      <label className="block text-sm font-semibold text-gray-800">Nama Rumah Sakit</label>
+                      <label className="block text-sm font-semibold text-gray-800">
+                        Nama Rumah Sakit
+                      </label>
                       <input
                         required
                         type="text"
@@ -190,7 +200,9 @@ const Rs = () => {
                       />
                     </div>
                     <div className="mb-4">
-                      <label className="block text-sm font-semibold text-gray-800">No Telepon</label>
+                      <label className="block text-sm font-semibold text-gray-800">
+                        No Telepon
+                      </label>
                       <input
                         required
                         type="text"
@@ -201,7 +213,9 @@ const Rs = () => {
                       />
                     </div>
                     <div className="mb-4">
-                      <label className="block text-sm font-semibold text-gray-800">Alamat</label>
+                      <label className="block text-sm font-semibold text-gray-800">
+                        Alamat
+                      </label>
                       <textarea
                         required
                         type="text"

@@ -1,59 +1,46 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 
-const Inventory = ({ loading, searchResults }) => {
-  if (loading) {
-    return <h2>Loading...</h2>;
-  }
+const Price = ({ searchResults2 }) => {
   const [showEdit, setShowEdit] = React.useState(false);
-  const [name, setName] = useState("");
-  const [amount, setAmount] = useState("");
-  const [status, setStatus] = useState("");
-  const [message, setMsg] = useState("");
-  const [inventory1, setInventory] = useState([]);
+  const [price, setPrice] = useState([]);
+  const [value, setValue] = useState("");
   const { id } = useParams();
   useEffect(() => {
-    handleShowEditInventory(id);
+    handleShowEdit(id);
   }, [id]);
-  const handleShowEditInventory = async (id) => {
+  const handleShowEdit = async (id) => {
     setShowEdit(id, true);
     try {
       const API_URL = import.meta.env.VITE_API_KEY;
       const token = localStorage.getItem("token");
-      const response = await axios.get(
-        `${API_URL}/api/v1/rfid/inventory/${id}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      console.log(response);
-      setInventory([response.data.data]);
-      setName(response.data.data.name);
-      setAmount(response.data.data.amount);
-      setStatus(response.data.data.status);
+      const response = await axios.get(`${API_URL}/api/v1/rfid/price/${id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      //   console.log(response.data);
+      setPrice([response.data.data]);
+      setValue(response.data.data.value);
     } catch (error) {
       if (error.response) {
         setMsg(error.response.data.msg);
       }
     }
   };
-  const updateinventory = async (id, e) => {
+  const updatePrice = async (id, e) => {
     e.preventDefault();
     try {
       const API_URL = import.meta.env.VITE_API_KEY;
       const token = localStorage.getItem("token");
       await axios
         .put(
-          `${API_URL}/api/v1/rfid/inventory/${id}`,
+          `${API_URL}/api/v1/rfid/price/${id}`,
           {
-            name: name,
-            amount: amount,
-            status: status,
+            value: value,
           },
           {
             headers: {
@@ -69,57 +56,16 @@ const Inventory = ({ loading, searchResults }) => {
           });
         });
       window.location.reload();
-      navigate("/inventory");
     } catch (error) {
       if (error.response) {
-        setMsg(error.response.data.msg);
+        // setMsg(error.response.data.msg);
       } else {
         Swal.fire({
-          text: error.data.message,
+          text: error.data.msg,
           icon: "error",
         });
       }
     }
-  };
-  const deleteInventory = async (InventoryId) => {
-    const isConfirm = await Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      return result.isConfirmed;
-    });
-
-    if (!isConfirm) {
-      return;
-    }
-    const API_URL = import.meta.env.VITE_API_KEY;
-    const token = localStorage.getItem("token");
-    await axios
-      .delete(`${API_URL}/api/v1/rfid/inventory/${InventoryId}`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then(({ data }) => {
-        Swal.fire({
-          icon: "success",
-          text: data.message,
-        });
-        window.location.reload();
-      })
-      .catch(({ response: { data } }) => {
-        Swal.fire({
-          text: data.message,
-          icon: "error",
-        });
-        window.location.reload();
-      });
   };
   return (
     <>
@@ -129,15 +75,11 @@ const Inventory = ({ loading, searchResults }) => {
             <th scope="col" className="px-6 py-4">
               No
             </th>
-
             <th scope="col" className="px-6 py-4">
-              Nama Barang
+              Nama
             </th>
             <th scope="col" className="px-6 py-4">
-              Jumlah
-            </th>
-            <th scope="col" className="px-6 py-4">
-              status
+              price
             </th>
             <th scope="col" className="px-6 py-4">
               Action
@@ -145,23 +87,22 @@ const Inventory = ({ loading, searchResults }) => {
           </tr>
         </thead>
         <tbody>
-          {searchResults.map((item, index) => (
+          {searchResults2.map((item, index) => (
             <tr key={item._id} className="border-b text-center text-gray-600">
               <td className="whitespace-nowrap px-6 py-4">{index + 1}</td>
-
               <td className="whitespace-nowrap px-6 py-4">{item.name}</td>
-              <td className="whitespace-nowrap px-6 py-4">{item.amount}</td>
-              <td className="whitespace-nowrap px-6 py-4">{item.status}</td>
+              <td className="whitespace-nowrap px-6 py-4">{item.value}</td>
+
               <td className="whitespace-nowrap px-6 py-4">
                 <button
-                  onClick={() => handleShowEditInventory(item._id)}
+                  onClick={() => handleShowEdit(item._id)}
                   className="m-3 "
                 >
                   <i className="fa-solid fa-pen-to-square text-[#96CDF4] hover:text-blue-400"></i>
                 </button>
-                <Link onClick={() => deleteInventory(item._id)}>
+                {/* <button onClick={() => deleteRole(item._id)}>
                   <i className="fa-solid fa-trash-can text-[#FF1818] hover:text-red-400"></i>
-                </Link>
+                </button> */}
               </td>
             </tr>
           ))}
@@ -187,43 +128,22 @@ const Inventory = ({ loading, searchResults }) => {
                   </button>
                 </div>
                 {/*body*/}
-                {inventory1.map((item) => (
+                {price.map((item) => (
                   <div className="relative p-6 flex-auto" key={item._id}>
                     <form
                       className="w-full"
-                      onSubmit={(e) => updateinventory(item._id, e)}
+                      onSubmit={(e) => updatePrice(item._id, e)}
                     >
                       <div className="mb-4">
                         <input
                           type="text"
-                          value={name}
-                          onChange={(e) => setName(e.target.value)}
+                          value={value}
+                          onChange={(e) => setValue(e.target.value)}
                           className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
-                          placeholder="Nama Barang..."
                         />
                       </div>
-                      <div className="mb-4">
-                        <input
-                          type="text"
-                          value={amount}
-                          onChange={(e) => setAmount(e.target.value)}
-                          className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
-                          placeholder="Jumlah..."
-                        />
-                      </div>
-                      <div className="mb-2">
-                        <select
-                          value={status}
-                          onChange={(e) => setStatus(e.target.value)}
-                          className="block w-full px-2 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
-                        >
-                          <option>Pilih Status :</option>
 
-                          <option value="operasional">Operasional</option>
-                          <option value="emergency">Emergency</option>
-                        </select>
-                      </div>
-
+                      
                       {/*footer*/}
                       <div className="flex justify-center pt-10">
                         <button
@@ -246,4 +166,4 @@ const Inventory = ({ loading, searchResults }) => {
   );
 };
 
-export default Inventory;
+export default Price;

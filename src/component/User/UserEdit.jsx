@@ -20,12 +20,15 @@ const UserEdit = () => {
     const getRole = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get("http://localhost:9000/api/v1/rfid/role", {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await axios.get(
+          "http://localhost:9000/api/v1/rfid/role",
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         // console.log(response);
         SetDataRole(response.data.data);
       } catch (error) {
@@ -41,13 +44,16 @@ const UserEdit = () => {
     const getUserById = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get(`http://localhost:9000/api/v1/rfid/user/${id}`, {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        console.log(response.data.data.role.name);
+        const response = await axios.get(
+          `http://localhost:9000/api/v1/rfid/user/${id}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        // console.log(response.data.data.role.name);
 
         setName(response.data.data.name);
         setUsername(response.data.data.username);
@@ -55,7 +61,7 @@ const UserEdit = () => {
         // setConfpassword(response.data.data.confPassword);
         setEmail(response.data.data.email);
         Setnumber_phone(response.data.data.number_phone);
-        setRole(response.data.data.role.name);
+        setRole(response.data.data.role._id);
       } catch (error) {
         if (error.response) {
           setMsg(error.response.data.msg);
@@ -86,7 +92,7 @@ const UserEdit = () => {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
-          },
+          }
         )
         .then(({ data }) => {
           Swal.fire({
@@ -128,7 +134,10 @@ const UserEdit = () => {
           )}
           <form className="w-full" onSubmit={updateUser}>
             <div className="mb-2">
-              <label for="nama" className=" text-sm font-semibold text-gray-800">
+              <label
+                for="nama"
+                className=" text-sm font-semibold text-gray-800"
+              >
                 Nama
               </label>
               <input
@@ -140,7 +149,10 @@ const UserEdit = () => {
               />
             </div>
             <div className="mb-2">
-              <label for="username" className="block text-sm font-semibold text-gray-800">
+              <label
+                for="username"
+                className="block text-sm font-semibold text-gray-800"
+              >
                 Username
               </label>
               <input
@@ -154,7 +166,10 @@ const UserEdit = () => {
             <div className="flex flex-wrap ">
               <div className="md:w-1/2  md:mb-2  w-full">
                 <div className="mb-2">
-                  <label for="password" className="block text-sm font-semibold text-gray-800">
+                  <label
+                    for="password"
+                    className="block text-sm font-semibold text-gray-800"
+                  >
                     Password
                   </label>
                   <input
@@ -169,7 +184,10 @@ const UserEdit = () => {
               <div className=" md:w-1/2  lg:pl-3 md:pl-3  w-full">
                 {" "}
                 <div className="mb-2">
-                  <label for="confrim_password" className="block text-sm font-semibold text-gray-800">
+                  <label
+                    for="confrim_password"
+                    className="block text-sm font-semibold text-gray-800"
+                  >
                     Confrim Password
                   </label>
                   <input
@@ -185,7 +203,10 @@ const UserEdit = () => {
             <div className="flex flex-wrap">
               <div className="md:w-1/2   w-full">
                 <div className="mb-2">
-                  <label for="email" className="block text-sm font-semibold text-gray-800">
+                  <label
+                    for="email"
+                    className="block text-sm font-semibold text-gray-800"
+                  >
                     Email
                   </label>
                   <input
@@ -200,7 +221,10 @@ const UserEdit = () => {
               <div className=" md:w-1/2 lg:pl-3 md:pl-3  w-full">
                 {" "}
                 <div className="mb-2">
-                  <label for="no_handphone" className="block text-sm font-semibold text-gray-800">
+                  <label
+                    for="no_handphone"
+                    className="block text-sm font-semibold text-gray-800"
+                  >
                     No Handphone
                   </label>
                   <input
@@ -216,7 +240,10 @@ const UserEdit = () => {
             <div className="flex flex-wrap">
               <div className="md:w-1/2   w-full">
                 <div className="mb-2">
-                  <label for="email" className="block text-sm font-semibold text-gray-800">
+                  <label
+                    for="email"
+                    className="block text-sm font-semibold text-gray-800"
+                  >
                     Pilih Role
                   </label>
                   <select

@@ -24,8 +24,9 @@ const Inventory = () => {
   }, []);
   const getInventory = async () => {
     setLoading(true);
+    const API_URL = import.meta.env.VITE_API_KEY;
     const token = localStorage.getItem("token");
-    const response = await axios.get("http://localhost:9000/api/v1/rfid/inventory", {
+    const response = await axios.get(`${API_URL}/api/v1/rfid/inventory`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
@@ -51,10 +52,11 @@ const Inventory = () => {
   const saveInventory = async (e) => {
     e.preventDefault();
     try {
+      const API_URL = import.meta.env.VITE_API_KEY;
       const token = localStorage.getItem("token");
       const response = await axios
         .post(
-          "http://localhost:9000/api/v1/rfid/inventory",
+          "${API_URL}/api/v1/rfid/inventory",
           {
             kode: kode,
             name: name,
@@ -66,7 +68,7 @@ const Inventory = () => {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
-          },
+          }
         )
         .then(({ data }) => {
           Swal.fire({
@@ -122,7 +124,10 @@ const Inventory = () => {
         <div className="flex flex-wrap flex-row">
           <div className="flex-shrink max-w-full px-4 w-full">
             <div className="p-6 bg-white  rounded-lg shadow-lg mb-6">
-              <SearchInventory inventory={inventory} setSearchResults={setSearchResults} />
+              <SearchInventory
+                inventory={inventory}
+                setSearchResults={setSearchResults}
+              />
               {loading ? (
                 <Loading />
               ) : (

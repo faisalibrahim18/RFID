@@ -2,14 +2,13 @@ import React from "react";
 
 const Search = ({ users, setSearchResults }) => {
   const handleSubmit = (e) => e.preventDefault();
-
   const handleSearchChange = (e) => {
     if (!e.target.value) return setSearchResults(users);
-
     const resultsArray = users.filter(
-      (user) => user.name.includes(e.target.value) || user.username.includes(e.target.value),
+      (item) =>
+        item.name.toLowerCase().includes(e.target.value.toLowerCase()) ||
+        item.username.toLowerCase().includes(e.target.value.toLowerCase())
     );
-
     setSearchResults(resultsArray);
   };
 

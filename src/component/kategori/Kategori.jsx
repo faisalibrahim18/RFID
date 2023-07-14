@@ -22,8 +22,9 @@ const Kategori = () => {
   }, []);
   const getCategory = async () => {
     setLoading(true);
+    const API_URL = import.meta.env.VITE_API_KEY;
     const token = localStorage.getItem("token");
-    const response = await axios.get("http://localhost:9000/api/v1/rfid/category", {
+    const response = await axios.get(`${API_URL}/api/v1/rfid/category`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
@@ -49,10 +50,11 @@ const Kategori = () => {
   const saveKategori = async (e) => {
     e.preventDefault();
     try {
+      const API_URL = import.meta.env.VITE_API_KEY;
       const token = localStorage.getItem("token");
       const response = await axios
         .post(
-          "http://localhost:9000/api/v1/rfid/category",
+          `${API_URL}/api/v1/rfid/category`,
           {
             name: name,
             expired: expired,
@@ -63,7 +65,7 @@ const Kategori = () => {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
-          },
+          }
         )
         .then(({ data }) => {
           Swal.fire({
@@ -111,7 +113,10 @@ const Kategori = () => {
         <div className="flex flex-wrap flex-row">
           <div className="flex-shrink max-w-full px-4 w-full">
             <div className="p-6 bg-white  rounded-lg shadow-lg mb-6">
-              <SearchKategori category={category} setSearchResults={setSearchResults} />
+              <SearchKategori
+                category={category}
+                setSearchResults={setSearchResults}
+              />
               {loading ? (
                 <Loading />
               ) : (
@@ -154,7 +159,10 @@ const Kategori = () => {
                 <div className="relative p-6 flex-auto">
                   <form className="w-full" onSubmit={saveKategori}>
                     <div className="mb-4">
-                      <label for="Nama Kategori" className=" text-sm font-semibold text-gray-800">
+                      <label
+                        for="Nama Kategori"
+                        className=" text-sm font-semibold text-gray-800"
+                      >
                         Nama Kategori
                       </label>
                       <input
@@ -165,8 +173,11 @@ const Kategori = () => {
                         placeholder="Masukan Nama Kategori..."
                       />
                     </div>
-                    <div className="mb-4">
-                      <label for="Nama Kategori" className=" text-sm font-semibold text-gray-800">
+                    {/* <div className="mb-4">
+                      <label
+                        for="Nama Kategori"
+                        className=" text-sm font-semibold text-gray-800"
+                      >
                         Expired
                       </label>
                       <input
@@ -175,9 +186,12 @@ const Kategori = () => {
                         onChange={(e) => setExpired(e.target.value)}
                         className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
                       />
-                    </div>
+                    </div> */}
                     <div className="mb-4">
-                      <label for="Nama Kategori" className=" text-sm font-semibold text-gray-800">
+                      <label
+                        for="Nama Kategori"
+                        className=" text-sm font-semibold text-gray-800"
+                      >
                         Unit
                       </label>
                       <input

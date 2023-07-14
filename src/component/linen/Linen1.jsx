@@ -28,7 +28,8 @@ const Linen1 = () => {
   const getRs = async () => {
     const token = localStorage.getItem("token");
 
-    const response = await axios.get("http://localhost:9000/api/v1/rfid/hospital", {
+    const API_URL = import.meta.env.VITE_API_KEY;
+    const response = await axios.get(`${API_URL}/api/v1/rfid/hospital`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
@@ -43,7 +44,8 @@ const Linen1 = () => {
   const getCategory = async () => {
     const token = localStorage.getItem("token");
 
-    const response = await axios.get("http://localhost:9000/api/v1/rfid/category", {
+    const API_URL = import.meta.env.VITE_API_KEY;
+    const response = await axios.get(`${API_URL}/api/v1/rfid/category`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
@@ -57,9 +59,10 @@ const Linen1 = () => {
     getlinen();
   }, []);
   const getlinen = async () => {
+    const API_URL = import.meta.env.VITE_API_KEY;
     const token = localStorage.getItem("token");
     setLoading(true);
-    const response = await axios.get("http://localhost:9000/api/v1/rfid/linen", {
+    const response = await axios.get(`${API_URL}/api/v1/rfid/linen`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
@@ -113,8 +116,9 @@ const Linen1 = () => {
         },
       };
 
+      const API_URL = import.meta.env.VITE_API_KEY;
       const response = await axios
-        .post("http://localhost:9000/api/v1/rfid/importLinen", formData, config)
+        .post(`${API_URL}/api/v1/rfid/importLinen`, formData, config)
         .then(({ data }) => {
           Swal.fire({
             icon: "success",
@@ -219,7 +223,9 @@ const Linen1 = () => {
                             href="#"
                             onClick={() => setOpenTab(1)}
                             className={` ${
-                              openTab === 1 ? "border-b-4 border-green-200 text-black" : ""
+                              openTab === 1
+                                ? "border-b-4 border-green-200 text-black"
+                                : ""
                             } inline-block px-4 py-2 text-gray-600 hover:border-b-4 border-green-200 `}
                           >
                             Linen Rumah Sakit Tertentu
@@ -241,7 +247,9 @@ const Linen1 = () => {
                         <div className={openTab === 1 ? "block" : "hidden"}>
                           <form className="w-full" onSubmit={uploadData}>
                             <div className="mb-5">
-                              <label className=" text-sm font-semibold text-gray-800">Rumah Sakit</label>
+                              <label className=" text-sm font-semibold text-gray-800">
+                                Rumah Sakit
+                              </label>
                               <select
                                 className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
                                 value={rs}
@@ -256,7 +264,9 @@ const Linen1 = () => {
                               </select>
                             </div>
                             <div className="mb-5">
-                              <label className=" text-sm font-semibold text-gray-800">Kategori</label>
+                              <label className=" text-sm font-semibold text-gray-800">
+                                Kategori
+                              </label>
                               <select
                                 className="block w-full px-4 py-2 mt-2  text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
                                 value={category}
@@ -272,7 +282,9 @@ const Linen1 = () => {
                             </div>
 
                             <div className="mb-2">
-                              <label className=" text-sm font-semibold text-gray-800">Masukan File</label>
+                              <label className=" text-sm font-semibold text-gray-800">
+                                Masukan File
+                              </label>
                               <input
                                 required
                                 type="file"
@@ -310,7 +322,9 @@ const Linen1 = () => {
                               </select>
                             </div> */}
                             <div className="mb-5">
-                              <label className=" text-sm font-semibold text-gray-800">Kategori</label>
+                              <label className=" text-sm font-semibold text-gray-800">
+                                Kategori
+                              </label>
                               <select
                                 className="block w-full px-4 py-2 mt-2  text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
                                 value={category}
@@ -326,7 +340,9 @@ const Linen1 = () => {
                             </div>
 
                             <div className="mb-2">
-                              <label className=" text-sm font-semibold text-gray-800">Masukan File</label>
+                              <label className=" text-sm font-semibold text-gray-800">
+                                Masukan File
+                              </label>
                               <input
                                 required
                                 type="file"

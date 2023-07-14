@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import Logo from "../../assets/logo.png";
 import Bg from "../../assets/1.png";
 import Bro from "../../assets/bro.png";
+import Get from "../../assets/get.png";
 import "./Landingpage.css";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -34,7 +35,12 @@ const Landing = () => {
             <img
               src={Logo}
               className="lg:h-auto lg:w-auto bounce-top-icons bg-opacity-100 "
-              style={{ width: "70px", height: "80px", left: "57px", top: "41px" }}
+              style={{
+                width: "70px",
+                height: "80px",
+                left: "57px",
+                top: "41px",
+              }}
             />
           </Link>
         </div>
@@ -47,9 +53,10 @@ const Landing = () => {
             BKA LAUNDRY
           </h1>
           <p className="text-xl mb-8 slide-in-bottom-subtitle">
-            <b>PT. BAKTI KASIH ANUGERAH </b>bergerak dibidang hospitality (hospital laundry service). Kami
-            menyediakan kebutuhan linen untuk Rumah Sakit, kami melayani dengan sistim cuci sewa linen bersih
-            siap pakai dan atau mencuci linen milik RS.
+            <b>PT. BAKTI KASIH ANUGERAH </b>bergerak dibidang hospitality
+            (hospital laundry service). Kami menyediakan kebutuhan linen untuk
+            Rumah Sakit, kami melayani dengan sistim cuci sewa linen bersih siap
+            pakai dan atau mencuci linen milik RS.
           </p>
 
           <div className="flex w-full justify-center md:justify-start lg:pb-0 fade-in">
@@ -61,7 +68,7 @@ const Landing = () => {
             </Link> */}
             <Link
               to={"/login"}
-              className=" bg-transparent  border text-center py-3 px-5 pl-10 pr-10 border-black hover:border-transparent text-black hover:text-white rounded-xl hover:bg-blue-950 bounce-top-icons"
+              className=" bg-transparent  border text-center py-3 px-5 pl-10 pr-10 border-black hover:border-transparent text-black hover:text-white rounded-lg  hover:bg-blue-950 bounce-top-icons"
             >
               Login
             </Link>
@@ -69,8 +76,12 @@ const Landing = () => {
         </div>
 
         {/* <!--Right Col--> */}
-        <div className="lg:pt-22 pt-10 pb-6 lg:pl-28 ">
-          <img className="slide-in-bottom lg:pt-14 " src={Bro} style={{ width: "90rem" }} />
+        <div className="pb-6 lg:pl-28 ">
+          <img
+            className="slide-in-bottom "
+            src={Get}
+            style={{ width: "80rem" }}
+          />
         </div>
       </div>
 

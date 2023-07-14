@@ -1,14 +1,16 @@
 import React from "react";
 
-const SearchLinen = ({ linen, setSearchResults }) => {
+const SearchInvoice = ({ invoice, setSearchResults }) => {
   const handleSubmit = (e) => e.preventDefault();
 
   const handleSearchChange = (e) => {
-    if (!e.target.value) return setSearchResults(linen);
-    const resultsArray = linen.filter(
+    if (!e.target.value) return setSearchResults(invoice);
+    const resultsArray = invoice.filter(
       (item) =>
-        item.code.toLowerCase().includes(e.target.value.toLowerCase()) ||
-        item.epc.toLowerCase().includes(e.target.value.toLowerCase())
+        item.transactionNumber
+          .toLowerCase()
+          .includes(e.target.value.toLowerCase()) ||
+        item.hospital.name.toLowerCase().includes(e.target.value.toLowerCase())
     );
     setSearchResults(resultsArray);
   };
@@ -44,4 +46,4 @@ const SearchLinen = ({ linen, setSearchResults }) => {
   );
 };
 
-export default SearchLinen;
+export default SearchInvoice;

@@ -23,9 +23,10 @@ const Linen = ({ linen, searchResults, loading }) => {
     if (!isConfirm) {
       return;
     }
+    const API_URL = import.meta.env.VITE_API_KEY;
     const token = localStorage.getItem("token");
     await axios
-      .delete(`http://localhost:9000/api/v1/rfid/linen/${LinenId}`, {
+      .delete(`${API_URL}/api/v1/rfid/linen/${LinenId}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -72,6 +73,9 @@ const Linen = ({ linen, searchResults, loading }) => {
               Count
             </th>
             <th scope="col" className="px-6 py-4">
+              Status
+            </th>
+            <th scope="col" className="px-6 py-4">
               Action
             </th>
           </tr>
@@ -81,10 +85,15 @@ const Linen = ({ linen, searchResults, loading }) => {
             <tr key={item._id} className="border-b text-center text-gray-600">
               <td className="whitespace-nowrap px-6 py-4">{index + 1}</td>
               <td className="whitespace-nowrap px-6 py-4">{item.code}</td>
-              <td className="whitespace-nowrap px-6 py-4">{item.hospital?.name}</td>
+              <td className="whitespace-nowrap px-6 py-4">
+                {item.hospital?.name}
+              </td>
               <td className="whitespace-nowrap px-6 py-4">{item.epc}</td>
-              <td className="whitespace-nowrap px-6 py-4">{item.category?.name}</td>
+              <td className="whitespace-nowrap px-6 py-4">
+                {item.category?.name}
+              </td>
               <td className="whitespace-nowrap px-6 py-4">{item.counter}</td>
+              <td className="whitespace-nowrap px-6 py-4">{item.status}</td>
               <td className="whitespace-nowrap px-6 py-4">
                 <Link to={`/linen/edit/${item._id}`} className=" m-3">
                   <i className="fa-solid fa-pen-to-square text-[#96CDF4] hover:text-blue-400"></i>

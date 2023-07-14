@@ -37,6 +37,7 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
     return <h2>Loading...</h2>;
   }
 
+  console.log(searchResults);
   const deleteDistribusi = async (distribusiId) => {
     const isConfirm = await Swal.fire({
       title: "Are you sure?",
@@ -53,9 +54,10 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
     if (!isConfirm) {
       return;
     }
+    const API_URL = import.meta.env.VITE_API_KEY;
     const token = localStorage.getItem("token");
     const response = await axios
-      .delete(`http://localhost:9000/api/v1/rfid/distribusi/${distribusiId}`, {
+      .delete(`${API_URL}/api/v1/rfid/distribusi/${distribusiId}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -80,9 +82,10 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
 
   const handleCetakSerahTerima = async (id) => {
     try {
+      const API_URL = import.meta.env.VITE_API_KEY;
       const token = localStorage.getItem("token");
       console.log(token);
-      window.open(`http://localhost:9000/api/v1/rfid/generatePDFSerahTerima/${id}`, {
+      window.open(`${API_URL}/api/v1/rfid/generatePDFSerahTerima/${id}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -94,9 +97,8 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
   };
 
   const handleUpdateProses = async (id) => {
-    // console.log(id);
-
-    fetch("http://localhost:9000/api/v1/rfid/tracker", {
+    const API_URL = import.meta.env.VITE_API_KEY;
+    fetch(`${API_URL}/api/v1/rfid/tracker`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -112,51 +114,54 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
         }
         return response.json();
       })
-      .then((data) => {
+      .then(async (data) => {
         const newTrackerId = data.data._id;
-        // console.log(data.data._id);
         const token = localStorage.getItem("token");
-        fetch(`http://localhost:9000/api/v1/rfid/distribusi/${id}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            status: newTrackerId,
-          }),
-        })
-          .then(() => {
-            Swal.fire({
-              icon: "success",
-              text: "Entitas tracker dan distribusi berhasil dibuat dan diperbarui",
-            });
-            window.location.reload();
-            // console.log("Entitas tracker dan distribusi berhasil dibuat dan diperbarui");
-          })
-          .catch(() => {
-            Swal.fire({
-              icon: "error",
-              text: 'Permintaan ke endpoint "/distribusi" gagal',
-            });
-            // console.error('Permintaan ke endpoint "/distribusi" gagal');
+
+        const API_URL = import.meta.env.VITE_API_KEY;
+        try {
+          const response = await axios.put(
+            `${API_URL}/api/v1/rfid/distribusi/${id}`,
+            {
+              status: newTrackerId,
+            },
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          Swal.fire({
+            icon: "success",
+            text: "Entitas tracker dan distribusi berhasil dibuat dan diperbarui",
           });
+          window.location.reload();
+        } catch (error) {
+          console.log(error);
+          Swal.fire({
+            icon: "error",
+            text: 'Permintaan ke endpoint "/distribusi" gagal',
+          });
+          // console.error('Permintaan ke endpoint "/distribusi" gagal');
+        }
       })
       .catch(() => {
+        // console.log(error);
         Swal.fire({
           icon: "error",
           text: 'Permintaan ke endpoint "/tracker" gagal',
         });
-        // console.error('Permintaan ke endpoint "/tracker" gagal');
+        console.error('Permintaan ke endpoint "/tracker" gagal');
       });
   };
-
   //Checkin
   const handleShowCheck = async (id) => {
     setShowProses(id, true);
     try {
+      const API_URL = import.meta.env.VITE_API_KEY;
       const token = localStorage.getItem("token");
-      const response = await axios.get(`http://localhost:9000/api/v1/rfid/tracker/${id}`, {
+      const response = await axios.get(`${API_URL}/api/v1/rfid/tracker/${id}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -203,8 +208,9 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
           Authorization: `Bearer ${token}`,
         },
       };
+      const API_URL = import.meta.env.VITE_API_KEY;
       const response = await axios
-        .put(`http://localhost:9000/api/v1/rfid/tracker/checking/${id}`, formData, config)
+        .put(`${API_URL}/api/v1/rfid/tracker/checking/${id}`, formData, config)
         .then(({ data }) => {
           Swal.fire({
             icon: "success",
@@ -241,8 +247,9 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
   const handleShowTransit = async (id) => {
     setShowTransit(id, true);
     try {
+      const API_URL = import.meta.env.VITE_API_KEY;
       const token = localStorage.getItem("token");
-      const response = await axios.get(`http://localhost:9000/api/v1/rfid/tracker/${id}`, {
+      const response = await axios.get(`${API_URL}/api/v1/rfid/tracker/${id}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -260,10 +267,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
   const updateTransit = async (id, e) => {
     e.preventDefault();
     try {
+      const API_URL = import.meta.env.VITE_API_KEY;
       const token = localStorage.getItem("token");
       const response = await axios
         .put(
-          `http://localhost:9000/api/v1/rfid/tracker/transit/${id}`,
+          `${API_URL}/api/v1/rfid/tracker/transit/${id}`,
 
           {
             name: name,
@@ -281,7 +289,7 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
-          },
+          }
         )
         .then(({ data }) => {
           Swal.fire({
@@ -309,8 +317,9 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
   const handleShowAcc = async (id) => {
     setShowAcc(id, true);
     try {
+      const API_URL = import.meta.env.VITE_API_KEY;
       const token = localStorage.getItem("token");
-      const response = await axios.get(`http://localhost:9000/api/v1/rfid/tracker/${id}`, {
+      const response = await axios.get(`${API_URL}/api/v1/rfid/tracker/${id}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -350,8 +359,9 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
           Authorization: `Bearer ${token}`,
         },
       };
+      const API_URL = import.meta.env.VITE_API_KEY;
       const response = await axios
-        .put(`http://localhost:9000/api/v1/rfid/tracker/accepted/${id}`, formData, config)
+        .put(`${API_URL}/api/v1/rfid/tracker/accepted/${id}`, formData, config)
         .then(({ data }) => {
           Swal.fire({
             icon: "success",
@@ -388,8 +398,9 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
   const handleShowWash = async (id) => {
     setShowWash(id, true);
     try {
+      const API_URL = import.meta.env.VITE_API_KEY;
       const token = localStorage.getItem("token");
-      const response = await axios.get(`http://localhost:9000/api/v1/rfid/tracker/${id}`, {
+      const response = await axios.get(`${API_URL}/api/v1/rfid/tracker/${id}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -428,15 +439,16 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
           Authorization: `Bearer ${token}`,
         },
       };
+      const API_URL = import.meta.env.VITE_API_KEY;
       const response = await axios
-        .put(`http://localhost:9000/api/v1/rfid/tracker/wash/${id}`, formData, config)
+        .put(`${API_URL}/api/v1/rfid/tracker/wash/${id}`, formData, config)
         .then(({ data }) => {
           Swal.fire({
             icon: "success",
             text: data.message,
           });
         });
-      console.log(response);
+      // console.log(response);
       navigate("/distribusi");
       window.location.reload();
       // e.preventDefault();
@@ -466,8 +478,9 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
   const handleShowDry = async (id) => {
     setShowDry(id, true);
     try {
+      const API_URL = import.meta.env.VITE_API_KEY;
       const token = localStorage.getItem("token");
-      const response = await axios.get(`http://localhost:9000/api/v1/rfid/tracker/${id}`, {
+      const response = await axios.get(`${API_URL}/api/v1/rfid/tracker/${id}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -506,15 +519,16 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
           Authorization: `Bearer ${token}`,
         },
       };
+      const API_URL = import.meta.env.VITE_API_KEY;
       const response = await axios
-        .put(`http://localhost:9000/api/v1/rfid/tracker/dry/${id}`, formData, config)
+        .put(`${API_URL}/api/v1/rfid/tracker/dry/${id}`, formData, config)
         .then(({ data }) => {
           Swal.fire({
             icon: "success",
             text: data.message,
           });
         });
-      console.log(response);
+      // console.log(response);
       navigate("/distribusi");
       window.location.reload();
       // e.preventDefault();
@@ -544,8 +558,9 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
   const handleShowDelivery = async (id) => {
     setShowDelivery(id, true);
     try {
+      const API_URL = import.meta.env.VITE_API_KEY;
       const token = localStorage.getItem("token");
-      const response = await axios.get(`http://localhost:9000/api/v1/rfid/tracker/${id}`, {
+      const response = await axios.get(`${API_URL}/api/v1/rfid/tracker/${id}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -563,10 +578,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
   const updateDelivery = async (id, e) => {
     e.preventDefault();
     try {
+      const API_URL = import.meta.env.VITE_API_KEY;
       const token = localStorage.getItem("token");
       const response = await axios
         .put(
-          `http://localhost:9000/api/v1/rfid/tracker/delivery/${id}`,
+          `${API_URL}/api/v1/rfid/tracker/delivery/${id}`,
 
           {
             name: name,
@@ -584,7 +600,7 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
-          },
+          }
         )
         .then(({ data }) => {
           Swal.fire({
@@ -616,8 +632,9 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
   const handleShowDone = async (id) => {
     setShowDone(id, true);
     try {
+      const API_URL = import.meta.env.VITE_API_KEY;
       const token = localStorage.getItem("token");
-      const response = await axios.get(`http://localhost:9000/api/v1/rfid/tracker/${id}`, {
+      const response = await axios.get(`${API_URL}/api/v1/rfid/tracker/${id}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -656,8 +673,9 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
           Authorization: `Bearer ${token}`,
         },
       };
+      const API_URL = import.meta.env.VITE_API_KEY;
       const response = await axios
-        .put(`http://localhost:9000/api/v1/rfid/tracker/done/${id}`, formData, config)
+        .put(`${API_URL}/api/v1/rfid/tracker/done/${id}`, formData, config)
         .then(({ data }) => {
           Swal.fire({
             icon: "success",
@@ -717,11 +735,17 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
                 </details>
               </td>
               <td className="whitespace-nowrap px-6 py-4">{index + 1}</td>
-              <td className="whitespace-nowrap px-6 py-4">{item.customer.name}</td>
+              <td className="whitespace-nowrap px-6 py-4">
+                {item.customer.name}
+              </td>
               <td className="whitespace-nowrap px-6 py-4">{item.dateIn}</td>
-              <td className="whitespace-nowrap px-6 py-4">{item.linen[0].epc}</td>
+              <td className="whitespace-nowrap px-6 py-4">
+                {item.linen[0].epc}
+              </td>
               <td className="whitespace-nowrap px-6 py-4">{item.quality}</td>
-              <td className="whitespace-nowrap px-6 py-4">{item.linen[0].category}</td>
+              <td className="whitespace-nowrap px-6 py-4">
+                {item.linen[0].category}
+              </td>
               <td className="whitespace-nowrap px-6 py-4">{item.amount}</td>
               <td className="whitespace-nowrap px-6 py-4">{item.service}</td>
               <td className="whitespace-nowrap px-6 py-4">
@@ -848,14 +872,24 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
             {/* CheckIn */}
             {/* check */}
             {item?.status?.status === "checking" ? (
-              <tr className={`border-b  text-gray-600 ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
-                <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold">CheckIn</td>
+              <tr
+                className={`border-b  text-gray-600 ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
+                <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold">
+                  CheckIn
+                </td>
               </tr>
             ) : (
               ""
             )}
             {item?.status?.status === "checking" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">Name</td>
                 <td>:</td>
                 <td>{item.status.checking.name}</td>
@@ -864,7 +898,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "checking" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">Email</td>
                 <td>:</td>
                 <td>{item.status.checking.email}</td>
@@ -873,7 +911,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "checking" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">No Hp</td>
                 <td>:</td>
                 <td>{item.status.checking.no_hp}</td>
@@ -882,7 +924,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "checking" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">amount</td>
                 <td>:</td>
                 <td>{item.status.checking.amount}</td>
@@ -891,7 +937,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "checking" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">heavy</td>
                 <td>:</td>
                 <td>{item.status.checking.heavy}</td>
@@ -900,7 +950,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "checking" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">note</td>
                 <td>:</td>
                 <td>{item.status.checking.note}</td>
@@ -909,7 +963,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "checking" ? (
-              <tr className={`border-b text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={`border-b text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">date</td>
                 <td>:</td>
                 <td>{item.status.checking.date}</td>
@@ -922,18 +980,30 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
             {/* Transit */}
             {/* checking & Transit */}
             {item?.status?.status === "transit to laundry" ? (
-              <tr className={`border-b  text-gray-600 ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
-                <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold">Checking</td>
+              <tr
+                className={`border-b  text-gray-600 ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
+                <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold">
+                  Checking
+                </td>
                 <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold"></td>
                 <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold"></td>
                 <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold"></td>
-                <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold">Transit</td>
+                <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold">
+                  Transit
+                </td>
               </tr>
             ) : (
               ""
             )}
             {item?.status?.status === "transit to laundry" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">Name</td>
                 <td>:</td>
                 <td>{item.status.checking.name}</td>
@@ -947,7 +1017,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "transit to laundry" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">Email</td>
                 <td>:</td>
                 <td>{item.status.checking.email}</td>
@@ -960,7 +1034,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "transit to laundry" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">No Hp</td>
                 <td>:</td>
                 <td>{item.status.checking.no_hp}</td>
@@ -974,7 +1052,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "transit to laundry" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">amount</td>
                 <td>:</td>
                 <td>{item.status.checking.amount}</td>
@@ -988,7 +1070,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "transit to laundry" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">heavy</td>
                 <td>:</td>
                 <td>{item.status.checking.heavy}</td>
@@ -1002,7 +1088,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "transit to laundry" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">note</td>
                 <td>:</td>
                 <td>{item.status.checking.note}</td>
@@ -1016,7 +1106,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "transit to laundry" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">date</td>
                 <td>:</td>
                 <td>{item.status.checking.date}</td>
@@ -1030,7 +1124,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "transit to laundry" ? (
-              <tr className={`text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={`text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td></td>
                 <td></td>
                 <td></td>
@@ -1044,7 +1142,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "transit to laundry" ? (
-              <tr className={`border-b text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={`border-b text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td></td>
                 <td></td>
                 <td></td>
@@ -1063,18 +1165,30 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
             {/* Accepted */}
             {/* checking & Transit */}
             {item?.status?.status === "accepted" ? (
-              <tr className={`border-b  text-gray-600 ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
-                <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold">Checking</td>
+              <tr
+                className={`border-b  text-gray-600 ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
+                <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold">
+                  Checking
+                </td>
                 <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold"></td>
                 <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold"></td>
                 <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold"></td>
-                <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold">Transit</td>
+                <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold">
+                  Transit
+                </td>
               </tr>
             ) : (
               ""
             )}
             {item?.status?.status === "accepted" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">Name</td>
                 <td>:</td>
                 <td>{item.status.checking.name}</td>
@@ -1088,7 +1202,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "accepted" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">Email</td>
                 <td>:</td>
                 <td>{item.status.checking.email}</td>
@@ -1101,7 +1219,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "accepted" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">No Hp</td>
                 <td>:</td>
                 <td>{item.status.checking.no_hp}</td>
@@ -1115,7 +1237,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "accepted" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">amount</td>
                 <td>:</td>
                 <td>{item.status.checking.amount}</td>
@@ -1129,7 +1255,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "accepted" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">heavy</td>
                 <td>:</td>
                 <td>{item.status.checking.heavy}</td>
@@ -1143,7 +1273,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "accepted" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">note</td>
                 <td>:</td>
                 <td>{item.status.checking.note}</td>
@@ -1157,7 +1291,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "accepted" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">date</td>
                 <td>:</td>
                 <td>{item.status.checking.date}</td>
@@ -1171,7 +1309,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "accepted" ? (
-              <tr className={`text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={`text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td></td>
                 <td></td>
                 <td></td>
@@ -1185,7 +1327,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "accepted" ? (
-              <tr className={`border-b text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={`border-b text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td></td>
                 <td></td>
                 <td></td>
@@ -1200,14 +1346,24 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
             )}
             {/* done */}
             {item?.status?.status === "accepted" ? (
-              <tr className={`border-b  text-gray-600 ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
-                <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold">Accepted</td>
+              <tr
+                className={`border-b  text-gray-600 ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
+                <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold">
+                  Accepted
+                </td>
               </tr>
             ) : (
               ""
             )}
             {item?.status?.status === "accepted" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">Name</td>
                 <td>:</td>
                 <td>{item.status.accepted.name}</td>
@@ -1216,7 +1372,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "accepted" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">Email</td>
                 <td>:</td>
                 <td>{item.status.accepted.email}</td>
@@ -1225,7 +1385,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "accepted" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">No Hp</td>
                 <td>:</td>
                 <td>{item.status.accepted.no_hp}</td>
@@ -1234,7 +1398,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "accepted" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">amount</td>
                 <td>:</td>
                 <td>{item.status.accepted.amount}</td>
@@ -1243,7 +1411,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "accepted" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">heavy</td>
                 <td>:</td>
                 <td>{item.status.accepted.heavy}</td>
@@ -1252,7 +1424,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "accepted" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">note</td>
                 <td>:</td>
                 <td>{item.status.accepted.note}</td>
@@ -1261,7 +1437,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "accepted" ? (
-              <tr className={`border-b text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={`border-b text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">date</td>
                 <td>:</td>
                 <td>{item.status.accepted.date}</td>
@@ -1275,18 +1455,30 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
             {/* drying */}
             {/* checking */}
             {item?.status?.status === "drying" ? (
-              <tr className={`border-b  text-gray-600 ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
-                <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold">Checking</td>
+              <tr
+                className={`border-b  text-gray-600 ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
+                <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold">
+                  Checking
+                </td>
                 <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold"></td>
                 <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold"></td>
                 <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold"></td>
-                <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold">Transit</td>
+                <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold">
+                  Transit
+                </td>
               </tr>
             ) : (
               ""
             )}
             {item?.status?.status === "drying" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">Name</td>
                 <td>:</td>
                 <td>{item.status.checking.name}</td>
@@ -1300,7 +1492,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "drying" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">Email</td>
                 <td>:</td>
                 <td>{item.status.checking.email}</td>
@@ -1313,7 +1509,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "drying" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">No Hp</td>
                 <td>:</td>
                 <td>{item.status.checking.no_hp}</td>
@@ -1327,7 +1527,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "drying" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">amount</td>
                 <td>:</td>
                 <td>{item.status.checking.amount}</td>
@@ -1341,7 +1545,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "drying" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">heavy</td>
                 <td>:</td>
                 <td>{item.status.checking.heavy}</td>
@@ -1355,7 +1563,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "drying" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">note</td>
                 <td>:</td>
                 <td>{item.status.checking.note}</td>
@@ -1369,7 +1581,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "drying" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">date</td>
                 <td>:</td>
                 <td>{item.status.checking.date}</td>
@@ -1383,7 +1599,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "drying" ? (
-              <tr className={`text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={`text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td></td>
                 <td></td>
                 <td></td>
@@ -1397,7 +1617,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "drying" ? (
-              <tr className={`border-b text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={`border-b text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td></td>
                 <td></td>
                 <td></td>
@@ -1412,18 +1636,30 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
             )}
             {/* acc & wash */}
             {item?.status?.status === "drying" ? (
-              <tr className={`border-b  text-gray-600 ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
-                <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold">Accepted</td>
+              <tr
+                className={`border-b  text-gray-600 ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
+                <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold">
+                  Accepted
+                </td>
                 <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold"></td>
                 <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold"></td>
                 <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold"></td>
-                <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold">Wash</td>
+                <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold">
+                  Wash
+                </td>
               </tr>
             ) : (
               ""
             )}
             {item?.status?.status === "drying" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">Name</td>
                 <td>:</td>
                 <td>{item.status.accepted.name}</td>
@@ -1437,7 +1673,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "drying" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">Email</td>
                 <td>:</td>
                 <td>{item.status.accepted.email}</td>
@@ -1450,7 +1690,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "drying" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">No Hp</td>
                 <td>:</td>
                 <td>{item.status.accepted.no_hp}</td>
@@ -1464,7 +1708,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "drying" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">amount</td>
                 <td>:</td>
                 <td>{item.status.accepted.amount}</td>
@@ -1478,7 +1726,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "drying" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">heavy</td>
                 <td>:</td>
                 <td>{item.status.accepted.heavy}</td>
@@ -1492,7 +1744,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "drying" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">note</td>
                 <td>:</td>
                 <td>{item.status.accepted.note}</td>
@@ -1506,7 +1762,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "drying" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">date</td>
                 <td>:</td>
                 <td>{item.status.accepted.date}</td>
@@ -1522,14 +1782,24 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
 
             {/* drying */}
             {item?.status?.status === "drying" ? (
-              <tr className={`border-b  text-gray-600 ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
-                <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold">Dry</td>
+              <tr
+                className={`border-b  text-gray-600 ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
+                <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold">
+                  Dry
+                </td>
               </tr>
             ) : (
               ""
             )}
             {item?.status?.status === "drying" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">Name</td>
                 <td>:</td>
                 <td>{item.status.dry.name}</td>
@@ -1538,7 +1808,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "drying" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">Email</td>
                 <td>:</td>
                 <td>{item.status.dry.email}</td>
@@ -1547,7 +1821,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "drying" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">No Hp</td>
                 <td>:</td>
                 <td>{item.status.dry.no_hp}</td>
@@ -1556,7 +1834,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "drying" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">amount</td>
                 <td>:</td>
                 <td>{item.status.dry.amount}</td>
@@ -1565,7 +1847,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "drying" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">heavy</td>
                 <td>:</td>
                 <td>{item.status.dry.heavy}</td>
@@ -1574,7 +1860,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "drying" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">note</td>
                 <td>:</td>
                 <td>{item.status.dry.note}</td>
@@ -1583,7 +1873,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "drying" ? (
-              <tr className={`border-b text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={`border-b text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">date</td>
                 <td>:</td>
                 <td>{item.status.dry.date}</td>
@@ -1596,18 +1890,30 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
             {/* wash */}
             {/* checking */}
             {item?.status?.status === "wash" ? (
-              <tr className={`border-b  text-gray-600 ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
-                <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold">Checking</td>
+              <tr
+                className={`border-b  text-gray-600 ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
+                <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold">
+                  Checking
+                </td>
                 <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold"></td>
                 <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold"></td>
                 <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold"></td>
-                <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold">Transit</td>
+                <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold">
+                  Transit
+                </td>
               </tr>
             ) : (
               ""
             )}
             {item?.status?.status === "wash" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">Name</td>
                 <td>:</td>
                 <td>{item.status.checking.name}</td>
@@ -1621,7 +1927,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "wash" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">Email</td>
                 <td>:</td>
                 <td>{item.status.checking.email}</td>
@@ -1634,7 +1944,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "wash" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">No Hp</td>
                 <td>:</td>
                 <td>{item.status.checking.no_hp}</td>
@@ -1648,7 +1962,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "wash" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">amount</td>
                 <td>:</td>
                 <td>{item.status.checking.amount}</td>
@@ -1662,7 +1980,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "wash" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">heavy</td>
                 <td>:</td>
                 <td>{item.status.checking.heavy}</td>
@@ -1676,7 +1998,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "wash" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">note</td>
                 <td>:</td>
                 <td>{item.status.checking.note}</td>
@@ -1690,7 +2016,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "wash" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">date</td>
                 <td>:</td>
                 <td>{item.status.checking.date}</td>
@@ -1704,7 +2034,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "wash" ? (
-              <tr className={`text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={`text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td></td>
                 <td></td>
                 <td></td>
@@ -1718,7 +2052,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "wash" ? (
-              <tr className={`border-b text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={`border-b text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td></td>
                 <td></td>
                 <td></td>
@@ -1733,18 +2071,30 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
             )}
             {/* acc & wash */}
             {item?.status?.status === "wash" ? (
-              <tr className={`border-b  text-gray-600 ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
-                <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold">Accepted</td>
+              <tr
+                className={`border-b  text-gray-600 ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
+                <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold">
+                  Accepted
+                </td>
                 <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold"></td>
                 <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold"></td>
                 <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold"></td>
-                <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold">Wash</td>
+                <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold">
+                  Wash
+                </td>
               </tr>
             ) : (
               ""
             )}
             {item?.status?.status === "wash" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">Name</td>
                 <td>:</td>
                 <td>{item.status.accepted.name}</td>
@@ -1758,7 +2108,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "wash" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">Email</td>
                 <td>:</td>
                 <td>{item.status.accepted.email}</td>
@@ -1771,7 +2125,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "wash" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">No Hp</td>
                 <td>:</td>
                 <td>{item.status.accepted.no_hp}</td>
@@ -1785,7 +2143,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "wash" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">amount</td>
                 <td>:</td>
                 <td>{item.status.accepted.amount}</td>
@@ -1799,7 +2161,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "wash" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">heavy</td>
                 <td>:</td>
                 <td>{item.status.accepted.heavy}</td>
@@ -1813,7 +2179,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "wash" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">note</td>
                 <td>:</td>
                 <td>{item.status.accepted.note}</td>
@@ -1827,7 +2197,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "wash" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">date</td>
                 <td>:</td>
                 <td>{item.status.accepted.date}</td>
@@ -1846,18 +2220,30 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
             {/* Delivery */}
             {/* checking */}
             {item?.status?.status === "transit to hospital" ? (
-              <tr className={`border-b  text-gray-600 ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
-                <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold">Checking</td>
+              <tr
+                className={`border-b  text-gray-600 ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
+                <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold">
+                  Checking
+                </td>
                 <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold"></td>
                 <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold"></td>
                 <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold"></td>
-                <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold">Transit</td>
+                <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold">
+                  Transit
+                </td>
               </tr>
             ) : (
               ""
             )}
             {item?.status?.status === "transit to hospital" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">Name</td>
                 <td>:</td>
                 <td>{item.status.checking.name}</td>
@@ -1871,7 +2257,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "transit to hospital" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">Email</td>
                 <td>:</td>
                 <td>{item.status.checking.email}</td>
@@ -1884,7 +2274,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "transit to hospital" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">No Hp</td>
                 <td>:</td>
                 <td>{item.status.checking.no_hp}</td>
@@ -1898,7 +2292,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "transit to hospital" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">amount</td>
                 <td>:</td>
                 <td>{item.status.checking.amount}</td>
@@ -1912,7 +2310,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "transit to hospital" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">heavy</td>
                 <td>:</td>
                 <td>{item.status.checking.heavy}</td>
@@ -1926,7 +2328,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "transit to hospital" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">note</td>
                 <td>:</td>
                 <td>{item.status.checking.note}</td>
@@ -1940,7 +2346,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "transit to hospital" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">date</td>
                 <td>:</td>
                 <td>{item.status.checking.date}</td>
@@ -1954,7 +2364,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "transit to hospital" ? (
-              <tr className={`text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={`text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td></td>
                 <td></td>
                 <td></td>
@@ -1968,7 +2382,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "transit to hospital" ? (
-              <tr className={`border-b text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={`border-b text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td></td>
                 <td></td>
                 <td></td>
@@ -1983,18 +2401,30 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
             )}
             {/* acc & wash */}
             {item?.status?.status === "transit to hospital" ? (
-              <tr className={`border-b  text-gray-600 ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
-                <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold">Accepted</td>
+              <tr
+                className={`border-b  text-gray-600 ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
+                <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold">
+                  Accepted
+                </td>
                 <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold"></td>
                 <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold"></td>
                 <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold"></td>
-                <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold">Wash</td>
+                <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold">
+                  Wash
+                </td>
               </tr>
             ) : (
               ""
             )}
             {item?.status?.status === "transit to hospital" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">Name</td>
                 <td>:</td>
                 <td>{item.status.accepted.name}</td>
@@ -2008,7 +2438,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "transit to hospital" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">Email</td>
                 <td>:</td>
                 <td>{item.status.accepted.email}</td>
@@ -2021,7 +2455,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "transit to hospital" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">No Hp</td>
                 <td>:</td>
                 <td>{item.status.accepted.no_hp}</td>
@@ -2035,7 +2473,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "transit to hospital" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">amount</td>
                 <td>:</td>
                 <td>{item.status.accepted.amount}</td>
@@ -2049,7 +2491,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "transit to hospital" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">heavy</td>
                 <td>:</td>
                 <td>{item.status.accepted.heavy}</td>
@@ -2063,7 +2509,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "transit to hospital" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">note</td>
                 <td>:</td>
                 <td>{item.status.accepted.note}</td>
@@ -2077,7 +2527,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "transit to hospital" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">date</td>
                 <td>:</td>
                 <td>{item.status.accepted.date}</td>
@@ -2093,18 +2547,30 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
 
             {/* dry & delivery */}
             {item?.status?.status === "transit to hospital" ? (
-              <tr className={`border-b  text-gray-600 ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
-                <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold">Dry</td>
+              <tr
+                className={`border-b  text-gray-600 ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
+                <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold">
+                  Dry
+                </td>
                 <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold"></td>
                 <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold"></td>
                 <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold"></td>
-                <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold">Delivery</td>
+                <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold">
+                  Delivery
+                </td>
               </tr>
             ) : (
               ""
             )}
             {item?.status?.status === "transit to hospital" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">Name</td>
                 <td>:</td>
                 <td>{item.status.dry.name}</td>
@@ -2118,7 +2584,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "transit to hospital" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">Email</td>
                 <td>:</td>
                 <td>{item.status.dry.email}</td>
@@ -2131,7 +2601,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "transit to hospital" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">No Hp</td>
                 <td>:</td>
                 <td>{item.status.dry.no_hp}</td>
@@ -2145,7 +2619,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "transit to hospital" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">amount</td>
                 <td>:</td>
                 <td>{item.status.dry.amount}</td>
@@ -2159,7 +2637,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "transit to hospital" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">heavy</td>
                 <td>:</td>
                 <td>{item.status.dry.heavy}</td>
@@ -2173,7 +2655,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "transit to hospital" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">note</td>
                 <td>:</td>
                 <td>{item.status.dry.note}</td>
@@ -2187,7 +2673,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "transit to hospital" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">date</td>
                 <td>:</td>
                 <td>{item.status.dry.date}</td>
@@ -2201,7 +2691,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "transit to hospital" ? (
-              <tr className={`text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={`text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td></td>
                 <td></td>
                 <td></td>
@@ -2215,7 +2709,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "transit to hospital" ? (
-              <tr className={`border-b text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={`border-b text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td></td>
                 <td></td>
                 <td></td>
@@ -2233,18 +2731,30 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
             {/* Success */}
             {/* checking */}
             {item?.status?.status === "success" ? (
-              <tr className={`border-b  text-gray-600 ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
-                <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold">Checking</td>
+              <tr
+                className={`border-b  text-gray-600 ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
+                <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold">
+                  Checking
+                </td>
                 <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold"></td>
                 <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold"></td>
                 <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold"></td>
-                <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold">Transit</td>
+                <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold">
+                  Transit
+                </td>
               </tr>
             ) : (
               ""
             )}
             {item?.status?.status === "success" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">Name</td>
                 <td>:</td>
                 <td>{item.status.checking.name}</td>
@@ -2258,7 +2768,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "success" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">Email</td>
                 <td>:</td>
                 <td>{item.status.checking.email}</td>
@@ -2271,7 +2785,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "success" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">No Hp</td>
                 <td>:</td>
                 <td>{item.status.checking.no_hp}</td>
@@ -2285,7 +2803,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "success" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">amount</td>
                 <td>:</td>
                 <td>{item.status.checking.amount}</td>
@@ -2299,7 +2821,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "success" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">heavy</td>
                 <td>:</td>
                 <td>{item.status.checking.heavy}</td>
@@ -2313,7 +2839,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "success" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">note</td>
                 <td>:</td>
                 <td>{item.status.checking.note}</td>
@@ -2327,7 +2857,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "success" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">date</td>
                 <td>:</td>
                 <td>{item.status.checking.date}</td>
@@ -2341,7 +2875,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "success" ? (
-              <tr className={`text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={`text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td></td>
                 <td></td>
                 <td></td>
@@ -2355,7 +2893,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "success" ? (
-              <tr className={`border-b text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={`border-b text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td></td>
                 <td></td>
                 <td></td>
@@ -2370,18 +2912,30 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
             )}
             {/* acc & wash */}
             {item?.status?.status === "success" ? (
-              <tr className={`border-b  text-gray-600 ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
-                <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold">Accepted</td>
+              <tr
+                className={`border-b  text-gray-600 ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
+                <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold">
+                  Accepted
+                </td>
                 <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold"></td>
                 <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold"></td>
                 <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold"></td>
-                <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold">Wash</td>
+                <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold">
+                  Wash
+                </td>
               </tr>
             ) : (
               ""
             )}
             {item?.status?.status === "success" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">Name</td>
                 <td>:</td>
                 <td>{item.status.accepted.name}</td>
@@ -2395,7 +2949,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "success" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">Email</td>
                 <td>:</td>
                 <td>{item.status.accepted.email}</td>
@@ -2408,7 +2966,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "success" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">No Hp</td>
                 <td>:</td>
                 <td>{item.status.accepted.no_hp}</td>
@@ -2422,7 +2984,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "success" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">amount</td>
                 <td>:</td>
                 <td>{item.status.accepted.amount}</td>
@@ -2436,7 +3002,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "success" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">heavy</td>
                 <td>:</td>
                 <td>{item.status.accepted.heavy}</td>
@@ -2450,7 +3020,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "success" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">note</td>
                 <td>:</td>
                 <td>{item.status.accepted.note}</td>
@@ -2464,7 +3038,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "success" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">date</td>
                 <td>:</td>
                 <td>{item.status.accepted.date}</td>
@@ -2480,18 +3058,30 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
 
             {/* dry & delivery */}
             {item?.status?.status === "success" ? (
-              <tr className={`border-b  text-gray-600 ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
-                <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold">Dry</td>
+              <tr
+                className={`border-b  text-gray-600 ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
+                <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold">
+                  Dry
+                </td>
                 <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold"></td>
                 <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold"></td>
                 <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold"></td>
-                <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold">Delivery</td>
+                <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold">
+                  Delivery
+                </td>
               </tr>
             ) : (
               ""
             )}
             {item?.status?.status === "success" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">Name</td>
                 <td>:</td>
                 <td>{item.status.dry.name}</td>
@@ -2505,7 +3095,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "success" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">Email</td>
                 <td>:</td>
                 <td>{item.status.dry.email}</td>
@@ -2518,7 +3112,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "success" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">No Hp</td>
                 <td>:</td>
                 <td>{item.status.dry.no_hp}</td>
@@ -2532,7 +3130,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "success" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">amount</td>
                 <td>:</td>
                 <td>{item.status.dry.amount}</td>
@@ -2546,7 +3148,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "success" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">heavy</td>
                 <td>:</td>
                 <td>{item.status.dry.heavy}</td>
@@ -2560,7 +3166,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "success" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">note</td>
                 <td>:</td>
                 <td>{item.status.dry.note}</td>
@@ -2574,7 +3184,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "success" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">date</td>
                 <td>:</td>
                 <td>{item.status.dry.date}</td>
@@ -2588,7 +3202,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "success" ? (
-              <tr className={`text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={`text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td></td>
                 <td></td>
                 <td></td>
@@ -2602,7 +3220,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "success" ? (
-              <tr className={`border-b text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={`border-b text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td></td>
                 <td></td>
                 <td></td>
@@ -2618,14 +3240,24 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
 
             {/* done */}
             {item?.status?.status === "success" ? (
-              <tr className={`border-b  text-gray-600 ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
-                <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold">Done</td>
+              <tr
+                className={`border-b  text-gray-600 ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
+                <td class="whitespace-nowrap px-6 py-4 text-lg font-semibold">
+                  Done
+                </td>
               </tr>
             ) : (
               ""
             )}
             {item?.status?.status === "success" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">Name</td>
                 <td>:</td>
                 <td>{item.status.done.name}</td>
@@ -2634,7 +3266,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "success" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">Email</td>
                 <td>:</td>
                 <td>{item.status.done.email}</td>
@@ -2643,7 +3279,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "success" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">No Hp</td>
                 <td>:</td>
                 <td>{item.status.done.no_hp}</td>
@@ -2652,7 +3292,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "success" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">amount</td>
                 <td>:</td>
                 <td>{item.status.done.amount}</td>
@@ -2661,7 +3305,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "success" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">heavy</td>
                 <td>:</td>
                 <td>{item.status.done.heavy}</td>
@@ -2670,7 +3318,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "success" ? (
-              <tr className={` text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">note</td>
                 <td>:</td>
                 <td>{item.status.done.note}</td>
@@ -2679,7 +3331,11 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               ""
             )}
             {item?.status?.status === "success" ? (
-              <tr className={`border-b text-gray-600   ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+              <tr
+                className={`border-b text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
                 <td className="pl-10">date</td>
                 <td>:</td>
                 <td>{item.status.done.date}</td>
@@ -2713,7 +3369,10 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
 
                 {status.map((item) => (
                   <div className="relative p-6 flex-auto" key={item._id}>
-                    <form className="w-full" onSubmit={(e) => setShowProses1(item._id, e)}>
+                    <form
+                      className="w-full"
+                      onSubmit={(e) => setShowProses1(item._id, e)}
+                    >
                       <div className="mb-2">
                         <input
                           type="text"
@@ -2816,7 +3475,10 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
                 {/*body*/}
                 {status.map((item) => (
                   <div className="relative p-6 flex-auto" key={item._id}>
-                    <form className="w-full" onSubmit={(e) => updateTransit(item._id, e)}>
+                    <form
+                      className="w-full"
+                      onSubmit={(e) => updateTransit(item._id, e)}
+                    >
                       <div className="mb-2">
                         <input
                           type="text"
@@ -2948,7 +3610,10 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
                 {/*body*/}
                 {status.map((item) => (
                   <div className="relative p-6 flex-auto" key={item._id}>
-                    <form className="w-full" onSubmit={(e) => updateAcc(item._id, e)}>
+                    <form
+                      className="w-full"
+                      onSubmit={(e) => updateAcc(item._id, e)}
+                    >
                       <div className="mb-2">
                         <input
                           type="text"
@@ -3043,7 +3708,10 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
                 {/*body*/}
                 {status.map((item) => (
                   <div className="relative p-6 flex-auto" key={item._id}>
-                    <form className="w-full" onSubmit={(e) => updateWash(item._id, e)}>
+                    <form
+                      className="w-full"
+                      onSubmit={(e) => updateWash(item._id, e)}
+                    >
                       <div className="mb-2">
                         <input
                           type="text"
@@ -3137,7 +3805,10 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
                 {/*body*/}
                 {status.map((item) => (
                   <div className="relative p-6 flex-auto" key={item._id}>
-                    <form className="w-full" onSubmit={(e) => updateDry(item._id, e)}>
+                    <form
+                      className="w-full"
+                      onSubmit={(e) => updateDry(item._id, e)}
+                    >
                       <div className="mb-2">
                         <input
                           type="text"
@@ -3231,7 +3902,10 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
                 {/*body*/}
                 {status.map((item) => (
                   <div className="relative p-6 flex-auto" key={item._id}>
-                    <form className="w-full" onSubmit={(e) => updateDelivery(item._id, e)}>
+                    <form
+                      className="w-full"
+                      onSubmit={(e) => updateDelivery(item._id, e)}
+                    >
                       <div className="mb-2">
                         <input
                           type="text"
@@ -3363,7 +4037,10 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
                 {/*body*/}
                 {status.map((item) => (
                   <div className="relative p-6 flex-auto" key={item._id}>
-                    <form className="w-full" onSubmit={(e) => updateDone(item._id, e)}>
+                    <form
+                      className="w-full"
+                      onSubmit={(e) => updateDone(item._id, e)}
+                    >
                       <div className="mb-2">
                         <input
                           type="text"

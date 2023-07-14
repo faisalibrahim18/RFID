@@ -42,8 +42,9 @@ const Distribusi = () => {
   }, []);
   const getDistribusi = async () => {
     setLoading(true);
+    const API_URL = import.meta.env.VITE_API_KEY;
     const token = localStorage.getItem("token");
-    const response = await axios.get("http://localhost:9000/api/v1/rfid/distribusi", {
+    const response = await axios.get(`${API_URL}/api/v1/rfid/distribusi`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
@@ -81,7 +82,11 @@ const Distribusi = () => {
       };
 
       const response = await axios
-        .post("http://localhost:9000/api/v1/rfid/distribusi/upload", formData, config)
+        .post(
+          "http://localhost:9000/api/v1/rfid/distribusi/upload",
+          formData,
+          config
+        )
         .then(({ data }) => {
           Swal.fire({
             icon: "success",
@@ -113,7 +118,9 @@ const Distribusi = () => {
   // export excel
   const donwloadTemplate = async () => {
     try {
-      window.open("http://localhost:9000/api/v1/rfid/distribusiDownloadTemplate");
+      window.open(
+        "http://localhost:9000/api/v1/rfid/distribusiDownloadTemplate"
+      );
     } catch (error) {
       console.log(error);
     }
@@ -124,27 +131,32 @@ const Distribusi = () => {
       <div className=" p-2">
         <div className="flex flex-wrap flex-row">
           <div className="flex-shrink max-w-full px-4 w-1/2">
-            <h1 className="text-3xl font-semibold mt-3 mb-5">Distribusi List</h1>
+            <h1 className="text-3xl font-semibold mt-3 mb-5">
+              Distribusi List
+            </h1>
           </div>
           <div className="flex flex-wrap pr-5 pl-5 w-full pt-1 mb-2 content-center font-semibold justify-between md:w-1/2 md:justify-end">
-            <button
+            {/* <button
               type="button"
               className="bg-[#FEBF00]  m-1 pl-3 pr-3 rounded-md p-2 hover:bg-yellow-400"
               onClick={() => setShowModal(true)}
             >
               <i className="fa-solid fa-upload"></i> Upload
-            </button>
+            </button> */}
           </div>
         </div>
 
         <div className="flex flex-wrap flex-row">
           <div className="flex-shrink max-w-full px-4 w-full">
             <div className="p-6 bg-white  rounded-lg shadow-lg mb-6">
-              <SearchDistribusi distribusi={distribusi} setSearchResults={setSearchResults} />
+              <SearchDistribusi
+                distribusi={distribusi}
+                setSearchResults={setSearchResults}
+              />
               {loading ? (
                 <Loading />
               ) : (
-                <div className="overflow-x-auto scrollbars">
+                <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-rounded-md  scrollbar-thumb-gray-300">
                   <Distribusi1 searchResults={currentPost} />
                 </div>
               )}
@@ -189,7 +201,9 @@ const Distribusi = () => {
                             href="#"
                             onClick={() => setOpenTab(1)}
                             className={` ${
-                              openTab === 1 ? "border-b-4 border-green-200 text-black" : ""
+                              openTab === 1
+                                ? "border-b-4 border-green-200 text-black"
+                                : ""
                             } inline-block px-4 py-2 text-gray-600 hover:border-b-4 border-green-200 `}
                           >
                             Upload File Excel
@@ -211,7 +225,10 @@ const Distribusi = () => {
                         <div className={openTab === 1 ? "block" : "hidden"}>
                           <form className="w-full" onSubmit={uploadData}>
                             <div className="mb-2">
-                              <label htmlFor="file" className="font-semibold text-gray-500">
+                              <label
+                                htmlFor="file"
+                                className="font-semibold text-gray-500"
+                              >
                                 Upload File
                               </label>
                               <input
@@ -238,7 +255,8 @@ const Distribusi = () => {
                             type="button"
                             className="bg-[#1cc939] text-white  m-1 pl-3 pr-3 rounded-md p-2 hover:bg-[#40d859]"
                           >
-                            <i className="fa-solid fa-file-excel"></i> Cetak Excel
+                            <i className="fa-solid fa-file-excel"></i> Cetak
+                            Excel
                           </button>
                         </div>
                       </div>

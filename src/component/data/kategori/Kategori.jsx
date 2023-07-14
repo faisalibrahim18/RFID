@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 
 const Kategori = ({ category, loading, searchResults }) => {
@@ -22,13 +22,16 @@ const Kategori = ({ category, loading, searchResults }) => {
     setShowEdit(id, true);
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get(`http://localhost:9000/api/v1/rfid/category/${id}`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      console.log(response);
+      const response = await axios.get(
+        `http://localhost:9000/api/v1/rfid/category/${id}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      // console.log(response);
       setKategori([response.data.data]);
 
       setExpired(response.data.data.expired);
@@ -43,10 +46,11 @@ const Kategori = ({ category, loading, searchResults }) => {
   const updatekategori = async (id, e) => {
     e.preventDefault();
     try {
+      const API_URL = import.meta.env.VITE_API_KEY;
       const token = localStorage.getItem("token");
       await axios
         .put(
-          `http://localhost:9000/api/v1/rfid/category/${id}`,
+          `${API_URL}/api/v1/rfid/category/${id}`,
           {
             name: name,
             expired: expired,
@@ -57,7 +61,7 @@ const Kategori = ({ category, loading, searchResults }) => {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
-          },
+          }
         )
         .then(({ data }) => {
           Swal.fire({
@@ -93,9 +97,10 @@ const Kategori = ({ category, loading, searchResults }) => {
     if (!isConfirm) {
       return;
     }
+    const API_URL = import.meta.env.VITE_API_KEY;
     const token = localStorage.getItem("token");
     await axios
-      .delete(`http://localhost:9000/api/v1/rfid/category/${CategoryId}`, {
+      .delete(`${API_URL}/api/v1/rfid/category/${CategoryId}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -130,7 +135,7 @@ const Kategori = ({ category, loading, searchResults }) => {
               Nama Kategori
             </th>
             <th scope="col" className="px-6 py-4">
-              Expired
+              Unit
             </th>
             <th scope="col" className="px-6 py-4">
               Action
@@ -143,9 +148,12 @@ const Kategori = ({ category, loading, searchResults }) => {
               <td className="whitespace-nowrap px-6 py-4">{index + 1}</td>
 
               <td className="whitespace-nowrap px-6 py-4">{item.name}</td>
-              <td className="whitespace-nowrap px-6 py-4">{item.expired}</td>
+              <td className="whitespace-nowrap px-6 py-4">{item.unit}</td>
               <td className="whitespace-nowrap px-6 py-4">
-                <button onClick={() => handleShowEditKategori(item._id)} className="m-3">
+                <button
+                  onClick={() => handleShowEditKategori(item._id)}
+                  className="m-3"
+                >
                   <i className="fa-solid fa-pen-to-square text-[#96CDF4] hover:text-blue-400"></i>
                 </button>
                 <Link onClick={() => deleteCategory(item._id)}>
@@ -177,9 +185,15 @@ const Kategori = ({ category, loading, searchResults }) => {
                 {/*body*/}
                 {kategori.map((item) => (
                   <div className="relative p-6 flex-auto" key={item._id}>
-                    <form className="w-full" onSubmit={(e) => updatekategori(item._id, e)}>
+                    <form
+                      className="w-full"
+                      onSubmit={(e) => updatekategori(item._id, e)}
+                    >
                       <div className="mb-2">
-                        <label for="Nama Kategori" className=" text-sm font-semibold text-gray-800">
+                        <label
+                          for="Nama Kategori"
+                          className=" text-sm font-semibold text-gray-800"
+                        >
                           Nama Kategori
                         </label>
                         <input
@@ -191,8 +205,11 @@ const Kategori = ({ category, loading, searchResults }) => {
                         />
                       </div>
 
-                      <div className="mb-2">
-                        <label for="Nama Kategori" className=" text-sm font-semibold text-gray-800">
+                      {/* <div className="mb-2">
+                        <label
+                          for="Nama Kategori"
+                          className=" text-sm font-semibold text-gray-800"
+                        >
                           Expired
                         </label>
                         <input
@@ -201,9 +218,13 @@ const Kategori = ({ category, loading, searchResults }) => {
                           onChange={(e) => setExpired(e.target.value)}
                           className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
                         />
-                      </div>
+                      </div> */}
+
                       <div className="mb-2">
-                        <label for="Nama Kategori" className=" text-sm font-semibold text-gray-800">
+                        <label
+                          for="Nama Kategori"
+                          className=" text-sm font-semibold text-gray-800"
+                        >
                           Unit
                         </label>
                         <input

@@ -4,7 +4,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { LoginUser, reset } from "../../features/authSlice";
 import Logo from "../../assets/logo.png";
 import Bg from "../../assets/1.png";
-import Kaos from "../../assets/kaos.png";
+import Login1 from "../../assets/login.png";
 
 import "./Login.css";
 import { BiArrowBack } from "react-icons/bi";
@@ -16,7 +16,9 @@ const Login = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { user, isError, isSuccess, isLoading, message } = useSelector((state) => state.auth);
+  const { user, isError, isSuccess, isLoading, message } = useSelector(
+    (state) => state.auth
+  );
 
   useEffect(() => {
     if (localStorage.getItem("token")) {
@@ -58,7 +60,12 @@ const Login = () => {
             <img
               src={Logo}
               className="lg:h-auto lg:w-auto bounce-top-icons bg-opacity-100 "
-              style={{ width: "70px", height: "80px", left: "57px", top: "41px" }}
+              style={{
+                width: "70px",
+                height: "80px",
+                left: "57px",
+                top: "41px",
+              }}
             />
           </Link>
         </div>
@@ -78,9 +85,15 @@ const Login = () => {
             login
           </h1>
           <form className="lg:w-1/2 fade-in" onSubmit={Auth}>
-            {isError && <p className="alert alert-danger rounded text-center p-2 shadow ">{message}</p>}
+            {isError && (
+              <p className="alert alert-danger rounded text-center p-2 shadow ">
+                {message}
+              </p>
+            )}
             <div className="mb-2">
-              <label className="block text-sm font-semibold text-gray-800">Username</label>
+              <label className="block text-sm font-semibold text-gray-800">
+                Username
+              </label>
               <input
                 type="text"
                 className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
@@ -90,7 +103,9 @@ const Login = () => {
               />
             </div>
             <div className="mb-2">
-              <label className="block text-sm font-semibold text-gray-800">Password</label>
+              <label className="block text-sm font-semibold text-gray-800">
+                Password
+              </label>
               <input
                 type="password"
                 className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
@@ -103,7 +118,7 @@ const Login = () => {
             <div className="mt-6">
               <button
                 type="submit"
-                className="color w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-blue-950 rounded-md hover:bg-blue-900 focus:outline-none focus:bg-blue-500"
+                className="color w-full px-4 py-2 tracking-wide text-white transition-colors duration-200 transform bg-blue-950 rounded-lg hover:bg-blue-900 focus:outline-none focus:bg-blue-500"
               >
                 {isLoading ? (
                   <div>
@@ -126,8 +141,12 @@ const Login = () => {
         </div>
 
         {/* <!--Right Col--> */}
-        <div className="lg:pt-22 pt-10 lg:pr-20">
-          <img className="slide-in-bottom  " src={Kaos} style={{ width: "40rem" }} />
+        <div className="lg:pr-20">
+          <img
+            className="slide-in-bottom  "
+            src={Login1}
+            style={{ width: "40rem" }}
+          />
         </div>
       </div>
 

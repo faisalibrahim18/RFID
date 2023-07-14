@@ -12,23 +12,24 @@ const Laporan = () => {
   });
 
   const getLaporan = async (e) => {
+    const token = localStorage.getItem("token");
+    const API_URL = import.meta.env.VITE_API_KEY;
     e.preventDefault();
     try {
-      const token = localStorage.getItem("token");
       const response = await axios.get(
-        `http://localhost:9000/api/v1/rfid/distribusi?startDate=${startDate}&endDate=${endDate}`,
-        {
-          startDate: startDate,
-          endDate: endDate,
-        },
+        `${API_URL}/api/v1/rfid/distribusi?startDate=${startDate}&endDate=${endDate}`,
         {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
         },
+        {
+          startDate: startDate,
+          endDate: endDate,
+        }
       );
-      console.log(response.data.data);
+      // console.log(response.data.data);
       setLaporan(response.data.data);
       setShowLaporan(true);
     } catch (error) {
@@ -36,9 +37,10 @@ const Laporan = () => {
     }
   };
   const cetakLaporanExcel = async () => {
+    const API_URL = import.meta.env.VITE_API_KEY;
     try {
       window.open(
-        `http://localhost:9000/api/v1/rfid/distribusiDownload?startDate=${startDate}&endDate=${endDate}`,
+        `${API_URL}/api/v1/rfid/distribusiDownload?startDate=${startDate}&endDate=${endDate}`
       );
     } catch (error) {
       console.log(error);
@@ -47,15 +49,16 @@ const Laporan = () => {
   const cetakLaporanPdf = async () => {
     try {
       const token = localStorage.getItem("token");
+      const API_URL = import.meta.env.VITE_API_KEY;
       // console.log(token);
       window.open(
-        `http://localhost:9000/api/v1/rfid/distribusiDownloadPdf?startDate=${startDate}&endDate=${endDate}`,
+        `${API_URL}/api/v1/rfid/distribusiDownloadPdf?startDate=${startDate}&endDate=${endDate}`,
         {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-        },
+        }
       );
     } catch (error) {
       console.log(error);
@@ -74,7 +77,9 @@ const Laporan = () => {
               <div className="flex flex-wrap ">
                 <div className="md:w-1/2  md:mb-2  w-full">
                   <div className="mb-2">
-                    <label className="block text-sm font-semibold text-gray-800">Tanggal Awal</label>
+                    <label className="block text-sm font-semibold text-gray-800">
+                      Tanggal Awal
+                    </label>
                     <input
                       type="date"
                       required
@@ -87,7 +92,9 @@ const Laporan = () => {
                 <div className=" md:w-1/2  lg:pl-3 md:pl-3  w-full">
                   {" "}
                   <div className="mb-2">
-                    <label className="block text-sm font-semibold text-gray-800">Tanggal Akhir</label>
+                    <label className="block text-sm font-semibold text-gray-800">
+                      Tanggal Akhir
+                    </label>
                     <input
                       type="date"
                       required
@@ -97,7 +104,10 @@ const Laporan = () => {
                     />
                   </div>
                 </div>
-                <button type="submit" className="w-full bg-[#FEBF00]  m-1 rounded-md p-2 hover:bg-yellow-400">
+                <button
+                  type="submit"
+                  className="w-full bg-[#FEBF00]  m-1 rounded-md p-2 hover:bg-yellow-400"
+                >
                   <i class="fa-solid fa-table-list"></i> Laporan
                 </button>
               </div>
@@ -163,51 +173,84 @@ const Laporan = () => {
                     </thead>
                     <tbody>
                       {laporan.map((item, index) => (
-                        <tr key={item._id} className="border-b text-center text-gray-600">
-                          <td className="whitespace-nowrap px-6 py-4">{index + 1}</td>
-                          <td className="whitespace-nowrap px-6 py-4">{item.customer.name}</td>
-                          <td className="whitespace-nowrap px-6 py-4">{item.dateIn}</td>
+                        <tr
+                          key={item._id}
+                          className="border-b text-center text-gray-600"
+                        >
+                          <td className="whitespace-nowrap px-6 py-4">
+                            {index + 1}
+                          </td>
+                          <td className="whitespace-nowrap px-6 py-4">
+                            {item.customer.name}
+                          </td>
+                          <td className="whitespace-nowrap px-6 py-4">
+                            {item.dateIn}
+                          </td>
 
-                          <td className="whitespace-nowrap px-6 py-4">{item.linen[0].epc}</td>
-                          <td className="whitespace-nowrap px-6 py-4">{item.quality}</td>
-                          <td className="whitespace-nowrap px-6 py-4">{item.linen[0].category}</td>
-                          <td className="whitespace-nowrap px-6 py-4">{item.amount}</td>
-                          <td className="whitespace-nowrap px-6 py-4">{item.service}</td>
+                          <td className="whitespace-nowrap px-6 py-4">
+                            {item.linen[0].epc}
+                          </td>
+                          <td className="whitespace-nowrap px-6 py-4">
+                            {item.quality}
+                          </td>
+                          <td className="whitespace-nowrap px-6 py-4">
+                            {item.linen[0].category}
+                          </td>
+                          <td className="whitespace-nowrap px-6 py-4">
+                            {item.amount}
+                          </td>
+                          <td className="whitespace-nowrap px-6 py-4">
+                            {item.service}
+                          </td>
 
                           <td className="whitespace-nowrap px-6 py-4">
                             {" "}
                             {item.status === null ? (
-                              <span className="bg-[#b5f1b5]  pr-2 pl-2 rounded-lg">Confirm</span>
+                              <span className="bg-[#b5f1b5]  pr-2 pl-2 rounded-lg">
+                                Confirm
+                              </span>
                             ) : (
                               ""
                             )}
                             {item?.status?.status === "processing" ? (
-                              <span className="bg-[#96CDF4]  pr-2 pl-2 rounded-lg">CheckIn</span>
+                              <span className="bg-[#96CDF4]  pr-2 pl-2 rounded-lg">
+                                CheckIn
+                              </span>
                             ) : (
                               ""
                             )}
                             {item?.status?.status === "checking" ? (
-                              <span className="bg-[#FEBF00]  pr-2 pl-2 rounded-lg">Transit</span>
+                              <span className="bg-[#FEBF00]  pr-2 pl-2 rounded-lg">
+                                Transit
+                              </span>
                             ) : (
                               ""
                             )}
                             {item?.status?.status === "transit" ? (
-                              <span className="bg-[#5eebc7]  pr-2 pl-2 rounded-lg">Accepted</span>
+                              <span className="bg-[#5eebc7]  pr-2 pl-2 rounded-lg">
+                                Accepted
+                              </span>
                             ) : (
                               ""
                             )}
                             {item?.status?.status === "accepted" ? (
-                              <span className="bg-[#65a0f8]  pr-2 pl-2 rounded-lg">Wash</span>
+                              <span className="bg-[#65a0f8]  pr-2 pl-2 rounded-lg">
+                                Wash
+                              </span>
                             ) : (
                               ""
                             )}
                             {item?.status?.status === "washing" ? (
-                              <span className="bg-[#82f865]  pr-2 pl-2 rounded-lg">Dry</span>
+                              <span className="bg-[#82f865]  pr-2 pl-2 rounded-lg">
+                                Dry
+                              </span>
                             ) : (
                               ""
                             )}
                             {item?.status?.status === "drying" ? (
-                              <span className="bg-[#54e2f5]  pr-2 pl-2 rounded-lg">Done</span>
+                              <span className="bg-[#54e2f5]  pr-2 pl-2 rounded-lg">
+                                Done
+                              </span>
                             ) : (
                               ""
                             )}

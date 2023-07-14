@@ -31,13 +31,17 @@ const rumah_sakit = ({ loading, searchRs, rumah_sakit }) => {
   const handleShowEditHospital = async (id) => {
     setShowEdit(id, true);
     try {
+      const API_URL = import.meta.env.VITE_API_KEY;
       const token = localStorage.getItem("token");
-      const response = await axios.get(`http://localhost:9000/api/v1/rfid/hospital/${id}`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get(
+        `${API_URL}/api/v1/rfid/hospital/${id}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       // console.log(response);
       setRumahSakit([response.data.data]);
       setCode(response.data.data.code);
@@ -53,10 +57,11 @@ const rumah_sakit = ({ loading, searchRs, rumah_sakit }) => {
   const updateHospital = async (id, e) => {
     e.preventDefault();
     try {
+      const API_URL = import.meta.env.VITE_API_KEY;
       const token = localStorage.getItem("token");
       await axios
         .put(
-          `http://localhost:9000/api/v1/rfid/hospital/${id}`,
+          `${API_URL}/api/v1/rfid/hospital/${id}`,
           {
             code: code,
             name: name,
@@ -68,7 +73,7 @@ const rumah_sakit = ({ loading, searchRs, rumah_sakit }) => {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
-          },
+          }
         )
         .then(({ data }) => {
           Swal.fire({
@@ -105,9 +110,10 @@ const rumah_sakit = ({ loading, searchRs, rumah_sakit }) => {
     if (!isConfirm) {
       return;
     }
+    const API_URL = import.meta.env.VITE_API_KEY;
     const token = localStorage.getItem("token");
     await axios
-      .delete(`http://localhost:9000/api/v1/rfid/hospital/${hospitalId}`, {
+      .delete(`${API_URL}/api/v1/rfid/hospital/${hospitalId}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -168,26 +174,42 @@ const rumah_sakit = ({ loading, searchRs, rumah_sakit }) => {
               <td className="whitespace-nowrap px-6 py-4">{index + 1}</td>
               <td className="whitespace-nowrap px-6 py-4">{item.code}</td>
               <td className="whitespace-nowrap px-6 py-4">{item.name}</td>
-              <td className="whitespace-nowrap px-6 py-4">{item.number_phone}</td>
-              <td className="whitespace-nowrap px-6 py-4">{item.address}</td>
-              <td className="whitespace-nowrap px-6 py-4">{item.stock}</td>
               <td className="whitespace-nowrap px-6 py-4">
-                <button onClick={() => handleShowEditHospital(item._id)} className="m-3">
+                {item.number_phone}
+              </td>
+              <td className="whitespace-nowrap px-6 py-4">{item.address}</td>
+              <td className="whitespace-nowrap px-6 py-4">
+                {item.stock} {item.linen[0]?.category?.unit}
+              </td>
+              <td className="whitespace-nowrap px-6 py-4">
+                <button
+                  onClick={() => handleShowEditHospital(item._id)}
+                  className="m-3"
+                >
                   <i className="fa-solid fa-pen-to-square text-[#96CDF4] hover:text-blue-400"></i>
                 </button>
+                
                 <Link onClick={() => deleteHospital(item._id)}>
                   <i className="fa-solid fa-trash-can text-[#FF1818] hover:text-red-400"></i>
                 </Link>
               </td>
             </tr>
 
-            <tr className={`border-b  text-gray-600 ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+            <tr
+              className={`border-b  text-gray-600 ${
+                collapsedIds.includes(item._id) ? "" : "hidden"
+              }`}
+            >
               <td class="whitespace-nowrap px-6 py-4 text-lg"></td>
               <td class="whitespace-nowrap px-6 py-4 text-lg"></td>
               <td class="whitespace-nowrap px-6 py-4 text-lg">Data Linen</td>
               <td class="whitespace-nowrap px-6 py-4 text-lg"></td>
             </tr>
-            <tr className={`border-b  text-gray-600 ${collapsedIds.includes(item._id) ? "" : "hidden"}`}>
+            <tr
+              className={`border-b  text-gray-600 ${
+                collapsedIds.includes(item._id) ? "" : "hidden"
+              }`}
+            >
               <td class="whitespace-nowrap px-6 py-4 text-lg"></td>
               <td class="whitespace-nowrap px-6 py-4 text-lg"></td>
               <td class="whitespace-nowrap px-6 py-4 text-lg">
@@ -221,9 +243,14 @@ const rumah_sakit = ({ loading, searchRs, rumah_sakit }) => {
                 {/*body*/}
                 {rumahsakit.map((item) => (
                   <div className="relative p-6 flex-auto" key={item._id}>
-                    <form className="w-full" onSubmit={(e) => updateHospital(item._id, e)}>
+                    <form
+                      className="w-full"
+                      onSubmit={(e) => updateHospital(item._id, e)}
+                    >
                       <div className="mb-4">
-                        <label className=" text-sm font-semibold text-gray-800">Kode Rumah Sakit</label>
+                        <label className=" text-sm font-semibold text-gray-800">
+                          Kode Rumah Sakit
+                        </label>
                         <input
                           required
                           type="text"
@@ -234,7 +261,9 @@ const rumah_sakit = ({ loading, searchRs, rumah_sakit }) => {
                         />
                       </div>
                       <div className="mb-4">
-                        <label className="block text-sm font-semibold text-gray-800">Nama Rumah Sakit</label>
+                        <label className="block text-sm font-semibold text-gray-800">
+                          Nama Rumah Sakit
+                        </label>
                         <input
                           required
                           type="text"
@@ -245,7 +274,9 @@ const rumah_sakit = ({ loading, searchRs, rumah_sakit }) => {
                         />
                       </div>
                       <div className="mb-4">
-                        <label className="block text-sm font-semibold text-gray-800">No Telepon</label>
+                        <label className="block text-sm font-semibold text-gray-800">
+                          No Telepon
+                        </label>
                         <input
                           required
                           type="text"
@@ -256,7 +287,9 @@ const rumah_sakit = ({ loading, searchRs, rumah_sakit }) => {
                         />
                       </div>
                       <div className="mb-4">
-                        <label className="block text-sm font-semibold text-gray-800">Alamat</label>
+                        <label className="block text-sm font-semibold text-gray-800">
+                          Alamat
+                        </label>
                         <textarea
                           required
                           type="text"

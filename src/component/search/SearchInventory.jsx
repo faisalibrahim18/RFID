@@ -5,11 +5,11 @@ const SearchInventory = ({ inventory, setSearchResults }) => {
 
   const handleSearchChange = (e) => {
     if (!e.target.value) return setSearchResults(inventory);
-
     const resultsArray = inventory.filter(
-      (item) => item.kode.includes(e.target.value) || item.name.includes(e.target.value),
+      (item) =>
+        item.kode.toLowerCase().includes(e.target.value.toLowerCase()) ||
+        item.name.toLowerCase().includes(e.target.value.toLowerCase())
     );
-
     setSearchResults(resultsArray);
   };
 

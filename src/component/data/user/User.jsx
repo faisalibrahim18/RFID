@@ -24,9 +24,10 @@ const User = ({ users, loading, searchResults }) => {
     if (!isConfirm) {
       return;
     }
+    const API_URL = import.meta.env.VITE_API_KEY;
     const token = localStorage.getItem("token");
     await axios
-      .delete(`http://localhost:9000/api/v1/rfid/user/${userId}`, {
+      .delete(`${API_URL}/api/v1/rfid/user/${userId}`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
