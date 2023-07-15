@@ -93,7 +93,43 @@ const Linen = ({ linen, searchResults, loading }) => {
                 {item.category?.name}
               </td>
               <td className="whitespace-nowrap px-6 py-4">{item.counter}</td>
-              <td className="whitespace-nowrap px-6 py-4">{item.status}</td>
+              <td className="whitespace-nowrap px-6 py-4">
+                {item.status === "1" ? (
+                  <span className="bg-gray-400 rounded-lg uppercase px-2 text-gray-700">
+                    Linen Tidak Terpakai
+                  </span>
+                ) : (
+                  ""
+                )}
+                {item.status === "2" ? (
+                  <span className="bg-green-400 rounded-lg uppercase px-2 text-grenn-700">
+                    Linen Di Pakai
+                  </span>
+                ) : (
+                  ""
+                )}
+                {item.status === "3" ? (
+                  <span className="bg-yellow-400 rounded-lg uppercase px-2 text-yellow-700">
+                    Linen Di Pakai Sudah 40x
+                  </span>
+                ) : (
+                  ""
+                )}
+                {item.status === "4" ? (
+                  <span className="bg-yellow-400 rounded-lg uppercase px-2 text-yellow-700">
+                    Linen Di Pakai Sudah 80x
+                  </span>
+                ) : (
+                  ""
+                )}
+                {item.status === "5" ? (
+                  <span className="bg-red-400 rounded-lg uppercase px-2 text-red-700">
+                    Linen Sudah Expired
+                  </span>
+                ) : (
+                  ""
+                )}
+              </td>
               <td className="whitespace-nowrap px-6 py-4">
                 <Link to={`/linen/edit/${item._id}`} className=" m-3">
                   <i className="fa-solid fa-pen-to-square text-[#96CDF4] hover:text-blue-400"></i>

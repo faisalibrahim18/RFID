@@ -25,6 +25,99 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
   const [status, setStatus] = useState([]);
   const { id } = useParams();
   const navigate = useNavigate();
+  const [users, setUser] = useState([]);
+  const [privilege, setPrivilege] = useState({
+    InventoryManagement: true,
+    RoleManagement: true,
+    UserManagement: true,
+    LinenManagement: true,
+    DistribusiManagement: true,
+    InvoicePage: true,
+    UserPage: true,
+    RolePage: true,
+    HospitalPage: true,
+    LinenPage: true,
+    DistribusiPage: true,
+    CategoryPage: true,
+    InventoryPage: true,
+    ReportPage: true,
+    TrackingPage: true,
+  });
+  //get data access proses
+  useEffect(() => {
+    getUsers();
+  }, []);
+
+  const getUsers = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.get(
+        "http://localhost:9000/api/v1/rfid/getUserSignedIn",
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const rolePrivileges = response.data.data.role.rolePrivileges;
+
+      // console.log("rolePrivileges:", rolePrivileges);
+
+      const allowValues = rolePrivileges.map((privilege) => privilege.allow);
+
+      // console.log("allowValues:", allowValues);
+
+      // Memperbarui state privilege dengan hasil allowValues
+      setPrivilege((prevPrivilege) => ({
+        ...prevPrivilege,
+        InventoryManagement: allowValues[0],
+        RoleManagement: allowValues[1],
+        UserManagement: allowValues[2],
+        LinenManagement: allowValues[3],
+        DistribusiManagement: allowValues[4],
+        InvoicePage: allowValues[5],
+        UserPage: allowValues[6],
+        RolePage: allowValues[7],
+        HospitalPage: allowValues[8],
+        LinenPage: allowValues[9],
+        DistribusiPage: allowValues[10],
+        CategoryPage: allowValues[11],
+        InventoryPage: allowValues[12],
+        ReportPage: allowValues[13],
+        TrackingPage: allowValues[14],
+      }));
+
+      // Mengecek izin akses dan mengambil tindakan yang sesuai
+      if (
+        allowValues.every((allow, index) => {
+          const privilegeName = Object.keys(privilege)[index];
+          if (allow) {
+            // console.log(`Pengguna diizinkan untuk ${privilegeName}`);
+            // Tindakan yang diambil jika izin adalah true
+            return true;
+          } else {
+            // console.log(`Pengguna tidak diizinkan untuk ${privilegeName}`);
+            // Tindakan yang diambil jika izin adalah false
+            return false;
+          }
+        })
+      ) {
+        // console.log("Semua izin diizinkan");
+        // Tindakan yang diambil jika semua izin bernilai true
+      } else {
+        // console.log("Tidak semua izin diizinkan");
+        // Tindakan yang diambil jika ada izin yang bernilai false
+      }
+
+      // console.log("response data:", response.data.data);
+      setUser([response.data.data]);
+    } catch (error) {
+      console.log("Error:", error.response); // Memperbaiki penanganan kesalahan
+    }
+  };
+  //close get data access proses
 
   const toggleCollapse = (id) => {
     if (collapsedIds.includes(id)) {
@@ -37,7 +130,7 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
     return <h2>Loading...</h2>;
   }
 
-  console.log(searchResults);
+  // console.log(searchResults);
   const deleteDistribusi = async (distribusiId) => {
     const isConfirm = await Swal.fire({
       title: "Are you sure?",
@@ -80,6 +173,7 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
       });
   };
 
+  //cetakserah terima
   const handleCetakSerahTerima = async (id) => {
     try {
       const API_URL = import.meta.env.VITE_API_KEY;
@@ -96,6 +190,7 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
     }
   };
 
+  //update Comfirm proses
   const handleUpdateProses = async (id) => {
     const API_URL = import.meta.env.VITE_API_KEY;
     fetch(`${API_URL}/api/v1/rfid/tracker`, {
@@ -155,6 +250,7 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
         console.error('Permintaan ke endpoint "/tracker" gagal');
       });
   };
+
   //Checkin
   const handleShowCheck = async (id) => {
     setShowProses(id, true);
@@ -758,86 +854,214 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               </td>
               <td className="whitespace-nowrap px-6 py-4">
                 {" "}
-                {item.status === null ? (
-                  <button
-                    onClick={() => handleUpdateProses(item._id)}
-                    className="bg-[#b5f1b5] hover:bg-[#88f588] pr-2 pl-2 rounded-lg"
-                  >
-                    Confirm
-                  </button>
+                {/* confrim */}
+                {privilege.UserPage ? (
+                  <div>
+                    {item.status === null ? (
+                      <button
+                        onClick={() => handleUpdateProses(item._id)}
+                        className="bg-[#b5f1b5] hover:bg-[#88f588] pr-2 pl-2 rounded-lg"
+                      >
+                        Confirm
+                      </button>
+                    ) : (
+                      ""
+                    )}
+                  </div>
                 ) : (
-                  ""
+                  <div>
+                    {item.status === null ? (
+                      <span className="bg-[#b5f1b5]  pr-2 pl-2 rounded-lg">
+                        Confirm
+                      </span>
+                    ) : (
+                      ""
+                    )}
+                  </div>
                 )}
-                {item?.status?.status === "processing" ? (
-                  <button
-                    onClick={() => handleShowCheck(item.status._id)}
-                    className="bg-[#96CDF4] hover:bg-[#a4d1f1] pr-2 pl-2 rounded-lg"
-                  >
-                    CheckIn
-                  </button>
+                {/* close confrim  */}
+                {/* checkIn */}
+                {privilege.UserPage ? (
+                  <div>
+                    {item?.status?.status === "processing" ? (
+                      <button
+                        onClick={() => handleShowCheck(item.status._id)}
+                        className="bg-[#96CDF4] hover:bg-[#a4d1f1] pr-2 pl-2 rounded-lg"
+                      >
+                        CheckIn
+                      </button>
+                    ) : (
+                      ""
+                    )}
+                  </div>
                 ) : (
-                  ""
+                  <div>
+                    {item?.status?.status === "processing" ? (
+                      <span className="bg-[#96CDF4] pr-2 pl-2 rounded-lg">
+                        CheckIn
+                      </span>
+                    ) : (
+                      ""
+                    )}
+                  </div>
                 )}
-                {item?.status?.status === "checking" ? (
-                  <button
-                    onClick={() => handleShowTransit(item.status._id)}
-                    className="bg-[#FEBF00] hover:bg-[#f8db84] pr-2 pl-2 rounded-lg"
-                  >
-                    Transit
-                  </button>
+                {/* close checkIn */}
+                {/* transit */}
+                {privilege.UserPage ? (
+                  <div>
+                    {item?.status?.status === "checking" ? (
+                      <button
+                        onClick={() => handleShowTransit(item.status._id)}
+                        className="bg-[#FEBF00] hover:bg-[#f8db84] pr-2 pl-2 rounded-lg"
+                      >
+                        Transit
+                      </button>
+                    ) : (
+                      ""
+                    )}
+                  </div>
                 ) : (
-                  ""
+                  <div>
+                    {item?.status?.status === "checking" ? (
+                      <span className="bg-[#FEBF00] pr-2 pl-2 rounded-lg">
+                        Transit
+                      </span>
+                    ) : (
+                      ""
+                    )}
+                  </div>
                 )}
-                {item?.status?.status === "transit to laundry" ? (
-                  <button
-                    onClick={() => handleShowAcc(item.status._id)}
-                    className="bg-[#5eebc7] hover:bg-[#93f1da] pr-2 pl-2 rounded-lg"
-                  >
-                    Accepted
-                  </button>
+                {/* close Transit */}
+                {/* Acc */}
+                {privilege.UserPage ? (
+                  <div>
+                    {item?.status?.status === "transit to laundry" ? (
+                      <button
+                        onClick={() => handleShowAcc(item.status._id)}
+                        className="bg-[#5eebc7] hover:bg-[#93f1da] pr-2 pl-2 rounded-lg"
+                      >
+                        Accepted
+                      </button>
+                    ) : (
+                      ""
+                    )}
+                  </div>
                 ) : (
-                  ""
+                  <div>
+                    {item?.status?.status === "transit to laundry" ? (
+                      <span className="bg-[#5eebc7] pr-2 pl-2 rounded-lg">
+                        Accepted
+                      </span>
+                    ) : (
+                      ""
+                    )}
+                  </div>
                 )}
-                {item?.status?.status === "accepted" ? (
-                  <button
-                    onClick={() => handleShowWash(item.status._id)}
-                    className="bg-[#65a0f8] hover:bg-[#7eabee] pr-2 pl-2 rounded-lg"
-                  >
-                    Wash
-                  </button>
+                {/* close Acc */}
+                {/* Wash */}
+                {privilege.UserPage ? (
+                  <div>
+                    {item?.status?.status === "accepted" ? (
+                      <button
+                        onClick={() => handleShowWash(item.status._id)}
+                        className="bg-[#65a0f8] hover:bg-[#7eabee] pr-2 pl-2 rounded-lg"
+                      >
+                        Wash
+                      </button>
+                    ) : (
+                      ""
+                    )}
+                  </div>
                 ) : (
-                  ""
+                  <div>
+                    {item?.status?.status === "accepted" ? (
+                      <span className="bg-[#65a0f8] pr-2 pl-2 rounded-lg">
+                        Wash
+                      </span>
+                    ) : (
+                      ""
+                    )}
+                  </div>
                 )}
-                {item?.status?.status === "wash" ? (
-                  <button
-                    onClick={() => handleShowDry(item.status._id)}
-                    className="bg-[#82f865] hover:bg-[#a2ee8f] pr-2 pl-2 rounded-lg"
-                  >
-                    Dry
-                  </button>
+                {/* close wash */}
+                {/* dry */}
+                {privilege.UserPage ? (
+                  <div>
+                    {item?.status?.status === "wash" ? (
+                      <button
+                        onClick={() => handleShowDry(item.status._id)}
+                        className="bg-[#82f865] hover:bg-[#a2ee8f] pr-2 pl-2 rounded-lg"
+                      >
+                        Dry
+                      </button>
+                    ) : (
+                      ""
+                    )}
+                  </div>
                 ) : (
-                  ""
+                  <div>
+                    {item?.status?.status === "wash" ? (
+                      <span className="bg-[#82f865] pr-2 pl-2 rounded-lg">
+                        Dry
+                      </span>
+                    ) : (
+                      ""
+                    )}
+                  </div>
                 )}
-                {item?.status?.status === "drying" ? (
-                  <button
-                    onClick={() => handleShowDelivery(item.status._id)}
-                    className="bg-[#54e2f5] hover:bg-[#9becf7] pr-2 pl-2 rounded-lg"
-                  >
-                    Delivery
-                  </button>
+                {/* close dry */}
+                {/* delivery */}
+                {privilege.UserPage ? (
+                  <div>
+                    {item?.status?.status === "drying" ? (
+                      <button
+                        onClick={() => handleShowDelivery(item.status._id)}
+                        className="bg-[#54e2f5] hover:bg-[#9becf7] pr-2 pl-2 rounded-lg"
+                      >
+                        Delivery
+                      </button>
+                    ) : (
+                      ""
+                    )}
+                  </div>
                 ) : (
-                  ""
+                  <div>
+                    {item?.status?.status === "drying" ? (
+                      <span className="bg-[#54e2f5] pr-2 pl-2 rounded-lg">
+                        Delivery
+                      </span>
+                    ) : (
+                      ""
+                    )}
+                  </div>
                 )}
-                {item?.status?.status === "transit to hospital" ? (
-                  <button
-                    onClick={() => handleShowDone(item.status._id)}
-                    className="bg-[#54e2f5] hover:bg-[#9becf7] pr-2 pl-2 rounded-lg"
-                  >
-                    Done
-                  </button>
+                {/* close delivery */}
+                {/* done */}
+                {privilege.UserPage ? (
+                  <div>
+                    {item?.status?.status === "transit to hospital" ? (
+                      <button
+                        onClick={() => handleShowDone(item.status._id)}
+                        className="bg-[#54e2f5] hover:bg-[#9becf7] pr-2 pl-2 rounded-lg"
+                      >
+                        Done
+                      </button>
+                    ) : (
+                      ""
+                    )}
+                  </div>
                 ) : (
-                  ""
+                  <div>
+                    {item?.status?.status === "transit to hospital" ? (
+                      <span className="bg-[#54e2f5] pr-2 pl-2 rounded-lg">
+                        Done
+                      </span>
+                    ) : (
+                      ""
+                    )}
+                  </div>
                 )}
+                {/* close done */}
                 {item?.status?.status === "success" ? (
                   <span className=" rounded-md bg-[#10e04f] px-4 py-px text-xs font-semibold uppercase text-gray-900 antialiased">
                     Success
