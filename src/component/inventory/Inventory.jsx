@@ -18,6 +18,7 @@ const Inventory = () => {
   const [name, setName] = useState("");
   const [status, setStatus] = useState("");
   const [amount, setAmount] = useState("");
+  const [lokasi, setLokasi] = useState("");
 
   useEffect(() => {
     getInventory();
@@ -56,12 +57,13 @@ const Inventory = () => {
       const token = localStorage.getItem("token");
       const response = await axios
         .post(
-          "${API_URL}/api/v1/rfid/inventory",
+          `${API_URL}/api/v1/rfid/inventory`,
           {
             kode: kode,
             name: name,
             amount: amount,
             status: status,
+            alamat: lokasi,
           },
           {
             headers: {
@@ -188,7 +190,7 @@ const Inventory = () => {
                         placeholder="Jumlah..."
                       />
                     </div>
-                    <div className="mb-2">
+                    <div className="mb-4">
                       <select
                         value={status}
                         onChange={(e) => setStatus(e.target.value)}
@@ -200,7 +202,15 @@ const Inventory = () => {
                         <option value="emergency">Emergency</option>
                       </select>
                     </div>
-
+                    <div className="mb-4">
+                      <input
+                        type="text"
+                        value={lokasi}
+                        onChange={(e) => setLokasi(e.target.value)}
+                        className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+                        placeholder="Lokasi..."
+                      />
+                    </div>
                     {/*footer*/}
                     <div className="flex justify-center pt-10">
                       <button

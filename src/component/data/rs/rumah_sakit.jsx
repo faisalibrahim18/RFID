@@ -95,44 +95,47 @@ const rumah_sakit = ({ loading, searchRs, rumah_sakit }) => {
   };
 
   const deleteHospital = async (hospitalId) => {
-    const isConfirm = await Swal.fire({
-      title: "Are youtd_clas sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      return result.isConfirmed;
-    });
+    try {
+      const token = localStorage.getItem("token");
 
-    if (!isConfirm) {
-      return;
-    }
-    const API_URL = import.meta.env.VITE_API_KEY;
-    const token = localStorage.getItem("token");
-    await axios
-      .delete(`${API_URL}/api/v1/rfid/hospital/${hospitalId}`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then(({ data }) => {
-        Swal.fire({
-          icon: "success",
-          text: data.message,
-        });
-        window.location.reload();
-      })
-      .catch(({ response: { data } }) => {
-        Swal.fire({
-          text: data.message,
-          icon: "error",
-        });
-        window.location.reload();
+      const result = await Swal.fire({
+        title: "Konfirmasi Delete",
+        text: "Apakah Anda yakin ingin menghapus Rumah Sakit ini?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Delete",
+        cancelButtonText: "Cancel",
       });
+
+      if (result.isConfirmed) {
+        const API_URL = import.meta.env.VITE_API_KEY;
+        const response = await axios.delete(
+          `${API_URL}/api/v1/rfid/hospital/${hospitalId}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        // console.log(response.data);
+
+        Swal.fire("Deleted!", "Rumah Sakit berhasil dihapus.", "success");
+        window.location.reload();
+      } else {
+        Swal.fire("Cancelled", "Data Anda telah disimpan.", "info");
+        // window.location.reload();
+      }
+    } catch (error) {
+      console.log(error);
+      Swal.fire(
+        "Error!",
+        "Terjadi kesalahan saat menghapus Rumah Sakit.",
+        "error"
+      );
+      // window.location.reload();
+    }
   };
   return (
     <>
@@ -188,7 +191,7 @@ const rumah_sakit = ({ loading, searchRs, rumah_sakit }) => {
                 >
                   <i className="fa-solid fa-pen-to-square text-[#96CDF4] hover:text-blue-400"></i>
                 </button>
-                
+
                 <Link onClick={() => deleteHospital(item._id)}>
                   <i className="fa-solid fa-trash-can text-[#FF1818] hover:text-red-400"></i>
                 </Link>

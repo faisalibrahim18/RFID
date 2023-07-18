@@ -11,6 +11,7 @@ const Inventory = ({ loading, searchResults }) => {
   const [name, setName] = useState("");
   const [amount, setAmount] = useState("");
   const [status, setStatus] = useState("");
+  const [lokasi, setLokasi] = useState("");
   const [message, setMsg] = useState("");
   const [inventory1, setInventory] = useState([]);
   const { id } = useParams();
@@ -31,11 +32,12 @@ const Inventory = ({ loading, searchResults }) => {
           },
         }
       );
-      console.log(response);
+      // console.log(response);
       setInventory([response.data.data]);
       setName(response.data.data.name);
       setAmount(response.data.data.amount);
       setStatus(response.data.data.status);
+      setLokasi(response.data.data.alamat);
     } catch (error) {
       if (error.response) {
         setMsg(error.response.data.msg);
@@ -47,13 +49,14 @@ const Inventory = ({ loading, searchResults }) => {
     try {
       const API_URL = import.meta.env.VITE_API_KEY;
       const token = localStorage.getItem("token");
-      await axios
+      const response = await axios
         .put(
           `${API_URL}/api/v1/rfid/inventory/${id}`,
           {
             name: name,
             amount: amount,
             status: status,
+            alamat: lokasi,
           },
           {
             headers: {
@@ -62,6 +65,7 @@ const Inventory = ({ loading, searchResults }) => {
             },
           }
         )
+        // console.log(response)
         .then(({ data }) => {
           Swal.fire({
             icon: "success",
@@ -82,44 +86,47 @@ const Inventory = ({ loading, searchResults }) => {
     }
   };
   const deleteInventory = async (InventoryId) => {
-    const isConfirm = await Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      return result.isConfirmed;
-    });
+    try {
+      const token = localStorage.getItem("token");
 
-    if (!isConfirm) {
-      return;
-    }
-    const API_URL = import.meta.env.VITE_API_KEY;
-    const token = localStorage.getItem("token");
-    await axios
-      .delete(`${API_URL}/api/v1/rfid/inventory/${InventoryId}`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then(({ data }) => {
-        Swal.fire({
-          icon: "success",
-          text: data.message,
-        });
-        window.location.reload();
-      })
-      .catch(({ response: { data } }) => {
-        Swal.fire({
-          text: data.message,
-          icon: "error",
-        });
-        window.location.reload();
+      const result = await Swal.fire({
+        title: "Konfirmasi Delete",
+        text: "Apakah Anda yakin ingin menghapus Inventory ini?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Delete",
+        cancelButtonText: "Cancel",
       });
+
+      if (result.isConfirmed) {
+        const API_URL = import.meta.env.VITE_API_KEY;
+        const response = await axios.delete(
+          `${API_URL}/api/v1/rfid/inventory/${InventoryId}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        // console.log(response.data);
+
+        Swal.fire("Deleted!", "Inventory berhasil dihapus.", "success");
+        window.location.reload();
+      } else {
+        Swal.fire("Cancelled", "Data Anda telah disimpan.", "info");
+        // window.location.reload();
+      }
+    } catch (error) {
+      console.log(error);
+      Swal.fire(
+        "Error!",
+        "Terjadi kesalahan saat menghapus Inventory.",
+        "error"
+      );
+      // window.location.reload();
+    }
   };
   return (
     <>
@@ -140,6 +147,9 @@ const Inventory = ({ loading, searchResults }) => {
               status
             </th>
             <th scope="col" className="px-6 py-4">
+              Lokasi
+            </th>
+            <th scope="col" className="px-6 py-4">
               Action
             </th>
           </tr>
@@ -152,6 +162,7 @@ const Inventory = ({ loading, searchResults }) => {
               <td className="whitespace-nowrap px-6 py-4">{item.name}</td>
               <td className="whitespace-nowrap px-6 py-4">{item.amount}</td>
               <td className="whitespace-nowrap px-6 py-4">{item.status}</td>
+              <td className="whitespace-nowrap px-6 py-4">{item.alamat}</td>
               <td className="whitespace-nowrap px-6 py-4">
                 <button
                   onClick={() => handleShowEditInventory(item._id)}
@@ -211,7 +222,7 @@ const Inventory = ({ loading, searchResults }) => {
                           placeholder="Jumlah..."
                         />
                       </div>
-                      <div className="mb-2">
+                      <div className="mb-4">
                         <select
                           value={status}
                           onChange={(e) => setStatus(e.target.value)}
@@ -223,7 +234,15 @@ const Inventory = ({ loading, searchResults }) => {
                           <option value="emergency">Emergency</option>
                         </select>
                       </div>
-
+                      <div className="mb-4">
+                        <input
+                          type="text"
+                          value={lokasi}
+                          onChange={(e) => setLokasi(e.target.value)}
+                          className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+                          placeholder="Lokasi..."
+                        />
+                      </div>
                       {/*footer*/}
                       <div className="flex justify-center pt-10">
                         <button

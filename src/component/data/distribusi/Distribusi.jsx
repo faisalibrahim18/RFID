@@ -27,11 +27,6 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
   const navigate = useNavigate();
   const [users, setUser] = useState([]);
   const [privilege, setPrivilege] = useState({
-    InventoryManagement: true,
-    RoleManagement: true,
-    UserManagement: true,
-    LinenManagement: true,
-    DistribusiManagement: true,
     InvoicePage: true,
     UserPage: true,
     RolePage: true,
@@ -42,6 +37,15 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
     InventoryPage: true,
     ReportPage: true,
     TrackingPage: true,
+    Checking: true,
+    Transit: true,
+    Accept: true,
+    Wash: true,
+    Dry: true,
+    Delivery: true,
+    Done: true,
+    LogPage: true,
+    Confirm: true,
   });
   //get data access proses
   useEffect(() => {
@@ -50,9 +54,10 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
 
   const getUsers = async () => {
     try {
+      const API_URL = import.meta.env.VITE_API_KEY;
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        "http://localhost:9000/api/v1/rfid/getUserSignedIn",
+        `${API_URL}/api/v1/rfid/getUserSignedIn`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -72,21 +77,25 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
       // Memperbarui state privilege dengan hasil allowValues
       setPrivilege((prevPrivilege) => ({
         ...prevPrivilege,
-        InventoryManagement: allowValues[0],
-        RoleManagement: allowValues[1],
-        UserManagement: allowValues[2],
-        LinenManagement: allowValues[3],
-        DistribusiManagement: allowValues[4],
-        InvoicePage: allowValues[5],
-        UserPage: allowValues[6],
-        RolePage: allowValues[7],
-        HospitalPage: allowValues[8],
-        LinenPage: allowValues[9],
-        DistribusiPage: allowValues[10],
-        CategoryPage: allowValues[11],
-        InventoryPage: allowValues[12],
-        ReportPage: allowValues[13],
-        TrackingPage: allowValues[14],
+        InvoicePage: allowValues[0],
+        UserPage: allowValues[1],
+        RolePage: allowValues[2],
+        HospitalPage: allowValues[3],
+        LinenPage: allowValues[4],
+        DistribusiPage: allowValues[5],
+        CategoryPage: allowValues[6],
+        InventoryPage: allowValues[7],
+        ReportPage: allowValues[8],
+        TrackingPage: allowValues[9],
+        Checking: allowValues[10],
+        Transit: allowValues[11],
+        Accept: allowValues[12],
+        Wash: allowValues[13],
+        Dry: allowValues[14],
+        Delivery: allowValues[15],
+        Done: allowValues[16],
+        LogPage: allowValues[17],
+        Confirm: allowValues[18],
       }));
 
       // Mengecek izin akses dan mengambil tindakan yang sesuai
@@ -132,45 +141,47 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
 
   // console.log(searchResults);
   const deleteDistribusi = async (distribusiId) => {
-    const isConfirm = await Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      return result.isConfirmed;
-    });
+    try {
+      const token = localStorage.getItem("token");
 
-    if (!isConfirm) {
-      return;
-    }
-    const API_URL = import.meta.env.VITE_API_KEY;
-    const token = localStorage.getItem("token");
-    const response = await axios
-      .delete(`${API_URL}/api/v1/rfid/distribusi/${distribusiId}`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
-
-      .then(({ data }) => {
-        Swal.fire({
-          icon: "success",
-          text: data.message,
-        });
-        window.location.reload();
-      })
-      .catch(({ response: { data } }) => {
-        Swal.fire({
-          text: data.message,
-          icon: "error",
-        });
-        window.location.reload();
+      const result = await Swal.fire({
+        title: "Konfirmasi Delete",
+        text: "Apakah Anda yakin ingin menghapus Distribusi ini?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Delete",
+        cancelButtonText: "Cancel",
       });
+
+      if (result.isConfirmed) {
+        const API_URL = import.meta.env.VITE_API_KEY;
+        const response = await axios.delete(
+          `${API_URL}/api/v1/rfid/distribusi/${distribusiId}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        // console.log(response.data);
+
+        Swal.fire("Deleted!", "Distribusi berhasil dihapus.", "success");
+        window.location.reload();
+      } else {
+        Swal.fire("Cancelled", "Data Anda telah disimpan.", "info");
+        // window.location.reload();
+      }
+    } catch (error) {
+      console.log(error);
+      Swal.fire(
+        "Error!",
+        "Terjadi kesalahan saat menghapus Distribusi.",
+        "error"
+      );
+      // window.location.reload();
+    }
   };
 
   //cetakserah terima
@@ -321,15 +332,15 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
       console.log(error);
       if (error.response) {
         Swal.fire({
-          text: error.response.data.message,
+          text: error.response.data.msg,
           icon: "error",
         });
-        // console.log(error.response.data.message);
+        // console.log(error.response.data.msg);
         // setMsg(error.response.data.msg);
       } else {
-        // console.log(error.response.message);
+        // console.log(error.response.msg);
         Swal.fire({
-          text: error.data.message,
+          text: error.data.msg,
           icon: "error",
         });
       }
@@ -472,15 +483,15 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
       console.log(error);
       if (error.response) {
         Swal.fire({
-          text: error.response.data.message,
+          text: error.response.data.msg,
           icon: "error",
         });
-        // console.log(error.response.data.message);
+        // console.log(error.response.data.msg);
         // setMsg(error.response.data.msg);
       } else {
-        // console.log(error.response.message);
+        // console.log(error.response.msg);
         Swal.fire({
-          text: error.data.message,
+          text: error.data.msg,
           icon: "error",
         });
       }
@@ -855,7 +866,7 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
               <td className="whitespace-nowrap px-6 py-4">
                 {" "}
                 {/* confrim */}
-                {privilege.UserPage ? (
+                {privilege.Confirm ? (
                   <div>
                     {item.status === null ? (
                       <button
@@ -881,7 +892,7 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
                 )}
                 {/* close confrim  */}
                 {/* checkIn */}
-                {privilege.UserPage ? (
+                {privilege.Checking ? (
                   <div>
                     {item?.status?.status === "processing" ? (
                       <button
@@ -907,7 +918,7 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
                 )}
                 {/* close checkIn */}
                 {/* transit */}
-                {privilege.UserPage ? (
+                {privilege.Transit ? (
                   <div>
                     {item?.status?.status === "checking" ? (
                       <button
@@ -933,7 +944,7 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
                 )}
                 {/* close Transit */}
                 {/* Acc */}
-                {privilege.UserPage ? (
+                {privilege.Accept ? (
                   <div>
                     {item?.status?.status === "transit to laundry" ? (
                       <button
@@ -959,7 +970,7 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
                 )}
                 {/* close Acc */}
                 {/* Wash */}
-                {privilege.UserPage ? (
+                {privilege.Wash ? (
                   <div>
                     {item?.status?.status === "accepted" ? (
                       <button
@@ -985,7 +996,7 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
                 )}
                 {/* close wash */}
                 {/* dry */}
-                {privilege.UserPage ? (
+                {privilege.Dry ? (
                   <div>
                     {item?.status?.status === "wash" ? (
                       <button
@@ -1011,7 +1022,7 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
                 )}
                 {/* close dry */}
                 {/* delivery */}
-                {privilege.UserPage ? (
+                {privilege.Delivery ? (
                   <div>
                     {item?.status?.status === "drying" ? (
                       <button
@@ -1037,7 +1048,7 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
                 )}
                 {/* close delivery */}
                 {/* done */}
-                {privilege.UserPage ? (
+                {privilege.Done ? (
                   <div>
                     {item?.status?.status === "transit to hospital" ? (
                       <button
@@ -1195,6 +1206,19 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
                 <td className="pl-10">date</td>
                 <td>:</td>
                 <td>{item.status.checking.date}</td>
+              </tr>
+            ) : (
+              ""
+            )}
+            {item?.status?.status === "checking" ? (
+              <tr
+                className={`border-b text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
+                <td className="pl-10">Notif</td>
+                <td>:</td>
+                <td>{item.status.checking?.notif}</td>
               </tr>
             ) : (
               ""
@@ -1371,14 +1395,32 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
                   collapsedIds.includes(item._id) ? "" : "hidden"
                 }`}
               >
-                <td></td>
-                <td></td>
-                <td></td>
+                <td className="pl-10">Notif</td>
+                <td>:</td>
+                <td>{item.status.checking?.notif}</td>
 
                 <td></td>
                 <td className="pl-10">date</td>
                 <td>:</td>
                 <td>{item.status.transit.date}</td>
+              </tr>
+            ) : (
+              ""
+            )}
+            {item?.status?.status === "transit to laundry" ? (
+              <tr
+                className={`border-b text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
+                <td></td>
+                <td></td>
+                <td></td>
+
+                <td></td>
+                <td className="pl-10">Notif</td>
+                <td>:</td>
+                <td>{item.status.transit?.notif}</td>
               </tr>
             ) : (
               ""
@@ -1538,14 +1580,33 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
                   collapsedIds.includes(item._id) ? "" : "hidden"
                 }`}
               >
-                <td></td>
-                <td></td>
-                <td></td>
+                <td className="pl-10">Notif</td>
+                <td>:</td>
+                <td>{item.status.checking?.notif}</td>
 
                 <td></td>
                 <td className="pl-10">note</td>
                 <td>:</td>
                 <td>{item.status.transit.note}</td>
+              </tr>
+            ) : (
+              ""
+            )}
+
+            {item?.status?.status === "accepted" ? (
+              <tr
+                className={`border-b text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
+                <td></td>
+                <td></td>
+                <td></td>
+
+                <td></td>
+                <td className="pl-10">date</td>
+                <td>:</td>
+                <td>{item.status.transit.date}</td>
               </tr>
             ) : (
               ""
@@ -1561,9 +1622,9 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
                 <td></td>
 
                 <td></td>
-                <td className="pl-10">date</td>
+                <td className="pl-10">Notif</td>
                 <td>:</td>
-                <td>{item.status.transit.date}</td>
+                <td>{item.status.transit?.notif}</td>
               </tr>
             ) : (
               ""
@@ -1669,6 +1730,19 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
                 <td className="pl-10">date</td>
                 <td>:</td>
                 <td>{item.status.accepted.date}</td>
+              </tr>
+            ) : (
+              ""
+            )}
+            {item?.status?.status === "accepted" ? (
+              <tr
+                className={`border-b text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
+                <td className="pl-10">Notif</td>
+                <td>:</td>
+                <td>{item.status.accepted?.notif}</td>
               </tr>
             ) : (
               ""
@@ -1828,10 +1902,9 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
                   collapsedIds.includes(item._id) ? "" : "hidden"
                 }`}
               >
-                <td></td>
-                <td></td>
-                <td></td>
-
+                <td className="pl-10">Notif</td>
+                <td>:</td>
+                <td>{item.status.checking?.notif}</td>
                 <td></td>
                 <td className="pl-10">note</td>
                 <td>:</td>
@@ -1854,6 +1927,24 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
                 <td className="pl-10">date</td>
                 <td>:</td>
                 <td>{item.status.transit.date}</td>
+              </tr>
+            ) : (
+              ""
+            )}
+            {item?.status?.status === "drying" ? (
+              <tr
+                className={`border-b text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
+                <td></td>
+                <td></td>
+                <td></td>
+
+                <td></td>
+                <td className="pl-10">Notif</td>
+                <td>:</td>
+                <td>{item.status.transit?.notif}</td>
               </tr>
             ) : (
               ""
@@ -2003,6 +2094,24 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
             ) : (
               ""
             )}
+            {item?.status?.status === "drying" ? (
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
+                <td className="pl-10">Notif</td>
+                <td>:</td>
+                <td>{item.status.accepted?.notif}</td>
+
+                <td></td>
+                <td className="pl-10">Notif</td>
+                <td>:</td>
+                <td>{item.status.wash?.notif}</td>
+              </tr>
+            ) : (
+              ""
+            )}
 
             {/* drying */}
             {item?.status?.status === "drying" ? (
@@ -2105,6 +2214,19 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
                 <td className="pl-10">date</td>
                 <td>:</td>
                 <td>{item.status.dry.date}</td>
+              </tr>
+            ) : (
+              ""
+            )}
+            {item?.status?.status === "drying" ? (
+              <tr
+                className={`border-b text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
+                <td className="pl-10">Notif</td>
+                <td>:</td>
+                <td>{item.status.dry?.notif}</td>
               </tr>
             ) : (
               ""
@@ -2263,9 +2385,9 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
                   collapsedIds.includes(item._id) ? "" : "hidden"
                 }`}
               >
-                <td></td>
-                <td></td>
-                <td></td>
+                <td className="pl-10">Notif</td>
+                <td>:</td>
+                <td>{item.status.checking?.notif}</td>
 
                 <td></td>
                 <td className="pl-10">note</td>
@@ -2289,6 +2411,24 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
                 <td className="pl-10">date</td>
                 <td>:</td>
                 <td>{item.status.transit.date}</td>
+              </tr>
+            ) : (
+              ""
+            )}
+            {item?.status?.status === "wash" ? (
+              <tr
+                className={`border-b text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
+                <td></td>
+                <td></td>
+                <td></td>
+
+                <td></td>
+                <td className="pl-10">Notif</td>
+                <td>:</td>
+                <td>{item.status.transit?.notif}</td>
               </tr>
             ) : (
               ""
@@ -2434,6 +2574,24 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
                 <td className="pl-10">date</td>
                 <td>:</td>
                 <td>{item.status.wash.date}</td>
+              </tr>
+            ) : (
+              ""
+            )}
+            {item?.status?.status === "wash" ? (
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
+                <td className="pl-10">notif</td>
+                <td>:</td>
+                <td>{item.status.accepted?.notif}</td>
+
+                <td></td>
+                <td className="pl-10">notif</td>
+                <td>:</td>
+                <td>{item.status.wash?.notif}</td>
               </tr>
             ) : (
               ""
@@ -2593,9 +2751,9 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
                   collapsedIds.includes(item._id) ? "" : "hidden"
                 }`}
               >
-                <td></td>
-                <td></td>
-                <td></td>
+                <td className="pl-10">Notif</td>
+                <td>:</td>
+                <td>{item.status.checking?.notif}</td>
 
                 <td></td>
                 <td className="pl-10">note</td>
@@ -2619,6 +2777,24 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
                 <td className="pl-10">date</td>
                 <td>:</td>
                 <td>{item.status.transit.date}</td>
+              </tr>
+            ) : (
+              ""
+            )}
+            {item?.status?.status === "transit to hospital" ? (
+              <tr
+                className={`border-b text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
+                <td></td>
+                <td></td>
+                <td></td>
+
+                <td></td>
+                <td className="pl-10">Notif</td>
+                <td>:</td>
+                <td>{item.status.transit?.notif}</td>
               </tr>
             ) : (
               ""
@@ -2764,6 +2940,24 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
                 <td className="pl-10">date</td>
                 <td>:</td>
                 <td>{item.status.wash.date}</td>
+              </tr>
+            ) : (
+              ""
+            )}
+            {item?.status?.status === "transit to hospital" ? (
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
+                <td className="pl-10">Notif</td>
+                <td>:</td>
+                <td>{item.status.accepted?.notif}</td>
+
+                <td></td>
+                <td className="pl-10">Notif</td>
+                <td>:</td>
+                <td>{item.status.wash?.notif}</td>
               </tr>
             ) : (
               ""
@@ -2920,9 +3114,9 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
                   collapsedIds.includes(item._id) ? "" : "hidden"
                 }`}
               >
-                <td></td>
-                <td></td>
-                <td></td>
+                <td className="pl-10">Notif</td>
+                <td>:</td>
+                <td>{item.status.returned?.notif}</td>
 
                 <td></td>
                 <td className="pl-10">note</td>
@@ -2946,6 +3140,24 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
                 <td className="pl-10">date</td>
                 <td>:</td>
                 <td>{item.status.returned.date}</td>
+              </tr>
+            ) : (
+              ""
+            )}
+            {item?.status?.status === "transit to hospital" ? (
+              <tr
+                className={`border-b text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
+                <td></td>
+                <td></td>
+                <td></td>
+
+                <td></td>
+                <td className="pl-10">Notif</td>
+                <td>:</td>
+                <td>{item.status.returned?.notif}</td>
               </tr>
             ) : (
               ""
@@ -3104,9 +3316,9 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
                   collapsedIds.includes(item._id) ? "" : "hidden"
                 }`}
               >
-                <td></td>
-                <td></td>
-                <td></td>
+                <td className="pl-10">Notif</td>
+                <td>:</td>
+                <td>{item.status.checking?.notif}</td>
 
                 <td></td>
                 <td className="pl-10">note</td>
@@ -3130,6 +3342,24 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
                 <td className="pl-10">date</td>
                 <td>:</td>
                 <td>{item.status.transit.date}</td>
+              </tr>
+            ) : (
+              ""
+            )}
+            {item?.status?.status === "success" ? (
+              <tr
+                className={`border-b text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
+                <td></td>
+                <td></td>
+                <td></td>
+
+                <td></td>
+                <td className="pl-10">Notif</td>
+                <td>:</td>
+                <td>{item.status.transit?.notif}</td>
               </tr>
             ) : (
               ""
@@ -3275,6 +3505,24 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
                 <td className="pl-10">date</td>
                 <td>:</td>
                 <td>{item.status.wash.date}</td>
+              </tr>
+            ) : (
+              ""
+            )}
+            {item?.status?.status === "success" ? (
+              <tr
+                className={` text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
+                <td className="pl-10">Notif</td>
+                <td>:</td>
+                <td>{item.status.accepted?.notif}</td>
+
+                <td></td>
+                <td className="pl-10">Notif</td>
+                <td>:</td>
+                <td>{item.status.wash?.notif}</td>
               </tr>
             ) : (
               ""
@@ -3431,12 +3679,12 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
                   collapsedIds.includes(item._id) ? "" : "hidden"
                 }`}
               >
-                <td></td>
-                <td></td>
-                <td></td>
+                <td className="pl-10">Notif</td>
+                <td>:</td>
+                <td>{item.status.dry?.notif}</td>
 
                 <td></td>
-                <td className="pl-10">note</td>
+                <td className="pl-10">Note</td>
                 <td>:</td>
                 <td>{item.status.returned.note}</td>
               </tr>
@@ -3457,6 +3705,24 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
                 <td className="pl-10">date</td>
                 <td>:</td>
                 <td>{item.status.returned.date}</td>
+              </tr>
+            ) : (
+              ""
+            )}
+            {item?.status?.status === "success" ? (
+              <tr
+                className={`border-b text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
+                <td></td>
+                <td></td>
+                <td></td>
+
+                <td></td>
+                <td className="pl-10">notif</td>
+                <td>:</td>
+                <td>{item.status.returned?.notif}</td>
               </tr>
             ) : (
               ""
@@ -3567,6 +3833,19 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
             ) : (
               ""
             )}
+            {item?.status?.status === "success" ? (
+              <tr
+                className={`border-b text-gray-600   ${
+                  collapsedIds.includes(item._id) ? "" : "hidden"
+                }`}
+              >
+                <td className="pl-10">Notif</td>
+                <td>:</td>
+                <td>{item.status.done?.notif}</td>
+              </tr>
+            ) : (
+              ""
+            )}
           </tbody>
         ))}
       </table>
@@ -3635,13 +3914,18 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
                         />
                       </div> */}
                       <div className="mb-2">
-                        <input
-                          type="text"
-                          value={heavy}
-                          onChange={(e) => setHeavy(e.target.value)}
-                          className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
-                          placeholder="Heavy"
-                        />
+                        <div className="flex ">
+                          <input
+                            type="text"
+                            value={heavy}
+                            onChange={(e) => setHeavy(e.target.value)}
+                            className="rounded-l-lg block w-full px-4 py-2 mt-2 text-black bg-white border  focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+                            placeholder="heavy"
+                          />
+                          <span className="inline-flex items-center px-4 py-2 mt-2 text-sm text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-r-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
+                            Kg
+                          </span>
+                        </div>
                       </div>
                       <div className="mb-2">
                         <textarea
@@ -3776,13 +4060,18 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
                         />
                       </div>
                       <div className="mb-2">
-                        <input
-                          type="text"
-                          value={heavy}
-                          onChange={(e) => setHeavy(e.target.value)}
-                          className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
-                          placeholder="Heavy"
-                        />
+                        <div className="flex ">
+                          <input
+                            type="text"
+                            value={heavy}
+                            onChange={(e) => setHeavy(e.target.value)}
+                            className="rounded-l-lg block w-full px-4 py-2 mt-2 text-black bg-white border  focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+                            placeholder="heavy"
+                          />
+                          <span className="inline-flex items-center px-4 py-2 mt-2 text-sm text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-r-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
+                            Kg
+                          </span>
+                        </div>
                       </div>
                       <div className="mb-2">
                         <textarea
@@ -3867,13 +4156,18 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
                       </div>
 
                       <div className="mb-2">
-                        <input
-                          type="text"
-                          value={heavy}
-                          onChange={(e) => setHeavy(e.target.value)}
-                          className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
-                          placeholder="Heavy"
-                        />
+                        <div className="flex ">
+                          <input
+                            type="text"
+                            value={heavy}
+                            onChange={(e) => setHeavy(e.target.value)}
+                            className="rounded-l-lg block w-full px-4 py-2 mt-2 text-black bg-white border  focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+                            placeholder="heavy"
+                          />
+                          <span className="inline-flex items-center px-4 py-2 mt-2 text-sm text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-r-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
+                            Kg
+                          </span>
+                        </div>
                       </div>
                       <div className="mb-2">
                         <textarea
@@ -3890,7 +4184,6 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
                           type="file"
                           onChange={handleFileChange}
                           className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
-                          placeholder="Heavy"
                         />
                       </div>
                       {/*footer*/}
@@ -3965,13 +4258,18 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
                       </div>
 
                       <div className="mb-2">
-                        <input
-                          type="text"
-                          value={heavy}
-                          onChange={(e) => setHeavy(e.target.value)}
-                          className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
-                          placeholder="Heavy"
-                        />
+                        <div className="flex ">
+                          <input
+                            type="text"
+                            value={heavy}
+                            onChange={(e) => setHeavy(e.target.value)}
+                            className="rounded-l-lg block w-full px-4 py-2 mt-2 text-black bg-white border  focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+                            placeholder="heavy"
+                          />
+                          <span className="inline-flex items-center px-4 py-2 mt-2 text-sm text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-r-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
+                            Kg
+                          </span>
+                        </div>
                       </div>
                       <div className="mb-2">
                         <textarea
@@ -4062,13 +4360,18 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
                       </div>
 
                       <div className="mb-2">
-                        <input
-                          type="text"
-                          value={heavy}
-                          onChange={(e) => setHeavy(e.target.value)}
-                          className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
-                          placeholder="Heavy"
-                        />
+                        <div className="flex ">
+                          <input
+                            type="text"
+                            value={heavy}
+                            onChange={(e) => setHeavy(e.target.value)}
+                            className="rounded-l-lg block w-full px-4 py-2 mt-2 text-black bg-white border  focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+                            placeholder="heavy"
+                          />
+                          <span className="inline-flex items-center px-4 py-2 mt-2 text-sm text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-r-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
+                            Kg
+                          </span>
+                        </div>
                       </div>
                       <div className="mb-2">
                         <textarea
@@ -4203,13 +4506,18 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
                         />
                       </div>
                       <div className="mb-2">
-                        <input
-                          type="text"
-                          value={heavy}
-                          onChange={(e) => setHeavy(e.target.value)}
-                          className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
-                          placeholder="Heavy"
-                        />
+                        <div className="flex ">
+                          <input
+                            type="text"
+                            value={heavy}
+                            onChange={(e) => setHeavy(e.target.value)}
+                            className="rounded-l-lg block w-full px-4 py-2 mt-2 text-black bg-white border  focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+                            placeholder="heavy"
+                          />
+                          <span className="inline-flex items-center px-4 py-2 mt-2 text-sm text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-r-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
+                            Kg
+                          </span>
+                        </div>
                       </div>
                       <div className="mb-2">
                         <textarea
@@ -4294,13 +4602,18 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
                       </div>
 
                       <div className="mb-2">
-                        <input
-                          type="text"
-                          value={heavy}
-                          onChange={(e) => setHeavy(e.target.value)}
-                          className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
-                          placeholder="Heavy"
-                        />
+                        <div className="flex ">
+                          <input
+                            type="text"
+                            value={heavy}
+                            onChange={(e) => setHeavy(e.target.value)}
+                            className="rounded-l-lg block w-full px-4 py-2 mt-2 text-black bg-white border  focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
+                            placeholder="heavy"
+                          />
+                          <span className="inline-flex items-center px-4 py-2 mt-2 text-sm text-gray-900 bg-gray-200 border border-r-0 border-gray-300 rounded-r-md dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
+                            Kg
+                          </span>
+                        </div>
                       </div>
                       <div className="mb-2">
                         <textarea

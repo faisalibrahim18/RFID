@@ -23,11 +23,6 @@ import Swal from "sweetalert2";
 const Layout = ({ children }) => {
   const [users, setUser] = useState([]);
   const [privilege, setPrivilege] = useState({
-    InventoryManagement: true,
-    RoleManagement: true,
-    UserManagement: true,
-    LinenManagement: true,
-    DistribusiManagement: true,
     InvoicePage: true,
     UserPage: true,
     RolePage: true,
@@ -38,6 +33,15 @@ const Layout = ({ children }) => {
     InventoryPage: true,
     ReportPage: true,
     TrackingPage: true,
+    Checking: true,
+    Transit: true,
+    Accept: true,
+    Wash: true,
+    Dry: true,
+    Delivery: true,
+    Done: true,
+    LogPage: true,
+    Confirm: true,
   });
 
   useEffect(() => {
@@ -67,9 +71,10 @@ const Layout = ({ children }) => {
 
   const getUsers = async () => {
     try {
+      const API_URL = import.meta.env.VITE_API_KEY;
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        "http://localhost:9000/api/v1/rfid/getUserSignedIn",
+        `${API_URL}/api/v1/rfid/getUserSignedIn`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -89,21 +94,25 @@ const Layout = ({ children }) => {
       // Memperbarui state privilege dengan hasil allowValues
       setPrivilege((prevPrivilege) => ({
         ...prevPrivilege,
-        InventoryManagement: allowValues[0],
-        RoleManagement: allowValues[1],
-        UserManagement: allowValues[2],
-        LinenManagement: allowValues[3],
-        DistribusiManagement: allowValues[4],
-        InvoicePage: allowValues[5],
-        UserPage: allowValues[6],
-        RolePage: allowValues[7],
-        HospitalPage: allowValues[8],
-        LinenPage: allowValues[9],
-        DistribusiPage: allowValues[10],
-        CategoryPage: allowValues[11],
-        InventoryPage: allowValues[12],
-        ReportPage: allowValues[13],
-        TrackingPage: allowValues[14],
+        InvoicePage: allowValues[0],
+        UserPage: allowValues[1],
+        RolePage: allowValues[2],
+        HospitalPage: allowValues[3],
+        LinenPage: allowValues[4],
+        DistribusiPage: allowValues[5],
+        CategoryPage: allowValues[6],
+        InventoryPage: allowValues[7],
+        ReportPage: allowValues[8],
+        TrackingPage: allowValues[9],
+        Checking: allowValues[10],
+        Transit: allowValues[11],
+        Accept: allowValues[12],
+        Wash: allowValues[13],
+        Dry: allowValues[14],
+        Delivery: allowValues[15],
+        Done: allowValues[16],
+        LogPage: allowValues[17],
+        Confirm: allowValues[18],
       }));
 
       // Mengecek izin akses dan mengambil tindakan yang sesuai
@@ -134,18 +143,23 @@ const Layout = ({ children }) => {
       console.log("Error:", error.response); // Memperbaiki penanganan kesalahan
     }
   };
+  // useEffect(() => {
+    
+  //   getPrivilege()
+
+  // }, [])
+  
+
   const getPrivilege = async () => {
     try {
+      const API_URL = import.meta.env.VITE_API_KEY;
       const token = localStorage.getItem("token");
-      const response = await axios.get(
-        "http://localhost:9000/api/v1/rfid/privilege",
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.get(`${API_URL}/api/v1/rfid/privilege`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       console.log(response.data.data);
     } catch (error) {
       console.log(error);
@@ -214,27 +228,27 @@ const Layout = ({ children }) => {
                       </h2>
                     </NavLink>
                   )}
-                  {/* {privilege.UserPage && ( */}
-                  <NavLink
-                    activeClassName="active"
-                    to={"/audit"}
-                    className={`group flex items-center text-center text-sm gap-3.5 font-medium p-4 hover:bg-[#dee7de] rounded-md ${
-                      privilege.allowed ? "allowed" : "not-allowed"
-                    }`}
-                  >
-                    <div className="text-lg">
-                      <i className="fa-solid fa-user-secret"></i>
-                    </div>
-                    <h2>Audit Log</h2>
-                    <h2
-                      className={`${
-                        open && " md:hidden "
-                      } absolute  left-44 md:hidden bg-white font-semibold whitespace-pre text-[#00205F] rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit`}
+                  {privilege.LogPage && (
+                    <NavLink
+                      activeClassName="active"
+                      to={"/audit"}
+                      className={`group flex items-center text-center text-sm gap-3.5 font-medium p-4 hover:bg-[#dee7de] rounded-md ${
+                        privilege.allowed ? "allowed" : "not-allowed"
+                      }`}
                     >
-                      Audit Log
-                    </h2>
-                  </NavLink>
-                  {/* )} */}
+                      <div className="text-lg">
+                        <i className="fa-solid fa-user-secret"></i>
+                      </div>
+                      <h2>Audit Log</h2>
+                      <h2
+                        className={`${
+                          open && " md:hidden "
+                        } absolute  left-44 md:hidden bg-white font-semibold whitespace-pre text-[#00205F] rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit`}
+                      >
+                        Audit Log
+                      </h2>
+                    </NavLink>
+                  )}
 
                   {privilege.RolePage && (
                     <NavLink

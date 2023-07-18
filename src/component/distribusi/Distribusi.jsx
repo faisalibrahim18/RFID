@@ -50,7 +50,7 @@ const Distribusi = () => {
         Authorization: `Bearer ${token}`,
       },
     });
-    // console.log(response.data.data);
+    console.log(response.data.data);
     setDistribusi(response.data.data);
     setSearchResults(response.data.data);
     setLoading(false);

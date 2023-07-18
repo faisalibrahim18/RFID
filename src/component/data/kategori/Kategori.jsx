@@ -21,9 +21,10 @@ const Kategori = ({ category, loading, searchResults }) => {
   const handleShowEditKategori = async (id) => {
     setShowEdit(id, true);
     try {
+      const API_URL = import.meta.env.VITE_API_KEY;
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        `http://localhost:9000/api/v1/rfid/category/${id}`,
+        `${API_URL}/api/v1/rfid/category/${id}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -82,45 +83,47 @@ const Kategori = ({ category, loading, searchResults }) => {
     }
   };
   const deleteCategory = async (CategoryId) => {
-    const isConfirm = await Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      return result.isConfirmed;
-    });
+    try {
+      const token = localStorage.getItem("token");
 
-    if (!isConfirm) {
-      return;
-    }
-    const API_URL = import.meta.env.VITE_API_KEY;
-    const token = localStorage.getItem("token");
-    await axios
-      .delete(`${API_URL}/api/v1/rfid/category/${CategoryId}`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
-
-      .then(({ data }) => {
-        Swal.fire({
-          icon: "success",
-          text: data.message,
-        });
-        window.location.reload();
-      })
-      .catch(({ response: { data } }) => {
-        Swal.fire({
-          text: data.msg,
-          icon: "error",
-        });
-        window.location.reload();
+      const result = await Swal.fire({
+        title: "Konfirmasi Delete",
+        text: "Apakah Anda yakin ingin menghapus Kategori ini?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Delete",
+        cancelButtonText: "Cancel",
       });
+
+      if (result.isConfirmed) {
+        const API_URL = import.meta.env.VITE_API_KEY;
+        const response = await axios.delete(
+          `${API_URL}/api/v1/rfid/category/${CategoryId}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        // console.log(response.data);
+
+        Swal.fire("Deleted!", "Kategori berhasil dihapus.", "success");
+        window.location.reload();
+      } else {
+        Swal.fire("Cancelled", "Data Anda telah disimpan.", "info");
+        // window.location.reload();
+      }
+    } catch (error) {
+      console.log(error);
+      Swal.fire(
+        "Error!",
+        "Terjadi kesalahan saat menghapus Kategori.",
+        "error"
+      );
+      // window.location.reload();
+    }
   };
   return (
     <>

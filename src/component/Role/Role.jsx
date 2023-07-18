@@ -14,9 +14,6 @@ const Role = () => {
   const [newRoleName, setNewRoleName] = useState("");
   const [frontEndPrivileges, setFrontEndPrivileges] = useState({});
   const [backEndPrivileges, setBackEndPrivileges] = useState({});
-  const [editRole, setEditRole] = useState(null);
-  const [editRoleName, setEditRoleName] = useState("");
-  const [isEditing, setIsEditing] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -162,10 +159,7 @@ const Role = () => {
         <div className="flex flex-wrap flex-row">
           <div className="flex-shrink max-w-full px-4 w-full">
             <div className="p-6 bg-white rounded-lg shadow-lg mb-6">
-              <SearchRole
-                role={role}
-                setSearchResults={setSearchResults}
-              />
+              <SearchRole role={role} setSearchResults={setSearchResults} />
               {loading ? (
                 <Loading />
               ) : (
@@ -187,7 +181,7 @@ const Role = () => {
         {showAdd && (
           <>
             <div className="overflow-x-hidden m-4 scrollbar fixed inset-0 z-50 outline-none focus:outline-none">
-              <div className="relative w-auto my-6 mx-auto max-w-sm">
+              <div className="relative w-auto my-6 mx-auto max-w-2xl">
                 <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
                   <div className="flex items-start justify-between p-5 border-b border-solid border-slate-200 rounded-t">
                     <h3 className="text-2xl font-semibold">Add Role</h3>
@@ -219,7 +213,7 @@ const Role = () => {
                         />
                       </div>
                       <div className="flex flex-shrink overflow-auto">
-                        <div className="">
+                        <div className="w-1/2">
                           <div className="font-bold">Access</div>
                           {privilege
                             .filter(
@@ -236,7 +230,7 @@ const Role = () => {
                                       {item.name}
                                     </label>
                                   </div>
-                                  <div className="w-1/2 pl-36">
+                                  <div className="w-1/2 pl-20">
                                     <Switch
                                       defaultChecked={
                                         frontEndPrivileges[item._id]
@@ -257,6 +251,52 @@ const Role = () => {
                                         aria-hidden="true"
                                         className={`${
                                           frontEndPrivileges[item._id]
+                                            ? "translate-x-6 pointer-events-none inline-block h-[20px] w-[20px] transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out"
+                                            : "translate-x-0 pointer-events-none inline-block h-[20px] w-[20px] transform rounded-full bg-gray-100 shadow-lg ring-0 transition duration-200 ease-in-out"
+                                        }`}
+                                      />
+                                    </Switch>
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
+                        </div>
+                        <div className="pl-10 w-1/2">
+                          <div className="font-bold">Access Proses</div>
+                          {privilege
+                            .filter((item) => item.access_id.name === "Backend")
+                            .map((item) => (
+                              <div className="mb-4" key={item._id}>
+                                <div className="flex flex-shrink">
+                                  <div className="w-1/2">
+                                    <label
+                                      htmlFor="Nama Role"
+                                      className="text-sm font-semibold text-gray-800"
+                                    >
+                                      {item.name}
+                                    </label>
+                                  </div>
+                                  <div className="w-1/2 pl-20">
+                                    <Switch
+                                      defaultChecked={
+                                        backEndPrivileges[item._id]
+                                      }
+                                      onChange={() =>
+                                        handlePrivilegeToggle(
+                                          item._id,
+                                          "backEnd"
+                                        )
+                                      }
+                                      className={`${
+                                        backEndPrivileges[item._id]
+                                          ? "bg-green-400"
+                                          : "bg-gray-300"
+                                      } relative inline-flex h-[24px] w-[48px] shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75`}
+                                    >
+                                      <span
+                                        aria-hidden="true"
+                                        className={`${
+                                          backEndPrivileges[item._id]
                                             ? "translate-x-6 pointer-events-none inline-block h-[20px] w-[20px] transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out"
                                             : "translate-x-0 pointer-events-none inline-block h-[20px] w-[20px] transform rounded-full bg-gray-100 shadow-lg ring-0 transition duration-200 ease-in-out"
                                         }`}

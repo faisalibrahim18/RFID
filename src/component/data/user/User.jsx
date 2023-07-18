@@ -9,44 +9,43 @@ const User = ({ users, loading, searchResults }) => {
   }
 
   const deleteUser = async (userId) => {
-    const isConfirm = await Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be table to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      return result.isConfirmed;
-    });
+    try {
+      const token = localStorage.getItem("token");
 
-    if (!isConfirm) {
-      return;
-    }
-    const API_URL = import.meta.env.VITE_API_KEY;
-    const token = localStorage.getItem("token");
-    await axios
-      .delete(`${API_URL}/api/v1/rfid/user/${userId}`, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then(({ data }) => {
-        Swal.fire({
-          icon: "success",
-          text: data.message,
-        });
-        window.location.reload();
-      })
-      .catch(({ response: { data } }) => {
-        Swal.fire({
-          text: data.message,
-          icon: "error",
-        });
-        window.location.reload();
+      const result = await Swal.fire({
+        title: "Konfirmasi Delete",
+        text: "Apakah Anda yakin ingin menghapus user ini?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Delete",
+        cancelButtonText: "Cancel",
       });
+
+      if (result.isConfirmed) {
+        const API_URL = import.meta.env.VITE_API_KEY;
+        const response = await axios.delete(
+          `${API_URL}/api/v1/rfid/user/${userId}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        // console.log(response.data);
+
+        Swal.fire("Deleted!", "User berhasil dihapus.", "success");
+        window.location.reload();
+      } else {
+        Swal.fire("Cancelled", "Data Anda telah disimpan.", "info");
+        // window.location.reload();
+      }
+    } catch (error) {
+      console.log(error);
+      Swal.fire("Error!", "Terjadi kesalahan saat menghapus User.", "error");
+      // window.location.reload();
+    }
   };
   return (
     <>

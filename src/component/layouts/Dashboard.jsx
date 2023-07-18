@@ -275,7 +275,7 @@ const Dashboard = () => {
                       </p>
                     </div>
                   </div>
-                  {item.role.name === "Superadmin" ? (
+                  {/* {item.role.name === "Superadmin" ? ( */}
                     <div className="flex-shrink max-w-full w-full lg:w-1/2 md:pt-0 pt-10">
                       <button
                         type="button"
@@ -289,9 +289,9 @@ const Dashboard = () => {
                         <i className=" fa-solid fa-chevron-down fa-rotate-270 fa-xl"></i>
                       </button>
                     </div>
-                  ) : (
+                  {/* ) : (
                     ""
-                  )}
+                  )} */}
                 </div>
               </div>
               <div className="relative">
@@ -303,7 +303,7 @@ const Dashboard = () => {
               </div>
             </div>
           </div>
-          {item.role.name === "Superadmin" ? (
+          {/* {item.role.name === "Superadmin" ? ( */}
             <div className="flex flex-wrap flex-row  ">
               <div className="max-w-full px-4 lg:w-auto mb-6 w-full fade-in pl-6">
                 <div className="bg-white border-b-4 mb-5 border-[#2DC8A8] rounded-lg shadow-xl p-5">
@@ -376,9 +376,9 @@ const Dashboard = () => {
                 </div>
               </div>
             </div>
-          ) : (
+          {/* ) : (
             ""
-          )}
+          )} */}
 
           {/* Modal */}
           {showModal ? (

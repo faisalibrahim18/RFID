@@ -14,7 +14,8 @@ const initialState = {
 
 export const LoginUser = createAsyncThunk("user/loginUser", async (user, thunkAPI, credential) => {
   try {
-    const response = await axios.post("http://localhost:9000/api/v1/rfid/signin/user", {
+    const API_URL = import.meta.env.VITE_API_KEY;
+    const response = await axios.post(`${API_URL}/api/v1/rfid/signin/user`, {
       username: user.username,
       password: user.password,
     });
@@ -22,7 +23,7 @@ export const LoginUser = createAsyncThunk("user/loginUser", async (user, thunkAP
     // console.log(response);
     // console.log(response.data?.data?.token);
     localStorage.setItem("token", response.data?.data?.token, true);
-    localStorage.setItem("user", JSON.stringify(response.data?.data?.token.result), true);
+    // localStorage.setItem("user", JSON.stringify(response.data?.data?.token.result), true);
     // console.log("Bearer", response);
     // console.log(response.data);
     return response.data;
@@ -62,8 +63,9 @@ export const UserLogOut = async function () {
 };
 export const getMe = createAsyncThunk("user/getMe", async (_, thunkAPI) => {
   try {
+    const API_URL = import.meta.env.VITE_API_KEY;
     const token = localStorage.getItem("token");
-    const response = await axios.get("http://localhost:9000/api/v1/rfid/getUserSignedIn", {
+    const response = await axios.get(`${API_URL}/api/v1/rfid/getUserSignedIn`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,

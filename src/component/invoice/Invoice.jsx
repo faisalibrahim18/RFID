@@ -32,7 +32,7 @@ const Invoice = () => {
         Authorization: `Bearer ${token}`,
       },
     });
-    // console.log(response.data);
+    console.log(response.data);
     setPrice(response.data.data);
     setSearchResults2(response.data.data);
     setLoading(false);
@@ -50,7 +50,7 @@ const Invoice = () => {
         Authorization: `Bearer ${token}`,
       },
     });
-    // console.log(response.data);
+    console.log(response.data);
     setInvoice(response.data.data);
     setSearchResults(response.data.data);
     setLoading(false);
