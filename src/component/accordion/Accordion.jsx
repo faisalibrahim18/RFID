@@ -12,7 +12,8 @@ const Accordion = () => {
   }, []);
   const getDistribusi = async () => {
     // setLoading(true);
-    const response = await axios.get("http://localhost:9000/api/v1/rfid/distribusi");
+    const API_URL = import.meta.env.VITE_API_KEY;
+    const response = await axios.get(`${API_URL}/api/v1/rfid/distribusi`);
     // console.log(response.data.data);
     setDistribusi(response.data.data);
     // setSearchResults(response.data.data);

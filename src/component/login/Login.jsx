@@ -86,7 +86,7 @@ const Login = () => {
           </h1>
           <form className="lg:w-1/2 fade-in" onSubmit={Auth}>
             {isError && (
-              <p className="alert alert-danger rounded text-center p-2 shadow ">
+              <p className="bg-red-200 uppercase opacity-75 font-sans  text-red-500 rounded text-center p-2 m-3">
                 {message}
               </p>
             )}
@@ -124,7 +124,7 @@ const Login = () => {
                   <div>
                     <h1
                       className=" mr-2 inline-block h-4 w-4 animate-spin rounded-full border-2 border-solid border-current border-r-transparent align-[-0.125em] text-primary motion-reduce:animate-[spin_1.5s_linear_infinite]"
-                      role="status"
+                 
                     >
                       <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
                         Loading...

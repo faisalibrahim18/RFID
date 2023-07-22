@@ -5,7 +5,7 @@ import {
   BsGridFill,
   BsPeopleFill,
 } from "react-icons/bs";
-import { NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { CgLogOut } from "react-icons/cg";
 import Logo from "../../assets/logo.png";
 import {
@@ -19,6 +19,7 @@ import {
 import axios from "axios";
 
 import Swal from "sweetalert2";
+import UserPicture from "../pictures/UserPicture";
 
 const Layout = ({ children }) => {
   const [users, setUser] = useState([]);
@@ -144,11 +145,10 @@ const Layout = ({ children }) => {
     }
   };
   // useEffect(() => {
-    
+
   //   getPrivilege()
 
   // }, [])
-  
 
   const getPrivilege = async () => {
     try {
@@ -160,7 +160,7 @@ const Layout = ({ children }) => {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log(response.data.data);
+      // console.log(response.data.data);
     } catch (error) {
       console.log(error);
     }
@@ -186,253 +186,253 @@ const Layout = ({ children }) => {
             </div>
 
             {/* <!-- Sidebar menu --> */}
-            {users.map((item) => (
-              <div className=" flex md:z-50 flex-col gap-2 md:pt-2 pt-20  w-full text-[#00205F] float-none font-medium ltr:pl-1.5 rtl:pr-1.5">
-                <div>
+
+            <div className=" flex md:z-50 flex-col gap-2 md:pt-2 pt-20  w-full text-[#00205F] float-none font-medium ltr:pl-1.5 rtl:pr-1.5">
+              <div>
+                <NavLink
+                  activeClassName="active"
+                  to={"/dashboard"}
+                  className="group  flex items-center text-center text-sm gap-3.5 font-medium p-4 hover:bg-[#dee7de] rounded-md"
+                >
+                  <div className="text-lg">
+                    <BsGridFill />
+                  </div>
+                  <h2>Dashboard</h2>
+                  <h2
+                    className={`${
+                      open && " md:hidden "
+                    } absolute  left-44 md:hidden bg-white font-semibold whitespace-pre text-[#00205F] rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit`}
+                  >
+                    Dashboard
+                  </h2>
+                </NavLink>
+
+                {privilege.UserPage && (
                   <NavLink
                     activeClassName="active"
-                    to={"/dashboard"}
-                    className="group  flex items-center text-center text-sm gap-3.5 font-medium p-4 hover:bg-[#dee7de] rounded-md"
+                    to={"/users"}
+                    className={`group flex items-center text-center text-sm gap-3.5 font-medium p-4 hover:bg-[#dee7de] rounded-md ${
+                      privilege.allowed ? "allowed" : "not-allowed"
+                    }`}
                   >
                     <div className="text-lg">
-                      <BsGridFill />
+                      <BsPeopleFill />
                     </div>
-                    <h2>Dashboard</h2>
+                    <h2>User Management</h2>
                     <h2
                       className={`${
                         open && " md:hidden "
                       } absolute  left-44 md:hidden bg-white font-semibold whitespace-pre text-[#00205F] rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit`}
                     >
-                      Dashboard
+                      User Management
                     </h2>
                   </NavLink>
-
-                  {privilege.UserPage && (
-                    <NavLink
-                      activeClassName="active"
-                      to={"/users"}
-                      className={`group flex items-center text-center text-sm gap-3.5 font-medium p-4 hover:bg-[#dee7de] rounded-md ${
-                        privilege.allowed ? "allowed" : "not-allowed"
-                      }`}
-                    >
-                      <div className="text-lg">
-                        <BsPeopleFill />
-                      </div>
-                      <h2>User Management</h2>
-                      <h2
-                        className={`${
-                          open && " md:hidden "
-                        } absolute  left-44 md:hidden bg-white font-semibold whitespace-pre text-[#00205F] rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit`}
-                      >
-                        User Management
-                      </h2>
-                    </NavLink>
-                  )}
-                  {privilege.LogPage && (
-                    <NavLink
-                      activeClassName="active"
-                      to={"/audit"}
-                      className={`group flex items-center text-center text-sm gap-3.5 font-medium p-4 hover:bg-[#dee7de] rounded-md ${
-                        privilege.allowed ? "allowed" : "not-allowed"
-                      }`}
-                    >
-                      <div className="text-lg">
-                        <i className="fa-solid fa-user-secret"></i>
-                      </div>
-                      <h2>Audit Log</h2>
-                      <h2
-                        className={`${
-                          open && " md:hidden "
-                        } absolute  left-44 md:hidden bg-white font-semibold whitespace-pre text-[#00205F] rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit`}
-                      >
-                        Audit Log
-                      </h2>
-                    </NavLink>
-                  )}
-
-                  {privilege.RolePage && (
-                    <NavLink
-                      activeClassName="active"
-                      to={"/role"}
-                      className={`group flex items-center text-center text-sm gap-3.5 font-medium p-4 hover:bg-[#dee7de] rounded-md ${
-                        privilege.allowed ? "allowed" : "not-allowed"
-                      }`}
-                    >
-                      <div className="text-lg">
-                        <BsFillPersonBadgeFill />
-                      </div>
-                      <h2>Role Management</h2>
-                      <h2
-                        className={`${
-                          open && " md:hidden "
-                        } absolute  left-44 md:hidden bg-white font-semibold whitespace-pre text-[#00205F] rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit`}
-                      >
-                        Role Management
-                      </h2>
-                    </NavLink>
-                  )}
-
-                  {privilege.HospitalPage && (
-                    <NavLink
-                      activeClassName="active"
-                      to={"/rumah_sakit"}
-                      className="group  flex items-center text-center text-sm gap-3.5 font-medium p-4 hover:bg-[#dee7de] rounded-md"
-                    >
-                      <div className="text-lg">
-                        <FaHospitalAlt />
-                      </div>
-                      <h2>Rumah Sakit</h2>
-                      <h2
-                        className={`${
-                          open && " md:hidden "
-                        } absolute  left-44 md:hidden bg-white font-semibold whitespace-pre text-[#00205F] rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit`}
-                      >
-                        Rumah Sakit
-                      </h2>
-                    </NavLink>
-                  )}
-
-                  {privilege.LinenPage && (
-                    <NavLink
-                      activeClassName="active"
-                      to={"/linen"}
-                      className="group  flex items-center text-center text-sm gap-3.5 font-medium p-4 hover:bg-[#dee7de] rounded-md"
-                    >
-                      <div className="text-lg">
-                        <FaTags />
-                      </div>
-                      <h2>Linen</h2>
-                      <h2
-                        className={`${
-                          open && " md:hidden "
-                        } absolute  left-44 md:hidden bg-white font-semibold whitespace-pre text-[#00205F] rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit`}
-                      >
-                        Linen
-                      </h2>
-                    </NavLink>
-                  )}
-
-                  {privilege.DistribusiPage && (
-                    <NavLink
-                      activeClassName="active"
-                      to={"/distribusi"}
-                      className="group  flex items-center text-center text-sm gap-3.5 font-medium p-4 hover:bg-[#dee7de] rounded-md"
-                    >
-                      <div className="text-lg">
-                        <FaRegListAlt />
-                      </div>
-                      <h2>Distribusi</h2>
-                      <h2
-                        className={`${
-                          open && " md:hidden "
-                        } absolute  left-44 md:hidden bg-white font-semibold whitespace-pre text-[#00205F] rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit`}
-                      >
-                        Distribusi
-                      </h2>
-                    </NavLink>
-                  )}
-
-                  {privilege.CategoryPage && (
-                    <NavLink
-                      activeClassName="active"
-                      to={"/kategori"}
-                      className="group  flex items-center text-center text-sm gap-3.5 font-medium p-4 hover:bg-[#dee7de] rounded-md"
-                    >
-                      <div className="text-lg">
-                        <FaCubes />
-                      </div>
-                      <h2>Kategori</h2>
-                      <h2
-                        className={`${
-                          open && " md:hidden "
-                        } absolute  left-44 md:hidden bg-white font-semibold whitespace-pre text-[#00205F] rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit`}
-                      >
-                        Kategori
-                      </h2>
-                    </NavLink>
-                  )}
-
-                  {privilege.InventoryPage && (
-                    <NavLink
-                      activeClassName="active"
-                      to={"/inventory"}
-                      className={`group  flex items-center text-center text-sm gap-3.5 font-medium p-4 hover:bg-[#dee7de] rounded-md `}
-                    >
-                      <div className="text-lg">
-                        <BsFillClipboard2CheckFill />
-                      </div>
-                      <h2>Inventory</h2>
-                      <h2
-                        className={`${
-                          open && " md:hidden "
-                        } absolute  left-44 md:hidden bg-white font-semibold whitespace-pre text-[#00205F] rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit`}
-                      >
-                        Inventory
-                      </h2>
-                    </NavLink>
-                  )}
-
-                  {privilege.ReportPage && (
-                    <NavLink
-                      activeClassName="active"
-                      to={"/laporan"}
-                      className="group  flex items-center text-center text-sm gap-3.5 font-medium p-4 hover:bg-[#dee7de] rounded-md"
-                    >
-                      <div className="text-lg">
-                        <FaClipboardList />
-                      </div>
-                      <h2>Laporan</h2>
-                      <h2
-                        className={`${
-                          open && " md:hidden "
-                        } absolute  left-44 md:hidden bg-white font-semibold whitespace-pre text-[#00205F] rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit`}
-                      >
-                        Laporan
-                      </h2>
-                    </NavLink>
-                  )}
-                  {/* {privilege.ReportPage && ( */}
+                )}
+                {privilege.LogPage && (
                   <NavLink
                     activeClassName="active"
-                    to={"/invoice"}
-                    className="group  flex items-center text-center text-sm gap-3.5 font-medium p-4 hover:bg-[#dee7de] rounded-md"
+                    to={"/audit"}
+                    className={`group flex items-center text-center text-sm gap-3.5 font-medium p-4 hover:bg-[#dee7de] rounded-md ${
+                      privilege.allowed ? "allowed" : "not-allowed"
+                    }`}
                   >
                     <div className="text-lg">
-                      <i className="fa-sharp fa-solid fa-file-invoice"></i>
+                      <i className="fa-solid fa-user-secret"></i>
                     </div>
-                    <h2>Invoice</h2>
+                    <h2>Audit Log</h2>
                     <h2
                       className={`${
                         open && " md:hidden "
                       } absolute  left-44 md:hidden bg-white font-semibold whitespace-pre text-[#00205F] rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit`}
                     >
-                      Invoice
+                      Audit Log
                     </h2>
                   </NavLink>
-                  {/* )} */}
+                )}
 
-                  {privilege.TrackingPage && (
-                    <NavLink
-                      activeClassName="active"
-                      to={"/tracking"}
-                      className="classname group  flex items-center text-center text-sm gap-3.5 font-medium p-4 hover:bg-[#dee7de] rounded-md"
+                {privilege.RolePage && (
+                  <NavLink
+                    activeClassName="active"
+                    to={"/role"}
+                    className={`group flex items-center text-center text-sm gap-3.5 font-medium p-4 hover:bg-[#dee7de] rounded-md ${
+                      privilege.allowed ? "allowed" : "not-allowed"
+                    }`}
+                  >
+                    <div className="text-lg">
+                      <BsFillPersonBadgeFill />
+                    </div>
+                    <h2>Role Management</h2>
+                    <h2
+                      className={`${
+                        open && " md:hidden "
+                      } absolute  left-44 md:hidden bg-white font-semibold whitespace-pre text-[#00205F] rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit`}
                     >
-                      <div className="text-lg">
-                        <FaTruck />
-                      </div>
-                      <h2>Tracking</h2>
-                      <h2
-                        className={`${
-                          open && " md:hidden "
-                        } absolute  left-44 md:hidden bg-white font-semibold whitespace-pre text-[#00205F] rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit`}
-                      >
-                        Tracking
-                      </h2>
-                    </NavLink>
-                  )}
-                </div>
+                      Role Management
+                    </h2>
+                  </NavLink>
+                )}
+
+                {privilege.HospitalPage && (
+                  <NavLink
+                    activeClassName="active"
+                    to={"/rumah_sakit"}
+                    className="group  flex items-center text-center text-sm gap-3.5 font-medium p-4 hover:bg-[#dee7de] rounded-md"
+                  >
+                    <div className="text-lg">
+                      <FaHospitalAlt />
+                    </div>
+                    <h2>Rumah Sakit</h2>
+                    <h2
+                      className={`${
+                        open && " md:hidden "
+                      } absolute  left-44 md:hidden bg-white font-semibold whitespace-pre text-[#00205F] rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit`}
+                    >
+                      Rumah Sakit
+                    </h2>
+                  </NavLink>
+                )}
+
+                {privilege.LinenPage && (
+                  <NavLink
+                    activeClassName="active"
+                    to={"/linen"}
+                    className="group  flex items-center text-center text-sm gap-3.5 font-medium p-4 hover:bg-[#dee7de] rounded-md"
+                  >
+                    <div className="text-lg">
+                      <FaTags />
+                    </div>
+                    <h2>Linen</h2>
+                    <h2
+                      className={`${
+                        open && " md:hidden "
+                      } absolute  left-44 md:hidden bg-white font-semibold whitespace-pre text-[#00205F] rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit`}
+                    >
+                      Linen
+                    </h2>
+                  </NavLink>
+                )}
+
+                {privilege.DistribusiPage && (
+                  <NavLink
+                    activeClassName="active"
+                    to={"/distribusi"}
+                    className="group  flex items-center text-center text-sm gap-3.5 font-medium p-4 hover:bg-[#dee7de] rounded-md"
+                  >
+                    <div className="text-lg">
+                      <FaRegListAlt />
+                    </div>
+                    <h2>Distribusi</h2>
+                    <h2
+                      className={`${
+                        open && " md:hidden "
+                      } absolute  left-44 md:hidden bg-white font-semibold whitespace-pre text-[#00205F] rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit`}
+                    >
+                      Distribusi
+                    </h2>
+                  </NavLink>
+                )}
+
+                {privilege.CategoryPage && (
+                  <NavLink
+                    activeClassName="active"
+                    to={"/kategori"}
+                    className="group  flex items-center text-center text-sm gap-3.5 font-medium p-4 hover:bg-[#dee7de] rounded-md"
+                  >
+                    <div className="text-lg">
+                      <FaCubes />
+                    </div>
+                    <h2>Kategori</h2>
+                    <h2
+                      className={`${
+                        open && " md:hidden "
+                      } absolute  left-44 md:hidden bg-white font-semibold whitespace-pre text-[#00205F] rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit`}
+                    >
+                      Kategori
+                    </h2>
+                  </NavLink>
+                )}
+
+                {privilege.InventoryPage && (
+                  <NavLink
+                    activeClassName="active"
+                    to={"/inventory"}
+                    className={`group  flex items-center text-center text-sm gap-3.5 font-medium p-4 hover:bg-[#dee7de] rounded-md `}
+                  >
+                    <div className="text-lg">
+                      <BsFillClipboard2CheckFill />
+                    </div>
+                    <h2>Inventory</h2>
+                    <h2
+                      className={`${
+                        open && " md:hidden "
+                      } absolute  left-44 md:hidden bg-white font-semibold whitespace-pre text-[#00205F] rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit`}
+                    >
+                      Inventory
+                    </h2>
+                  </NavLink>
+                )}
+
+                {privilege.ReportPage && (
+                  <NavLink
+                    activeClassName="active"
+                    to={"/laporan"}
+                    className="group  flex items-center text-center text-sm gap-3.5 font-medium p-4 hover:bg-[#dee7de] rounded-md"
+                  >
+                    <div className="text-lg">
+                      <FaClipboardList />
+                    </div>
+                    <h2>Laporan</h2>
+                    <h2
+                      className={`${
+                        open && " md:hidden "
+                      } absolute  left-44 md:hidden bg-white font-semibold whitespace-pre text-[#00205F] rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit`}
+                    >
+                      Laporan
+                    </h2>
+                  </NavLink>
+                )}
+                {/* {privilege.ReportPage && ( */}
+                <NavLink
+                  activeClassName="active"
+                  to={"/invoice"}
+                  className="group  flex items-center text-center text-sm gap-3.5 font-medium p-4 hover:bg-[#dee7de] rounded-md"
+                >
+                  <div className="text-lg">
+                    <i className="fa-sharp fa-solid fa-file-invoice"></i>
+                  </div>
+                  <h2>Invoice</h2>
+                  <h2
+                    className={`${
+                      open && " md:hidden "
+                    } absolute  left-44 md:hidden bg-white font-semibold whitespace-pre text-[#00205F] rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit`}
+                  >
+                    Invoice
+                  </h2>
+                </NavLink>
+                {/* )} */}
+
+                {privilege.TrackingPage && (
+                  <NavLink
+                    activeClassName="active"
+                    to={"/tracking"}
+                    className="classname group  flex items-center text-center text-sm gap-3.5 font-medium p-4 hover:bg-[#dee7de] rounded-md"
+                  >
+                    <div className="text-lg">
+                      <FaTruck />
+                    </div>
+                    <h2>Tracking</h2>
+                    <h2
+                      className={`${
+                        open && " md:hidden "
+                      } absolute  left-44 md:hidden bg-white font-semibold whitespace-pre text-[#00205F] rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit`}
+                    >
+                      Tracking
+                    </h2>
+                  </NavLink>
+                )}
               </div>
-            ))}
+            </div>
+
             {/* Footer Sidebar */}
             {/* <div className="px-4 box-banner">
               <div className="my-8 p-4 text-center bg-gray-300  bg-opacity-50 rounded-lg">
@@ -464,43 +464,48 @@ const Layout = ({ children }) => {
             id="desktop-menu"
           >
             {" "}
-            <button
-              id="navbartoggle"
-              type="button"
-              className="inline-flex  w-1/2  text-gray-800 hover:text-gray-600 dark:text-gray-300 dark:hover:text-gray-200 focus:outline-none focus:ring-0"
-              aria-controls="sidebar-menu"
-              onClick={() => setOpen(!open)}
-              aria-expanded="false"
-              x-bind:aria-expanded="open.toString()"
-            >
-              <svg
-                x-description="Icon closed"
-                x-state:on="Menu open"
-                x-state:off="Menu closed"
-                className="block h-8 w-8"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="currentColor"
-                viewBox="0 0 16 16"
+            <div className="w-1/2">
+              <button
+                id="navbartoggle"
+                type="button"
+                className="inline-flex    text-gray-800 hover:text-gray-600 dark:text-gray-300 dark:hover:text-gray-200 focus:outline-none focus:ring-0"
+                aria-controls="sidebar-menu"
+                aria-expanded="false"
+                x-bind:aria-expanded="open.toString()"
               >
-                <path
-                  className="md:hidden"
-                  d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"
-                />
-                <path
-                  className="hidden md:block"
-                  d="M2 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"
-                />
-              </svg>
-            </button>
-            <ul className="flex ml-auto mr-auto mt-2 pl-auto ">
+                <svg
+                  x-description="Icon closed"
+                  x-state:on="Menu open"
+                  x-state:off="Menu closed"
+                  className="block h-8 w-8"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="currentColor"
+                  viewBox="0 0 16 16"
+                  onClick={() => setOpen(!open)}
+                >
+                  <path
+                    className="md:hidden"
+                    d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"
+                  />
+                  <path
+                    className="hidden md:block"
+                    d="M2 10.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm0-3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"
+                  />
+                </svg>
+              </button>
+            </div>
+            <ul className="flex ml-auto mr-auto mt-2 pl-auto justify-end items-end static">
               <li className="relative">
                 <a
                   className="px-3 flex text-sm rounded-full focus:outline-none"
                   id="user-menu-button"
                   onClick={() => setisOpen(!isopen)}
                 >
-                  <div className="relative">
-                    <img className="h-10 w-10 rounded-full border border-gray-300 bg-gray-700" />
+                  <div className="relative cursor-pointer">
+                    <div>
+                      <UserPicture />
+                    </div>
+                    {/* <img className="h-10 w-10 rounded-full border border-gray-300 bg-gray-700" /> */}
                     <span
                       title="online"
                       className="flex justify-center absolute -bottom-0.5 ltr:right-1 rtl:left-1 text-center bg-green-500 border border-white w-3 h-3 rounded-full"
@@ -508,7 +513,7 @@ const Layout = ({ children }) => {
                   </div>
                   {users.map((item) => (
                     <span
-                      className="hidden md:block ml-1 mr-1 self-center"
+                      className="hidden md:block ml-1 mr-1 self-center cursor-pointer"
                       key={item._id}
                     >
                       {" "}
@@ -519,6 +524,15 @@ const Layout = ({ children }) => {
                 {isopen ? (
                   <div className="absolute right-0 z-10 w-56 mt-4 origin-top-right bg-white border border-gray-100 rounded-md shadow-lg">
                     <div className="p-2 items-center">
+                      {users.map((item) => (
+                        <Link
+                          to={`/profile/${item._id}`}
+                          className="flex w-full  px-4 py-2 text-gray-500 rounded-lg hover:bg-[#E5F5E5] hover:text-gray-700"
+                        >
+                          <i className="fa-solid fa-user text-lg m-1"></i>
+                          <span className="pt-2 pl-1"> Profile</span>
+                        </Link>
+                      ))}
                       <button
                         type="button"
                         onClick={logout}

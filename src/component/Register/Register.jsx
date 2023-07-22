@@ -32,8 +32,9 @@ const Register = () => {
   const saveRegister = async (e) => {
     e.preventDefault();
     try {
+      const API_URL = import.meta.env.VITE_API_KEY;
       await axios
-        .post("http://localhost:9000/api/v1/rfid/user", {
+        .post(`${API_URL}/api/v1/rfid/user`, {
           name: name,
           username: username,
           password: password,

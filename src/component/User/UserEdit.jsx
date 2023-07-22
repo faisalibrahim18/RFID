@@ -18,10 +18,10 @@ const UserEdit = () => {
 
   useEffect(() => {
     const getRole = async () => {
-      try {
+      try { const API_URL = import.meta.env.VITE_API_KEY;
         const token = localStorage.getItem("token");
         const response = await axios.get(
-          "http://localhost:9000/api/v1/rfid/role",
+          `${API_URL}/api/v1/rfid/role`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -42,10 +42,10 @@ const UserEdit = () => {
 
   useEffect(() => {
     const getUserById = async () => {
-      try {
+      try { const API_URL = import.meta.env.VITE_API_KEY;
         const token = localStorage.getItem("token");
         const response = await axios.get(
-          `http://localhost:9000/api/v1/rfid/user/${id}`,
+          `${API_URL}/api/v1/rfid/user/${id}`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -73,11 +73,11 @@ const UserEdit = () => {
 
   const updateUser = async (e) => {
     e.preventDefault();
-    try {
+    try { const API_URL = import.meta.env.VITE_API_KEY;
       const token = localStorage.getItem("token");
       await axios
         .put(
-          `http://localhost:9000/api/v1/rfid/user/${id}`,
+          `${API_URL}/api/v1/rfid/user/${id}`,
           {
             name: name,
             username: username,

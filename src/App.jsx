@@ -40,6 +40,7 @@ import Accordion from "./component/accordion/Accordion";
 import RolePage from "./page/Role/RolePage";
 import Invoice from "./page/invoice/Invoice";
 import Audit from "./page/audit/Audit";
+import Profile from "./page/profile/Profile";
 
 function App() {
   return (
@@ -85,6 +86,7 @@ function App() {
           <Route exact path="/role" element={<RolePage />} />
           <Route exact path="/invoice" element={<Invoice />} />
           <Route exact path="/audit" element={<Audit />} />
+          <Route exact path="/profile/:id" element={<Profile />} />
 
           {/* user_Laundry route */}
           <Route exact path="/dashboardLaundry" element={<Dashboard />} />

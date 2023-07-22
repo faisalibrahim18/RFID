@@ -19,9 +19,9 @@ const UserAdd = () => {
   }, []);
 
   const getRole = async () => {
-    try {
+    try { const API_URL = import.meta.env.VITE_API_KEY;
       const token = localStorage.getItem("token");
-      const response = await axios.get("http://localhost:9000/api/v1/rfid/role", {
+      const response = await axios.get(`${API_URL}/api/v1/rfid/role`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -35,11 +35,11 @@ const UserAdd = () => {
   };
   const saveUser = async (e) => {
     e.preventDefault();
-    try {
+    try { const API_URL = import.meta.env.VITE_API_KEY;
       const token = localStorage.getItem("token");
       await axios
         .post(
-          "http://localhost:9000/api/v1/rfid/user",
+          `${API_URL}/api/v1/rfid/user`,
 
           {
             name: name,
