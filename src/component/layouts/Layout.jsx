@@ -430,6 +430,25 @@ const Layout = ({ children }) => {
                     </h2>
                   </NavLink>
                 )}
+      
+                  <NavLink
+                    activeClassName="active"
+                    to={"/guide_book"}
+                    className="classname group  flex items-center text-center text-sm gap-3.5 font-medium p-4 hover:bg-[#dee7de] rounded-md"
+                  >
+                    <div className="text-lg">
+                    <i className="fa-solid fa-book-open"></i>
+                    </div>
+                    <h2>Guide Book</h2>
+                    <h2
+                      className={`${
+                        open && " md:hidden "
+                      } absolute  left-44 md:hidden bg-white font-semibold whitespace-pre text-[#00205F] rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit`}
+                    >
+                      Tracking
+                    </h2>
+                  </NavLink>
+              
               </div>
             </div>
 
@@ -456,7 +475,7 @@ const Layout = ({ children }) => {
           {/* Navbar */}
 
           <nav
-            className={`z-20 fixed w-screen flex flex-row flex-nowrap items-center justify-between mt-0 py-2 ltr:left-0 md:ltr:left-64 ltr:right-0 rtl:right-0 md:rtl:right-64 rtl:left-0 px-6 bg-white  shadow-sm transition-all duration-500 ease-in-out ${
+            className={`z-20 fixed w-screen h-16 flex flex-row flex-nowrap items-center justify-between mt-0 py-2 ltr:left-0 md:ltr:left-64 ltr:right-0 rtl:right-0 md:rtl:right-64 rtl:left-0 px-6 bg-white  shadow-sm transition-all duration-500 ease-in-out ${
               open
                 ? "lg:left-0 ltr:right-0 left-12 right-0 rtl:left-0 "
                 : "md:left-56 -right-64 left-0  md:right-0 rtl:right-64  md:rtl:right-0 md:rtl:left-0"
@@ -494,7 +513,7 @@ const Layout = ({ children }) => {
                 </svg>
               </button>
             </div>
-            <ul className="flex ml-auto mr-auto mt-2 pl-auto justify-end items-end static">
+            <ul className="flex fixed mr-5 right-0">
               <li className="relative">
                 <a
                   className="px-3 flex text-sm rounded-full focus:outline-none"

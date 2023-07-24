@@ -6,6 +6,7 @@ import { store } from "./app/store";
 import { Provider } from "react-redux";
 import { createRoot } from "react-dom/client";
 import axios from "axios";
+// import "tw-elements-react/dist/css/tw-elements-react.min.css";
 // import { config } from "dotenv";
 
 // config();

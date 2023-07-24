@@ -41,6 +41,7 @@ import RolePage from "./page/Role/RolePage";
 import Invoice from "./page/invoice/Invoice";
 import Audit from "./page/audit/Audit";
 import Profile from "./page/profile/Profile";
+import GuideBook from "./page/guide/GuideBook";
 
 function App() {
   return (
@@ -87,28 +88,7 @@ function App() {
           <Route exact path="/invoice" element={<Invoice />} />
           <Route exact path="/audit" element={<Audit />} />
           <Route exact path="/profile/:id" element={<Profile />} />
-
-          {/* user_Laundry route */}
-          <Route exact path="/dashboardLaundry" element={<Dashboard />} />
-          <Route exact path="/laporanL" element={<Laporan />} />
-          <Route exact path="/laporanL/edit/:id" element={<EditLaporan />} />
-          <Route exact path="/permintaan" element={<Permintaan />} />
-
-          {/* user_pabrik route */}
-          <Route exact path="/permintaanP" element={<Permintaan1 />} />
-          <Route exact path="/laporanP" element={<Laporan1 />} />
-          <Route exact path="/laporanP/edit/:id" element={<EditLaporan1 />} />
-
-          {/* delivery */}
-          <Route exact path="/permintaanD" element={<Permintaan2 />} />
-
-          {/* Super admin */}
-          <Route exact path="/laporanS" element={<Laporan2 />} />
-          <Route exact path="/peminjaman" element={<Peminjaman1 />} />
-          <Route exact path="/userS" element={<User1 />} />
-          <Route exact path="/permintaanR" element={<Permintaan3 />} />
-
-          <Route exact path="/accordion" element={<Accordion />} />
+          <Route exact path="/guide_book" element={<GuideBook />} />        
         </Routes>
       </BrowserRouter>
     </>
