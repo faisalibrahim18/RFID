@@ -13,20 +13,32 @@ import Swal from "sweetalert2";
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [isPasswordVisible, setIsPasswordVisible] = useState( false ); 
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user, isError, isSuccess, isLoading, message } = useSelector(
     (state) => state.auth
   );
+  
+  function togglePasswordVisibility() {
+    setIsPasswordVisible((prevState) => !prevState);
+  }
+
 
   useEffect(() => {
     if (localStorage.getItem("token")) {
-      Swal.fire({
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "top-right",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+      });
+      Toast.fire({
         icon: "error",
         text: "Anda harus LogOut Terlebih dahulu!",
       });
-
       navigate("/dashboard");
     }
   }, []);
@@ -85,11 +97,11 @@ const Login = () => {
             login
           </h1>
           <form className="lg:w-1/2 fade-in" onSubmit={Auth}>
-            {isError && (
+            {/* {isError && (
               <p className="bg-red-200 uppercase opacity-75 font-sans  text-red-500 rounded text-center p-2 m-3">
                 {message}
               </p>
-            )}
+            )} */}
             <div className="mb-2">
               <label className="block text-sm font-semibold text-gray-800">
                 Username
@@ -107,12 +119,21 @@ const Login = () => {
                 Password
               </label>
               <input
-                type="password"
+                 type={isPasswordVisible ? "text" : "password"}
                 className="block w-full px-4 py-2 mt-2 text-black bg-white border rounded-md focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40"
                 placeholder="********"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
+              <label className="flex items-center mt-2">
+        <input
+          type="checkbox"
+          className="mr-2 w-4 h-4"
+          checked={isPasswordVisible}
+          onChange={togglePasswordVisibility}
+        />
+        <span className="text-sm text-gray-600">Show password</span>
+      </label>
             </div>
 
             <div className="mt-6">
@@ -122,10 +143,7 @@ const Login = () => {
               >
                 {isLoading ? (
                   <div>
-                    <h1
-                      className=" mr-2 inline-block h-4 w-4 animate-spin rounded-full border-2 border-solid border-current border-r-transparent align-[-0.125em] text-primary motion-reduce:animate-[spin_1.5s_linear_infinite]"
-                 
-                    >
+                    <h1 className=" mr-2 inline-block h-4 w-4 animate-spin rounded-full border-2 border-solid border-current border-r-transparent align-[-0.125em] text-primary motion-reduce:animate-[spin_1.5s_linear_infinite]">
                       <span className="!absolute !-m-px !h-px !w-px !overflow-hidden !whitespace-nowrap !border-0 !p-0 ![clip:rect(0,0,0,0)]">
                         Loading...
                       </span>

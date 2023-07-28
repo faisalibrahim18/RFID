@@ -10,7 +10,14 @@ const GuideBook = () => {
       checkTokenExpiration();
       const token = localStorage.getItem("token");
       if (!token) {
-        Swal.fire({
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-right",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+        });
+        Toast.fire({
           icon: "warning",
           text: "Anda harus Login Terlebih dahulu!",
         });

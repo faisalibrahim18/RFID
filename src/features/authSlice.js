@@ -29,6 +29,21 @@ export const LoginUser = createAsyncThunk("user/loginUser", async (user, thunkAP
     return response.data;
   } catch (error) {
     if (error.response) {
+      const Toast = Swal.mixin({
+        toast: true,
+        position: "top-right",
+        iconColor: 'white',
+        customClass: {
+          popup: 'colored-toast'
+        },
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+      });
+      Toast.fire({
+        icon: "error",
+        text: error.response.data.msg,
+      });
       const message = error.response.data.msg;
       return thunkAPI.rejectWithValue(message);
     }
