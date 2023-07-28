@@ -12,7 +12,7 @@ const Search = ({ users, setSearchResults }) => {
     setSearchResults(resultsArray);
   };
 
-  return (
+  return ( 
     <div className="flex justify-end">
       {" "}
       <form className="max-w-sm px-4" onSubmit={handleSubmit}>
