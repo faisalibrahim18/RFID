@@ -217,6 +217,11 @@ const rumah_sakit = ({ loading, searchRs, rumah_sakit }) => {
               <td class="whitespace-nowrap px-6 py-4 text-lg"></td>
               <td class="whitespace-nowrap px-6 py-4 text-lg">
                 {item?.linen.map((item) => (
+                  <p>{item.code}</p>
+                ))}
+              </td>
+              <td class="whitespace-nowrap px-6 py-4 text-lg">
+                {item?.linen.map((item) => (
                   <p>{item.epc}</p>
                 ))}
               </td>

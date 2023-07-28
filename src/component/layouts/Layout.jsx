@@ -24,25 +24,18 @@ import UserPicture from "../pictures/UserPicture";
 const Layout = ({ children }) => {
   const [users, setUser] = useState([]);
   const [privilege, setPrivilege] = useState({
-    InvoicePage: true,
-    UserPage: true,
-    RolePage: true,
-    HospitalPage: true,
-    LinenPage: true,
-    DistribusiPage: true,
-    CategoryPage: true,
-    InventoryPage: true,
-    ReportPage: true,
-    TrackingPage: true,
-    Checking: true,
-    Transit: true,
-    Accept: true,
-    Wash: true,
-    Dry: true,
-    Delivery: true,
-    Done: true,
-    LogPage: true,
-    Confirm: true,
+    Dashboard: true,
+    User: true,
+    Log: true,
+    Role: true,
+    Hospital: true,
+    Linen: true,
+    Distribusi: true,
+    Category: true,
+    Inventory: true,
+    Report: true,
+    Invoice: true,
+    Tracking: true,
   });
 
   useEffect(() => {
@@ -95,25 +88,18 @@ const Layout = ({ children }) => {
       // Memperbarui state privilege dengan hasil allowValues
       setPrivilege((prevPrivilege) => ({
         ...prevPrivilege,
-        InvoicePage: allowValues[0],
-        UserPage: allowValues[1],
-        RolePage: allowValues[2],
-        HospitalPage: allowValues[3],
-        LinenPage: allowValues[4],
-        DistribusiPage: allowValues[5],
-        CategoryPage: allowValues[6],
-        InventoryPage: allowValues[7],
-        ReportPage: allowValues[8],
-        TrackingPage: allowValues[9],
-        Checking: allowValues[10],
-        Transit: allowValues[11],
-        Accept: allowValues[12],
-        Wash: allowValues[13],
-        Dry: allowValues[14],
-        Delivery: allowValues[15],
-        Done: allowValues[16],
-        LogPage: allowValues[17],
-        Confirm: allowValues[18],
+        Dashboard: allowValues[0],
+        User: allowValues[1],
+        Log: allowValues[2],
+        Role: allowValues[3],
+        Hospital: allowValues[4],
+        Linen: allowValues[5],
+        Distribusi: allowValues[6],
+        Category: allowValues[7],
+        Inventory: allowValues[8],
+        Report: allowValues[9],
+        Invoice: allowValues[10],
+        Tracking: allowValues[11],
       }));
 
       // Mengecek izin akses dan mengambil tindakan yang sesuai
@@ -145,10 +131,8 @@ const Layout = ({ children }) => {
     }
   };
   // useEffect(() => {
-
-  //   getPrivilege()
-
-  // }, [])
+  //   getPrivilege();
+  // }, []);
 
   const getPrivilege = async () => {
     try {
@@ -160,7 +144,7 @@ const Layout = ({ children }) => {
           Authorization: `Bearer ${token}`,
         },
       });
-      // console.log(response.data.data);
+      console.log(response.data.data);
     } catch (error) {
       console.log(error);
     }
@@ -207,7 +191,7 @@ const Layout = ({ children }) => {
                   </h2>
                 </NavLink>
 
-                {privilege.UserPage && (
+                {privilege.User && (
                   <NavLink
                     activeClassName="active"
                     to={"/users"}
@@ -228,7 +212,7 @@ const Layout = ({ children }) => {
                     </h2>
                   </NavLink>
                 )}
-                {privilege.LogPage && (
+                {privilege.Log && (
                   <NavLink
                     activeClassName="active"
                     to={"/audit"}
@@ -250,7 +234,7 @@ const Layout = ({ children }) => {
                   </NavLink>
                 )}
 
-                {privilege.RolePage && (
+                {privilege.Role && (
                   <NavLink
                     activeClassName="active"
                     to={"/role"}
@@ -272,7 +256,7 @@ const Layout = ({ children }) => {
                   </NavLink>
                 )}
 
-                {privilege.HospitalPage && (
+                {privilege.Hospital && (
                   <NavLink
                     activeClassName="active"
                     to={"/rumah_sakit"}
@@ -292,7 +276,7 @@ const Layout = ({ children }) => {
                   </NavLink>
                 )}
 
-                {privilege.LinenPage && (
+                {privilege.Linen && (
                   <NavLink
                     activeClassName="active"
                     to={"/linen"}
@@ -312,7 +296,7 @@ const Layout = ({ children }) => {
                   </NavLink>
                 )}
 
-                {privilege.DistribusiPage && (
+                {privilege.Distribusi && (
                   <NavLink
                     activeClassName="active"
                     to={"/distribusi"}
@@ -332,7 +316,7 @@ const Layout = ({ children }) => {
                   </NavLink>
                 )}
 
-                {privilege.CategoryPage && (
+                {privilege.Category ? (
                   <NavLink
                     activeClassName="active"
                     to={"/kategori"}
@@ -350,9 +334,11 @@ const Layout = ({ children }) => {
                       Kategori
                     </h2>
                   </NavLink>
+                ) : (
+                  ""
                 )}
 
-                {privilege.InventoryPage && (
+                {privilege.Inventory ? (
                   <NavLink
                     activeClassName="active"
                     to={"/inventory"}
@@ -370,9 +356,11 @@ const Layout = ({ children }) => {
                       Inventory
                     </h2>
                   </NavLink>
+                ) : (
+                  ""
                 )}
 
-                {privilege.ReportPage && (
+                {privilege.Report ? (
                   <NavLink
                     activeClassName="active"
                     to={"/laporan"}
@@ -390,28 +378,32 @@ const Layout = ({ children }) => {
                       Laporan
                     </h2>
                   </NavLink>
+                ) : (
+                  ""
                 )}
-                {/* {privilege.ReportPage && ( */}
-                <NavLink
-                  activeClassName="active"
-                  to={"/invoice"}
-                  className="group  flex items-center text-center text-sm gap-3.5 font-medium p-4 hover:bg-[#dee7de] rounded-md"
-                >
-                  <div className="text-lg">
-                    <i className="fa-sharp fa-solid fa-file-invoice"></i>
-                  </div>
-                  <h2>Invoice</h2>
-                  <h2
-                    className={`${
-                      open && " md:hidden "
-                    } absolute  left-44 md:hidden bg-white font-semibold whitespace-pre text-[#00205F] rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit`}
+                {privilege.Invoice ? (
+                  <NavLink
+                    activeClassName="active"
+                    to={"/invoice"}
+                    className="group  flex items-center text-center text-sm gap-3.5 font-medium p-4 hover:bg-[#dee7de] rounded-md"
                   >
-                    Invoice
-                  </h2>
-                </NavLink>
-                {/* )} */}
+                    <div className="text-lg">
+                      <i className="fa-sharp fa-solid fa-file-invoice"></i>
+                    </div>
+                    <h2>Invoice</h2>
+                    <h2
+                      className={`${
+                        open && " md:hidden "
+                      } absolute  left-44 md:hidden bg-white font-semibold whitespace-pre text-[#00205F] rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit`}
+                    >
+                      Invoice
+                    </h2>
+                  </NavLink>
+                ) : (
+                  ""
+                )}
 
-                {privilege.TrackingPage && (
+                {privilege.Tracking && (
                   <NavLink
                     activeClassName="active"
                     to={"/tracking"}
@@ -430,25 +422,24 @@ const Layout = ({ children }) => {
                     </h2>
                   </NavLink>
                 )}
-      
-                  <NavLink
-                    activeClassName="active"
-                    to={"/guide_book"}
-                    className="classname group  flex items-center text-center text-sm gap-3.5 font-medium p-4 hover:bg-[#dee7de] rounded-md"
-                  >
-                    <div className="text-lg">
+
+                <NavLink
+                  activeClassName="active"
+                  to={"/guide_book"}
+                  className="classname group  flex items-center text-center text-sm gap-3.5 font-medium p-4 hover:bg-[#dee7de] rounded-md"
+                >
+                  <div className="text-lg">
                     <i className="fa-solid fa-book-open"></i>
-                    </div>
-                    <h2>Guide Book</h2>
-                    <h2
-                      className={`${
-                        open && " md:hidden "
-                      } absolute  left-44 md:hidden bg-white font-semibold whitespace-pre text-[#00205F] rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit`}
-                    >
-                      Tracking
-                    </h2>
-                  </NavLink>
-              
+                  </div>
+                  <h2>Guide Book</h2>
+                  <h2
+                    className={`${
+                      open && " md:hidden "
+                    } absolute  left-44 md:hidden bg-white font-semibold whitespace-pre text-[#00205F] rounded-md drop-shadow-lg px-0 py-0 w-0 overflow-hidden group-hover:px-2 group-hover:py-1 group-hover:left-14 group-hover:duration-300 group-hover:w-fit`}
+                  >
+                    Guide Book
+                  </h2>
+                </NavLink>
               </div>
             </div>
 

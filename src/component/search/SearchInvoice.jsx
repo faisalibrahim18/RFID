@@ -10,7 +10,12 @@ const SearchInvoice = ({ invoice, setSearchResults }) => {
         item.transactionNumber
           .toLowerCase()
           .includes(e.target.value.toLowerCase()) ||
-        item.hospital.name.toLowerCase().includes(e.target.value.toLowerCase())
+        item.hospital.name
+          .toLowerCase()
+          .includes(e.target.value.toLowerCase()) ||
+        item.code_distribusi
+          .toLowerCase()
+          .includes(e.target.value.toLowerCase())
     );
     setSearchResults(resultsArray);
   };

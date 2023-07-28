@@ -32,6 +32,9 @@ const Invoice = ({ searchResults }) => {
             Nomor Transaksi
           </th>
           <th scope="col" className="px-6 py-4">
+            Kode Distribusi
+          </th>
+          <th scope="col" className="px-6 py-4">
             Nama
           </th>
           <th scope="col" className="px-6 py-4">
@@ -45,6 +48,9 @@ const Invoice = ({ searchResults }) => {
             <td className="whitespace-nowrap px-6 py-4">{index + 1}</td>
             <td className="whitespace-nowrap px-6 py-4">
               {item.transactionNumber}
+            </td>
+            <td className="whitespace-nowrap px-6 py-4">
+              {item.code_distribusi}
             </td>
             <td className="whitespace-nowrap px-6 py-4">
               {item.hospital.name}

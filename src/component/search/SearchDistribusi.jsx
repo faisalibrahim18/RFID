@@ -5,8 +5,12 @@ const SearchDistribusi = ({ distribusi, setSearchResults }) => {
 
   const handleSearchChange = (e) => {
     if (!e.target.value) return setSearchResults(distribusi);
-    const resultsArray = distribusi.filter((item) =>
-      item.customer.name.toLowerCase().includes(e.target.value.toLowerCase())
+    const resultsArray = distribusi.filter(
+      (item) =>
+        item.customer.name
+          .toLowerCase()
+          .includes(e.target.value.toLowerCase()) ||
+        item.code.toLowerCase().includes(e.target.value.toLowerCase())
     );
     setSearchResults(resultsArray);
   };

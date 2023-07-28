@@ -1,20 +1,28 @@
 import React from "react";
 
-const Pagination = ({ postPerPage, totalPosts, paginateFront, paginate, paginateBack, currentPage }) => {
+const Pagination = ({
+  postPerPage,
+  totalPosts,
+  paginateFront,
+  paginate,
+  paginateBack,
+  currentPage,
+}) => {
   const pageNumbers = [];
 
   for (let i = 1; i <= Math.ceil(totalPosts / postPerPage); i++) {
     pageNumbers.push(i);
   }
-  // demoretail112@gmail.com
-  // Hunter1911
+
   return (
     <>
       <div className="py-2">
         <div>
           <p className="text-sm text-gray-700 ">
             Showing
-            <span className="font-medium"> {currentPage * postPerPage - 10} </span>
+            <span className="font-medium pl-1 pr-1">
+              {currentPage * postPerPage - 10}
+            </span>
             to
             <span className="font-medium"> {currentPage * postPerPage} </span>
             of
@@ -27,12 +35,12 @@ const Pagination = ({ postPerPage, totalPosts, paginateFront, paginate, paginate
           <nav aria-label="Page navigation example">
             <ul className="inline-flex items-center -space-x-px ">
               <li>
-                <a
+                <button
                   onClick={() => {
                     paginateBack();
                   }}
-                  href="#"
-                  className="bg-white border-gray-300 text-gray-500 hover:bg-blue-200 relative inline-flex items-center px-4 py-2 border text-sm font-medium rounded-l-lg "
+                  disabled={currentPage === 1}
+                  className="bg-white border-gray-300 disabled:bg-gray-300 text-gray-500 hover:bg-blue-200 relative inline-flex items-center px-4 py-2 border text-sm font-medium rounded-l-lg "
                 >
                   <span className="sr-only">Previous</span>
                   <svg
@@ -48,8 +56,9 @@ const Pagination = ({ postPerPage, totalPosts, paginateFront, paginate, paginate
                       clip-rule="evenodd"
                     ></path>
                   </svg>
-                </a>
+                </button>
               </li>
+
               <li>
                 {pageNumbers.map((number) => (
                   <a
@@ -69,12 +78,12 @@ const Pagination = ({ postPerPage, totalPosts, paginateFront, paginate, paginate
               </li>
 
               <li>
-                <a
+                <button
                   onClick={() => {
                     paginateFront();
                   }}
-                  href="#"
-                  className="bg-white border-gray-300 text-gray-500 hover:bg-blue-200 relative inline-flex items-center px-4 py-2 border text-sm font-medium rounded-r-lg  "
+                  disabled={totalPosts === currentPage}
+                  className="bg-white border-gray-300 disabled:bg-gray-300 text-gray-500 hover:bg-blue-200 relative inline-flex items-center px-4 py-2 border text-sm font-medium rounded-r-lg  "
                 >
                   <span className="sr-only">Next</span>
                   <svg
@@ -90,7 +99,7 @@ const Pagination = ({ postPerPage, totalPosts, paginateFront, paginate, paginate
                       clip-rule="evenodd"
                     ></path>
                   </svg>
-                </a>
+                </button>
               </li>
             </ul>
           </nav>

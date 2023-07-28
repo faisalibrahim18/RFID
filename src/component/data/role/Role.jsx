@@ -151,9 +151,9 @@ const Role = ({ searchResults }) => {
         setEditRole(null);
         setEditRoleName("");
         getRole();
-        setShowAdd(false);
-
+        
         Swal.fire("Deleted!", "Role berhasil dihapus.", "success");
+        window.location.reload();
       } else {
         Swal.fire("Cancelled", "Data Anda telah disimpan.", "info");
       }

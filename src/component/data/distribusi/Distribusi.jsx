@@ -27,16 +27,7 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
   const navigate = useNavigate();
   const [users, setUser] = useState([]);
   const [privilege, setPrivilege] = useState({
-    InvoicePage: true,
-    UserPage: true,
-    RolePage: true,
-    HospitalPage: true,
-    LinenPage: true,
-    DistribusiPage: true,
-    CategoryPage: true,
-    InventoryPage: true,
-    ReportPage: true,
-    TrackingPage: true,
+    Confirm: true,
     Checking: true,
     Transit: true,
     Accept: true,
@@ -44,8 +35,6 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
     Dry: true,
     Delivery: true,
     Done: true,
-    LogPage: true,
-    Confirm: true,
   });
   //get data access proses
   useEffect(() => {
@@ -77,25 +66,14 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
       // Memperbarui state privilege dengan hasil allowValues
       setPrivilege((prevPrivilege) => ({
         ...prevPrivilege,
-        InvoicePage: allowValues[0],
-        UserPage: allowValues[1],
-        RolePage: allowValues[2],
-        HospitalPage: allowValues[3],
-        LinenPage: allowValues[4],
-        DistribusiPage: allowValues[5],
-        CategoryPage: allowValues[6],
-        InventoryPage: allowValues[7],
-        ReportPage: allowValues[8],
-        TrackingPage: allowValues[9],
-        Checking: allowValues[10],
-        Transit: allowValues[11],
-        Accept: allowValues[12],
-        Wash: allowValues[13],
-        Dry: allowValues[14],
-        Delivery: allowValues[15],
-        Done: allowValues[16],
-        LogPage: allowValues[17],
-        Confirm: allowValues[18],
+        Confirm: allowValues[12],
+        Checking: allowValues[13],
+        Transit: allowValues[14],
+        Accept: allowValues[15],
+        Wash: allowValues[16],
+        Dry: allowValues[17],
+        Delivery: allowValues[18],
+        Done: allowValues[19],
       }));
 
       // Mengecek izin akses dan mengambil tindakan yang sesuai
@@ -819,9 +797,9 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
           <tr>
             <th className="px-6 py-4"></th>
             <th className="px-6 py-4">No</th>
+            <th className="px-6 py-4">Code</th>
             <th className="px-6 py-4">Customer</th>
             <th className="px-6 py-4">Tanggal</th>
-
             <th className="px-6 py-4">Linen</th>
             <th className="px-6 py-4">Kualitas Linen</th>
             <th className="px-6 py-4">Jenis Linen</th>
@@ -842,6 +820,9 @@ const Distribusi = ({ distribusi, loading, searchResults }) => {
                 </details>
               </td>
               <td className="whitespace-nowrap px-6 py-4">{index + 1}</td>
+              <td className="whitespace-nowrap px-6 py-4">
+                {item.code}
+              </td>
               <td className="whitespace-nowrap px-6 py-4">
                 {item.customer.name}
               </td>

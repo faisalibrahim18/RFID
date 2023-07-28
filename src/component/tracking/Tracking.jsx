@@ -20,9 +20,10 @@ const Tracking = () => {
   }, []);
 
   const getTracking = async () => {
+    const API_URL = import.meta.env.VITE_API_KEY;
     const token = localStorage.getItem("token");
     const response = await axios.get(
-      "http://localhost:9000/api/v1/rfid/distribusi",
+      `${API_URL}/api/v1/rfid/distribusi`,
       {
         headers: {
           "Content-Type": "application/json",

@@ -129,22 +129,22 @@ const Linen1 = () => {
 
       window.location.reload();
     } catch (error) {
-      console.log(error);
+      // console.log(error.response.data.msg);
       Swal.fire({
-        text: error.response.data.message,
+        text: error.response.data.msg,
         icon: "error",
       });
       if (error.response) {
         Swal.fire({
-          text: error.response.data.message,
+          text: error.response.data.msg + " : " + error.response.data.data,
           icon: "error",
         });
         // console.log(error.response.data.message);
         // setMsg(error.response.data.message);
       } else {
-        console.log(error.data);
+        // console.log(error.data);
         Swal.fire({
-          text: error.data.response.message,
+          text: error.data.response.msg,
           icon: "error",
         });
       }

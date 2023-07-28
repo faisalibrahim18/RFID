@@ -15,8 +15,9 @@ const DoughnutComponent = ({ selectedHospital }) => {
 
   const fetchChartData = async (hospitalId) => {
     try {
+      const API_URL = import.meta.env.VITE_API_KEY;
       const token = localStorage.getItem("token");
-      let url = "http://localhost:9000/api/v1/rfid/distribusi";
+      let url = `${API_URL}/api/v1/rfid/distribusi`;
 
       if (hospitalId !== "all") {
         url += `/${hospitalId}`;
